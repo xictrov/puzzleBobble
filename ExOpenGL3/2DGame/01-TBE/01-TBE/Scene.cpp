@@ -28,7 +28,7 @@ void Scene::init()
 	
 	// Load textures
 	texs.loadFromFile("images/gameBackground.png", TEXTURE_PIXEL_FORMAT_RGBA);
-	map = TileMap::createTileMap("levels/level01.txt", glm::vec2(32, 16), texProgram);
+	map = TileMap::createTileMap("levels/level01.txt", glm::vec2(192, 48), texProgram);
 	projection = glm::ortho(0.f, float(CAMERA_WIDTH - 1), float(CAMERA_HEIGHT - 1), 0.f);
 	currentTime = 0.0f;
 }
@@ -36,6 +36,7 @@ void Scene::init()
 void Scene::update(int deltaTime)
 {
 	currentTime += deltaTime;
+	map->newball(3, 1);
 }
 
 void Scene::render()

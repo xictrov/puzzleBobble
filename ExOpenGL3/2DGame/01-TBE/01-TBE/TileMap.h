@@ -25,6 +25,7 @@ public:
 
 	void render() const;
 	void free();
+	void newball(int x, int y);
 
 private:
 	bool loadLevel(const string &levelFile);
@@ -34,11 +35,13 @@ private:
 	GLuint vao;
 	GLuint vbo;
 	GLint posLocation, texCoordLocation;
-	glm::ivec2 position, mapSize, tilesheetSize;
+	glm::ivec2 position, tilesheetSize, mapSize;
 	int tileSize, blockSize;
 	Texture tilesheet;
 	glm::vec2 tileTexSize;
 	int *map;
+	glm::vec2 minCoordsnew;
+	ShaderProgram programnew;
 
 };
 

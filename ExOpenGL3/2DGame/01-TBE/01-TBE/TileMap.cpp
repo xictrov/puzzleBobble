@@ -76,6 +76,8 @@ bool TileMap::loadLevel(const string &levelFile)
 	sstream.str(line);
 	sstream >> tilesheetSize.x >> tilesheetSize.y;
 	tileTexSize = glm::vec2(1.f / tilesheetSize.x, 1.f / tilesheetSize.y);
+
+	cout << tilesheetSize.x << ", " << tilesheetSize.y << endl;
 	
 	map = new int[mapSize.x * mapSize.y];
 	for(int j=0; j<mapSize.y; j++)
@@ -87,7 +89,11 @@ bool TileMap::loadLevel(const string &levelFile)
 				map[j*mapSize.x+i] = 0;
 			else
 				map[j*mapSize.x+i] = tile - int('0');
+
+			cout << tile;
+
 		}
+		cout << endl;
 		fin.get(tile);
 #ifndef _WIN32
 		fin.get(tile);
@@ -100,6 +106,8 @@ bool TileMap::loadLevel(const string &levelFile)
 
 void TileMap::prepareArrays(const glm::vec2 &minCoords, ShaderProgram &program)
 {
+	minCoordsnew = minCoords;
+	programnew = program;
 	int tile, nTiles = 0;
 	glm::vec2 posTile, texCoordTile[2], halfTexel;
 	vector<float> vertices;
@@ -120,7 +128,7 @@ void TileMap::prepareArrays(const glm::vec2 &minCoords, ShaderProgram &program)
 				else{
 					posTile = glm::vec2(minCoords.x + i * tileSize + tileSize / 2, minCoords.y + j * tileSize);
 				}
-				texCoordTile[0] = glm::vec2(float((tile-1)%2) / tilesheetSize.x, float((tile-1)/2) / tilesheetSize.y);
+				texCoordTile[0] = glm::vec2(0.0f, float(tile-1) / tilesheetSize.y);
 				texCoordTile[1] = texCoordTile[0] + tileTexSize;
 				//texCoordTile[0] += halfTexel;
 				texCoordTile[1] -= halfTexel;
@@ -151,6 +159,13 @@ void TileMap::prepareArrays(const glm::vec2 &minCoords, ShaderProgram &program)
 	texCoordLocation = program.bindVertexAttribute("texCoord", 2, 4*sizeof(float), (void *)(2*sizeof(float)));
 }
 
+void TileMap::newball(int x, int y)
+{
+	glDeleteVertexArrays(1, &vao);
+	glDeleteBuffers(1, &vbo);
+	map[y*mapSize.x + x] = 1;
+	prepareArrays(minCoordsnew, programnew);
+}
 
 
 
