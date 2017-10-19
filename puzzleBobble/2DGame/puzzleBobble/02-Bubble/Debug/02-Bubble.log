@@ -1,0 +1,7 @@
+﻿  Scene.cpp
+c:\users\vimar\desktop\vj\2d\exopengl3\2dgame\02-bubble\02-bubble\scene.cpp(76): warning C4244: 'inicializando': conversión de 'double' a 'float'; posible pérdida de datos
+SOIL.lib(image_DXT.obj) : warning LNK4099: no se encontró PDB 'vc100.pdb' con 'SOIL.lib(image_DXT.obj)' o en 'C:\Users\vimar\Desktop\VJ\2D\ExOpenGL3\2DGame\02-Bubble\Debug\vc100.pdb'; se vinculará el objeto sin tener en cuenta información de depuración
+SOIL.lib(image_helper.obj) : warning LNK4099: no se encontró PDB 'vc100.pdb' con 'SOIL.lib(image_helper.obj)' o en 'C:\Users\vimar\Desktop\VJ\2D\ExOpenGL3\2DGame\02-Bubble\Debug\vc100.pdb'; se vinculará el objeto sin tener en cuenta información de depuración
+SOIL.lib(SOIL.obj) : warning LNK4099: no se encontró PDB 'vc100.pdb' con 'SOIL.lib(SOIL.obj)' o en 'C:\Users\vimar\Desktop\VJ\2D\ExOpenGL3\2DGame\02-Bubble\Debug\vc100.pdb'; se vinculará el objeto sin tener en cuenta información de depuración
+SOIL.lib(stb_image_aug.obj) : warning LNK4099: no se encontró PDB 'vc100.pdb' con 'SOIL.lib(stb_image_aug.obj)' o en 'C:\Users\vimar\Desktop\VJ\2D\ExOpenGL3\2DGame\02-Bubble\Debug\vc100.pdb'; se vinculará el objeto sin tener en cuenta información de depuración
+  02-Bubble.vcxproj -> C:\Users\vimar\Desktop\VJ\2D\ExOpenGL3\2DGame\02-Bubble\Debug\02-Bubble.exe
