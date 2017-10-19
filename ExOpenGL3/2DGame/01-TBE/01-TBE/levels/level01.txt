@@ -1,7 +1,0 @@
-TILEMAP
-8 2							-- Size of tile map in tiles
-32 32 							-- Tile size & block size
-images/Bolas.png 	-- Tilesheet
-1 4 	-- Number of tiles in tilesheet	
-11111111
-00000000
