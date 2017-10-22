@@ -7,12 +7,15 @@
 #include "Scene.h"
 #include "Game.h"
 
-
 #define SCREEN_X 192
 #define SCREEN_Y 48
 
 #define INIT_PLAYER_X_TILES 4
 #define INIT_PLAYER_Y_TILES 25
+
+bool cambio = false;
+bool acaba = false;
+bool empieza = false;
 
 Scene::Scene()
 {
@@ -45,7 +48,7 @@ void Scene::init()
 	map = TileMap::createTileMap("levels/level01.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
 	
 	player = new Player();
-	player->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
+	player->init(glm::ivec2(305.f, 390.f), texProgram);
 	//player->setPosition(glm::vec2(INIT_PLAYER_X_TILES * map->getTileSize(), INIT_PLAYER_Y_TILES * map->getTileSize()));
 	player->setTileMap(map);
 
@@ -61,7 +64,6 @@ void Scene::init()
 void Scene::update(int deltaTime)
 {
 	currentTime += deltaTime;
-	//player->update(deltaTime*3);
 
 	if (Game::instance().getSpecialKey(GLUT_KEY_LEFT))
 	{
@@ -73,9 +75,31 @@ void Scene::update(int deltaTime)
 	}
 	if (angle > 170) angle = 170;
 	if (angle < 10) angle = 10;
-	float numRad = (angle - 90) * (M_PI / 180);
 
-	arrow->update(deltaTime, numRad);
+	float numRadBola = angle * (M_PI / 180);
+	float numRadArrow = (angle - 90.f) * (M_PI / 180);
+
+	arrow->update(deltaTime, numRadArrow);
+
+	if (Game::instance().getSpecialKey(GLUT_KEY_UP)) {
+		empieza = true;
+	}
+
+	if (empieza) {
+		player->update(deltaTime, numRadBola, cambio, acaba);
+		if (cambio) angle = 180 - angle;
+		cambio = false;
+	}
+	if (acaba) {
+		empieza = false;
+		acaba = false;
+		player = new Player();
+		player->init(glm::ivec2(305.f, 390.f), texProgram);
+		//player->setPosition(glm::vec2(INIT_PLAYER_X_TILES * map->getTileSize(), INIT_PLAYER_Y_TILES * map->getTileSize()));
+		player->setTileMap(map);
+	}
+
+	
 }
 
 void Scene::render()
@@ -106,9 +130,11 @@ void Scene::render()
 
 	map->render();
 
+	arrow->render();
+
 	player->render();
 
-	arrow->render();
+	
 }
 
 void Scene::initShaders()

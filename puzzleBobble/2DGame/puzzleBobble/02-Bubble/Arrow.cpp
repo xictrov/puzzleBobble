@@ -21,8 +21,8 @@ enum PlayerAnims
 void Arrow::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram)
 {
 	bJumping = false;
-	spritesheet.loadFromFile("images/Arrow.png", TEXTURE_PIXEL_FORMAT_RGBA);
-	sprite = Sprite::createSprite(glm::ivec2(44, 110), glm::vec2(1, 1), &spritesheet, &shaderProgram);
+	spritesheet.loadFromFile("images/arrowBig.png", TEXTURE_PIXEL_FORMAT_RGBA);
+	sprite = Sprite::createSprite(glm::ivec2(44, 128), glm::vec2(1, 1), &spritesheet, &shaderProgram);
 	sprite->setNumberAnimations(1);
 
 	sprite->setAnimationSpeed(ARROW, 0);
