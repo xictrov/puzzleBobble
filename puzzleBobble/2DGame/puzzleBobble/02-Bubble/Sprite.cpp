@@ -33,6 +33,7 @@ Sprite::Sprite(const glm::vec2 &quadSize, const glm::vec2 &sizeInSpritesheet, Te
 	currentAnimation = -1;
 	position = glm::vec2(0.f);
 	spriteSize = quadSize;
+	angleSprite = 0.0f;
 }
 
 void Sprite::update(int deltaTime, float angle)

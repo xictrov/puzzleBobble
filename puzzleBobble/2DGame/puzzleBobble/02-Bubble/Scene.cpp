@@ -84,7 +84,6 @@ void Scene::update(int deltaTime)
 	if (Game::instance().getSpecialKey(GLUT_KEY_UP)) {
 		empieza = true;
 	}
-
 	if (empieza) {
 		player->update(deltaTime, numRadBola, cambio, acaba);
 		if (cambio) angle = 180 - angle;

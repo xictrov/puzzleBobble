@@ -30,40 +30,31 @@ void Player::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram)
 
 	sprite->changeAnimation(0);
 	tileMapDispl = tileMapPos;
-	sprite->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)));
+	posPlayer = glm::vec2(0.0f);
+	sprite->setPosition(glm::vec2(float(tileMapDispl.x), float(tileMapDispl.y)));
 
 }
 
 void Player::update(int deltaTime, float angle, bool &cambio, bool &acaba)
 {
-	cout << "x:";
-	cout << posPlayer.x << endl;
-
-	cout << "cambio" << cambio << endl;
 
 	sprite->update(deltaTime, angle);
 
-	if (posPlayer.x<-112.5f) {
+	if (posPlayer.x < -112.5f || posPlayer.x>112.f ) {
 		angle = M_PI - angle;
 		cambio = true;
 	}
-	else if (posPlayer.x>112.f) {
-		angle = M_PI - angle;
-		cambio = true;
-	}
-
-	cout << "angle:";
-	cout << angle << endl;
 
 	posPlayer.x -= cos(angle) * 10;
-	posPlayer.y -= 2;
+	posPlayer.y -= sin(angle) * 10;
 
 	if (posPlayer.y < -400) {
 		acaba = true;
 	}
 
-
 	sprite->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)));
+
+
 }
 
 void Player::render()
