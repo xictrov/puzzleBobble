@@ -231,7 +231,7 @@ bool TileMap::collision(const glm::ivec2 &pos,int color)
 				if(dist<=32){
 
 						colocaBola(BolaJugadax/32,BolaJugaday/32,color);
-						
+
 
 					return true;
 
