@@ -93,10 +93,10 @@ void Scene::update(int deltaTime)
 		empieza = false;
 		acaba = false;
 		angle=90.0f;
-		player = new Player();
-		player->init(glm::ivec2(305.f, 390.f), texProgram);
+		//player = new Player();
+		//player->init(glm::ivec2(305.f, 390.f), texProgram);
 		//player->setPosition(glm::vec2(INIT_PLAYER_X_TILES * map->getTileSize(), INIT_PLAYER_Y_TILES * map->getTileSize()));
-		player->setTileMap(map);
+		//player->setTileMap(map);
 	}
 
 

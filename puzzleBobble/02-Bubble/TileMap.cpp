@@ -19,6 +19,7 @@ TileMap *TileMap::createTileMap(const string &levelFile, const glm::vec2 &minCoo
 TileMap::TileMap(const string &levelFile, const glm::vec2 &minCoords, ShaderProgram &program)
 {
 	loadLevel(levelFile);
+	this->minCoords=minCoords;
 	prepareArrays(minCoords, program);
 }
 
@@ -202,6 +203,45 @@ bool TileMap::collisionMoveDown(const glm::ivec2 &pos, const glm::ivec2 &size, i
 	}
 
 	return false;
+}
+
+bool TileMap::collision(const glm::ivec2 &pos)
+{
+	for (int j=0;j<mapSize.y;++j){
+		for (int i=0;i<mapSize.x;++i){
+
+			int tile=map[j*mapSize.x + i];
+			if(tile!=0){
+				glm::vec2 posTile;
+				//if(j%2==0){
+					posTile=glm::vec2(minCoords.x+i*tileSize,minCoords.y+j*tileSize);
+				/*}
+				else{
+					posTile=glm::vec2(minCoords.x+i*tileSize+tileSize/2,minCoords.y+j*tileSize);
+				}*/
+				int BolaJugadax=pos.x+tileSize/2;
+				int BolaJugaday=pos.y+tileSize/2;
+				int BolaMapax=posTile.x+tileSize/2;
+				int BolaMapay=posTile.y+tileSize/2;
+
+				double dist=(sqrt(pow(abs(BolaMapax-BolaJugadax),2)+pow(abs(BolaMapay-BolaJugaday),2)));
+				cout << "BolaMapax: " << BolaMapax << endl;
+				cout << "BolaMapay: " << BolaMapay << endl;
+				cout << "BolaJugadax: " << BolaJugadax << endl;
+				cout << "BolaJugaday: " << BolaJugaday << endl;
+				cout << "dist: " << dist << endl;
+				if(dist<=32){
+					return true;
+
+				}
+			}
+		}
+	}
+	return false;
+}
+
+void TileMap::colocaBola(int i, int j, int color)
+{
 }
 
 

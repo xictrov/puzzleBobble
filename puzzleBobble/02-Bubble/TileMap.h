@@ -27,10 +27,11 @@ public:
 	void free();
 
 	int getTileSize() const { return tileSize; }
-
+	bool collision(const glm::ivec2 &pos);
 	bool collisionMoveLeft(const glm::ivec2 &pos, const glm::ivec2 &size) const;
 	bool collisionMoveRight(const glm::ivec2 &pos, const glm::ivec2 &size) const;
 	bool collisionMoveDown(const glm::ivec2 &pos, const glm::ivec2 &size, int *posY) const;
+	void colocaBola(int i, int j, int color);
 
 private:
 	bool loadLevel(const string &levelFile);
@@ -44,6 +45,7 @@ private:
 	int tileSize, blockSize;
 	Texture tilesheet;
 	glm::vec2 tileTexSize;
+	glm::vec2 minCoords;
 	int *map;
 
 };
