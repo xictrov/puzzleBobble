@@ -1,9 +1,0 @@
-﻿  Player.cpp
-c:\users\vimar\desktop\vj\2d\puzzlebobble\2dgame\puzzlebobble\02-bubble\player.cpp(44): warning C4244: '=': conversión de 'double' a 'float'; posible pérdida de datos
-c:\users\vimar\desktop\vj\2d\puzzlebobble\2dgame\puzzlebobble\02-bubble\player.cpp(48): warning C4244: '-=': conversión de 'float' a 'int'; posible pérdida de datos
-c:\users\vimar\desktop\vj\2d\puzzlebobble\2dgame\puzzlebobble\02-bubble\player.cpp(49): warning C4244: '-=': conversión de 'float' a 'int'; posible pérdida de datos
-SOIL.lib(image_DXT.obj) : warning LNK4099: no se encontró PDB 'vc100.pdb' con 'SOIL.lib(image_DXT.obj)' o en 'C:\Users\vimar\Desktop\VJ\2D\puzzleBobble\2DGame\puzzleBobble\Debug\vc100.pdb'; se vinculará el objeto sin tener en cuenta información de depuración
-SOIL.lib(image_helper.obj) : warning LNK4099: no se encontró PDB 'vc100.pdb' con 'SOIL.lib(image_helper.obj)' o en 'C:\Users\vimar\Desktop\VJ\2D\puzzleBobble\2DGame\puzzleBobble\Debug\vc100.pdb'; se vinculará el objeto sin tener en cuenta información de depuración
-SOIL.lib(SOIL.obj) : warning LNK4099: no se encontró PDB 'vc100.pdb' con 'SOIL.lib(SOIL.obj)' o en 'C:\Users\vimar\Desktop\VJ\2D\puzzleBobble\2DGame\puzzleBobble\Debug\vc100.pdb'; se vinculará el objeto sin tener en cuenta información de depuración
-SOIL.lib(stb_image_aug.obj) : warning LNK4099: no se encontró PDB 'vc100.pdb' con 'SOIL.lib(stb_image_aug.obj)' o en 'C:\Users\vimar\Desktop\VJ\2D\puzzleBobble\2DGame\puzzleBobble\Debug\vc100.pdb'; se vinculará el objeto sin tener en cuenta información de depuración
-  02-Bubble.vcxproj -> C:\Users\vimar\Desktop\VJ\2D\puzzleBobble\2DGame\puzzleBobble\Debug\02-Bubble.exe
