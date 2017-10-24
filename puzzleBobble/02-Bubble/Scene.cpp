@@ -3,7 +3,7 @@
 #include <cmath>
 #include <glm/gtc/matrix_transform.hpp>
 #include <GL/glew.h>
-#include <GLUT/glut.h>
+#include <GL/glut.h>
 #include "Scene.h"
 #include "Game.h"
 
@@ -48,7 +48,7 @@ void Scene::init()
 	map = TileMap::createTileMap("levels/level01.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
 
 	player = new Player();
-	player->init(glm::ivec2(305.f, 390.f), texProgram);
+	player->init(glm::ivec2(305.f, 390.f), texProgram,rand()%4);
 	//player->setPosition(glm::vec2(INIT_PLAYER_X_TILES * map->getTileSize(), INIT_PLAYER_Y_TILES * map->getTileSize()));
 	player->setTileMap(map);
 
@@ -93,10 +93,10 @@ void Scene::update(int deltaTime)
 		empieza = false;
 		acaba = false;
 		angle=90.0f;
-		//player = new Player();
-		//player->init(glm::ivec2(305.f, 390.f), texProgram);
+		player = new Player();
+		player->init(glm::ivec2(305.f, 390.f), texProgram,rand()%4);
 		//player->setPosition(glm::vec2(INIT_PLAYER_X_TILES * map->getTileSize(), INIT_PLAYER_Y_TILES * map->getTileSize()));
-		//player->setTileMap(map);
+		player->setTileMap(map);
 	}
 
 

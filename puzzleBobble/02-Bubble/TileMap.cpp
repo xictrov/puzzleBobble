@@ -20,6 +20,7 @@ TileMap::TileMap(const string &levelFile, const glm::vec2 &minCoords, ShaderProg
 {
 	loadLevel(levelFile);
 	this->minCoords=minCoords;
+	this->program=program;
 	prepareArrays(minCoords, program);
 }
 
@@ -90,12 +91,8 @@ bool TileMap::loadLevel(const string &levelFile)
 				map[j*mapSize.x+i] = tile - int('0');
 		}
 		fin.get(tile);
-#ifndef _WIN32
-		fin.get(tile);
-#endif
 	}
 	fin.close();
-
 	return true;
 }
 
@@ -205,8 +202,9 @@ bool TileMap::collisionMoveDown(const glm::ivec2 &pos, const glm::ivec2 &size, i
 	return false;
 }
 
-bool TileMap::collision(const glm::ivec2 &pos)
+bool TileMap::collision(const glm::ivec2 &pos,int color)
 {
+
 	for (int j=0;j<mapSize.y;++j){
 		for (int i=0;i<mapSize.x;++i){
 
@@ -231,6 +229,7 @@ bool TileMap::collision(const glm::ivec2 &pos)
 				cout << "BolaJugaday: " << BolaJugaday << endl;
 				cout << "dist: " << dist << endl;
 				if(dist<=32){
+					colocaBola(i,j+1,color);
 					return true;
 
 				}
@@ -241,8 +240,24 @@ bool TileMap::collision(const glm::ivec2 &pos)
 }
 
 void TileMap::colocaBola(int i, int j, int color)
+
 {
+	cout << "entra" << endl;
+	cout << "i:" << i << endl;
+	cout << "j: " << j << endl;
+	cout << "color:" << color << endl;
+	glDeleteVertexArrays(1, &vao);
+	glDeleteBuffers(1, &vbo);
+	map[j*mapSize.x + i] = color+1;
+	prepareArrays(minCoords, program);
+	for (int j=0;j<mapSize.y;++j){
+		for (int i=0;i<mapSize.x;++i){
+			cout << map[j*mapSize.x+i];
+		}
+		cout << endl;
+	}
 }
+
 
 
 
