@@ -31,7 +31,7 @@ public:
 	bool collisionMoveLeft(const glm::ivec2 &pos, const glm::ivec2 &size) const;
 	bool collisionMoveRight(const glm::ivec2 &pos, const glm::ivec2 &size) const;
 	bool collisionMoveDown(const glm::ivec2 &pos, const glm::ivec2 &size, int *posY) const;
-	void colocaBola(int i, int j, int color);
+	void colocaBola(int i, int j, int color, int Bolax, int Bolay);
 
 private:
 	bool loadLevel(const string &levelFile);

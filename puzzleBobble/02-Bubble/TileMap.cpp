@@ -112,7 +112,13 @@ void TileMap::prepareArrays(const glm::vec2 &minCoords, ShaderProgram &program)
 			{
 				// Non-empty tile
 				nTiles++;
-				posTile = glm::vec2(minCoords.x + i * tileSize, minCoords.y + j * tileSize);
+
+				if(j%2==0)
+					posTile = glm::vec2(minCoords.x + i * tileSize, minCoords.y + j * tileSize);
+				else
+					posTile = glm::vec2(minCoords.x + i * tileSize+tileSize/2, minCoords.y + j * tileSize);
+
+
 				texCoordTile[0] = glm::vec2(0, float((tile-1)) / 4.f);
 				texCoordTile[1] = texCoordTile[0] + tileTexSize;
 				//texCoordTile[0] += halfTexel;
@@ -211,12 +217,12 @@ bool TileMap::collision(const glm::ivec2 &pos,int color)
 			int tile=map[j*mapSize.x + i];
 			if(tile!=0){
 				glm::vec2 posTile;
-				//if(j%2==0){
+				if(j%2==0){
 					posTile=glm::vec2(minCoords.x+i*tileSize,minCoords.y+j*tileSize);
-				/*}
+				}
 				else{
 					posTile=glm::vec2(minCoords.x+i*tileSize+tileSize/2,minCoords.y+j*tileSize);
-				}*/
+				}
 				int BolaJugadax=pos.x+tileSize/2;
 				int BolaJugaday=pos.y+tileSize/2;
 				int BolaMapax=posTile.x+tileSize/2;
@@ -230,9 +236,7 @@ bool TileMap::collision(const glm::ivec2 &pos,int color)
 				cout << "dist: " << dist << endl;
 				if(dist<=32){
 
-						colocaBola(BolaJugadax/32,BolaJugaday/32,color);
-
-
+					colocaBola(i,j,color,BolaJugadax,BolaJugaday);
 					return true;
 
 				}
@@ -242,23 +246,51 @@ bool TileMap::collision(const glm::ivec2 &pos,int color)
 	return false;
 }
 
-void TileMap::colocaBola(int i, int j, int color)
+void TileMap::colocaBola(int i, int j, int color, int Bolax, int Bolay)
 
 {
-	cout << "entra" << endl;
-	cout << "i:" << i << endl;
-	cout << "j: " << j << endl;
-	cout << "color:" << color << endl;
+	cout << i << " j" << j << endl;
+	int dist_anterior=100;
+	int posfx=0;
+	int posfy=0;
+	for (int jj=-1;jj<2;++jj){
+		for (int ii=-1;ii<2;++ii){
+			if((jj==-1 and ii==-1) or (ii==1 and jj==-1) or (ii==0 and jj==0)){
+
+			}
+			else {
+			cout << i+ii << " " << j+jj << endl;
+				int tile=map[(j+jj)*mapSize.x + (i+ii)];
+				if(tile==0){
+					glm::vec2 posTile;
+					if(j%2==0){
+						posTile=glm::vec2(minCoords.x+(i+ii)*tileSize,minCoords.y+(j+jj)*tileSize);
+					}
+					else{
+						posTile=glm::vec2(minCoords.x+(ii+i)*tileSize+tileSize/2,minCoords.y+(j+jj)*tileSize);
+					}
+					int BolaMapax=posTile.x+tileSize/2;
+					int BolaMapay=posTile.y+tileSize/2;
+
+					double dist=(sqrt(pow(abs(BolaMapax-Bolax),2)+pow(abs(BolaMapay-Bolay),2)));
+
+					if(dist_anterior>dist){
+						dist_anterior=dist;
+						posfx=i+ii;
+						posfy=j+jj;
+					}
+				}
+			}
+		}
+	}
+			
+
+
 	glDeleteVertexArrays(1, &vao);
 	glDeleteBuffers(1, &vbo);
-	map[j*mapSize.x + i] = color+1;
+	map[posfy*mapSize.x + posfx] = color+1;
 	prepareArrays(minCoords, program);
-	for (int j=0;j<mapSize.y;++j){
-		for (int i=0;i<mapSize.x;++i){
-			cout << map[j*mapSize.x+i];
-		}
-		cout << endl;
-	}
+
 }
 
 

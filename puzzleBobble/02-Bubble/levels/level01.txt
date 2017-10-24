@@ -4,7 +4,7 @@ TILEMAP
 images/Bolas.png 	-- Tilesheet
 1 4 	-- Number of tiles in tilesheet	
 11121111
-00031100
+11232120
 00000011
 00000000
 00000000
