@@ -113,7 +113,7 @@ void TileMap::prepareArrays(const glm::vec2 &minCoords, ShaderProgram &program)
 				// Non-empty tile
 				nTiles++;
 				posTile = glm::vec2(minCoords.x + i * tileSize, minCoords.y + j * tileSize);
-				texCoordTile[0] = glm::vec2(float((tile-1)%2) / tilesheetSize.x, float((tile-1)/2) / tilesheetSize.y);
+				texCoordTile[0] = glm::vec2(0, float((tile-1)) / 4.f);
 				texCoordTile[1] = texCoordTile[0] + tileTexSize;
 				//texCoordTile[0] += halfTexel;
 				texCoordTile[1] -= halfTexel;
@@ -229,7 +229,10 @@ bool TileMap::collision(const glm::ivec2 &pos,int color)
 				cout << "BolaJugaday: " << BolaJugaday << endl;
 				cout << "dist: " << dist << endl;
 				if(dist<=32){
-					colocaBola(i,j+1,color);
+
+						colocaBola(BolaJugadax/32,BolaJugaday/32,color);
+						
+
 					return true;
 
 				}
