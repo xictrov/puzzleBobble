@@ -210,7 +210,6 @@ bool TileMap::collisionMoveDown(const glm::ivec2 &pos, const glm::ivec2 &size, i
 
 bool TileMap::collision(const glm::ivec2 &pos,int color)
 {
-
 	for (int j=0;j<mapSize.y;++j){
 		for (int i=0;i<mapSize.x;++i){
 
@@ -228,11 +227,19 @@ bool TileMap::collision(const glm::ivec2 &pos,int color)
 				int BolaMapax=posTile.x+tileSize/2;
 				int BolaMapay=posTile.y+tileSize/2;
 
+				cout << BolaJugadax << ": BolaJugadaX     " ;
+				cout << BolaJugaday << ": BolaJugadaY" << endl;
 				double dist=(sqrt(pow(abs(BolaMapax-BolaJugadax),2)+pow(abs(BolaMapay-BolaJugaday),2)));
+				cout << "Distancia: " << dist << endl;
 				if(dist<=32){
 					colocaBola(j,i,color,BolaJugadax,BolaJugaday);
 					return true;
 				}
+				if(BolaJugaday<60){
+					colocaBola(0,(BolaJugadax-192.5f)/32,color);
+					return true;
+				}
+					
 			}
 		}
 	}
@@ -241,26 +248,23 @@ bool TileMap::collision(const glm::ivec2 &pos,int color)
 
 void TileMap::colocaBola(int j, int i, int color, int Bolax, int Bolay)
 {
-	cout << j << " , " << i << endl;
 	double dist_anterior = 100.0f;
 	int posfx = 0;
 	int posfy = 0;
+	int par=0;
+	if(j%2!=0){
+		par=-1;
+	}
+	else{
+		par=1;
+	}
 	for (int jj = -1; jj < 2; ++jj) {
 		for (int ii = -1; ii < 2; ++ii) {
-
-			if (!(jj == 0 && ii == 0)) {
-				
-				if (j % 2 == 0) {
-					if (!(jj == -1 && ii == 1) && !(jj == 1 && ii == 1)) {
-						//cout << jj << " , " << ii << endl;
+			if (!(jj == 0 && ii == 0) && !(jj == -1 && ii == par) && !(jj == 1 && ii == par) ) {
 						int tile = map[(j + jj)*mapSize.x + (i + ii)];
-
 						if (tile == 0 ) {
-
-							//cout << "En la " << j + jj << " , " << i + ii << " no hay una bola" << endl;
-
 							glm::vec2 posTile;
-							if (j % 2 == 0) {
+							if ((jj+j) % 2 == 0) {
 								posTile = glm::vec2(minCoords.x + (i + ii)*tileSize, minCoords.y + (j + jj)*tileSize);
 							}
 							else {
@@ -272,62 +276,30 @@ void TileMap::colocaBola(int j, int i, int color, int Bolax, int Bolay)
 
 							double dist = (sqrt(pow(abs(BolaMapax - Bolax), 2) + pow(abs(BolaMapay - Bolay), 2)));
 
-							cout << dist << endl;
-
 							if (dist_anterior > dist) {
 								dist_anterior = dist;
 								posfy = j + jj;
 								posfx = i + ii;
 							}
-							// << posfy << " , " << posfx << endl;
-						}
-					}
-				}
-				else {
-					if (!(jj == -1 && ii == -1) && !(jj == 1 && ii == -1)) {
-						//cout << jj << " , " << ii << endl;
-
-						int tile = map[(j + jj)*mapSize.x + (i + ii)];
-
-						if (tile == 0) {
-
-							//cout << "En la " << j + jj << " , " << i + ii << " no hay una bola" << endl;
-
-							glm::vec2 posTile;
-							if (j % 2 == 0) {
-								posTile = glm::vec2(minCoords.x + (i + ii)*tileSize, minCoords.y + (j + jj)*tileSize);
-							}
-							else {
-								posTile = glm::vec2(minCoords.x + (i + ii)*tileSize + tileSize / 2, minCoords.y + (j + jj)*tileSize);
-							}
-
-							int BolaMapax = posTile.x + tileSize / 2;
-							int BolaMapay = posTile.y + tileSize / 2;
-
-							double dist = (sqrt(pow(abs(BolaMapax - Bolax), 2) + pow(abs(BolaMapay - Bolay), 2)));
-
-							cout << dist << endl;
-
-							if (dist_anterior > dist) {
-								dist_anterior = dist;
-								posfy = j + jj;
-								posfx = i + ii;
-							}
-							cout << posfy << " , " << posfx << endl;
 						}
 					}
 				}
 			}
-		}
-	}
-
-	//cout << posfx << " , " << posfy << endl;
-			
 	glDeleteVertexArrays(1, &vao);
 	glDeleteBuffers(1, &vbo);
 	map[posfy*mapSize.x + posfx] = color+1;
 	prepareArrays(minCoords, program);
+	}
 
+
+
+void TileMap::colocaBola(int j, int i, int color)
+{
+
+	glDeleteVertexArrays(1, &vao);
+	glDeleteBuffers(1, &vbo);
+	map[j*mapSize.x + i] = color+1;
+	prepareArrays(minCoords, program);
 }
 
 

@@ -3,7 +3,7 @@
 #include <cmath>
 #include <glm/gtc/matrix_transform.hpp>
 #include <GL/glew.h>
-#include <GL/glut.h>
+#include <GLUT/glut.h>
 #include "Scene.h"
 #include "Game.h"
 
@@ -67,11 +67,11 @@ void Scene::update(int deltaTime)
 
 	if (Game::instance().getSpecialKey(GLUT_KEY_LEFT))
 	{
-		angle -= 2;
+		angle -= 1;
 	}
 	else if (Game::instance().getSpecialKey(GLUT_KEY_RIGHT))
 	{
-		angle += 2;
+		angle += 1;
 	}
 	if (angle > 170) angle = 170;
 	if (angle < 10) angle = 10;

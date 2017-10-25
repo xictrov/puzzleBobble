@@ -2,7 +2,7 @@
 #include <cmath>
 #include <iostream>
 #include <GL/glew.h>
-#include <GL/glut.h>
+#include <GLUT/glut.h>
 #include "Player.h"
 #include "Game.h"
 
@@ -40,19 +40,18 @@ void Player::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram, in
 void Player::update(int deltaTime, float angle, bool &cambio, bool &acaba)
 {
 
+
 	sprite->update(deltaTime, angle);
 
-	if (posPlayer.x < -112.5f || posPlayer.x>112.f ) {
+	if (posPlayer.x < -112.5f || posPlayer.x>112.5f ) {
 		angle = M_PI - angle;
 		cambio = true;
 	}
 
 	posPlayer.x -= cos(angle) * 10;
 	posPlayer.y -= sin(angle) * 10;
-
-
-	sprite->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)));
 	acaba=map->collision(posPlayer+tileMapDispl, color);
+	sprite->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)));
 
 
 }
