@@ -15,7 +15,7 @@ class Player
 
 public:
 	void init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram, int colorbola);
-	void update(int deltaTime, float angle, bool &cambio, bool &acaba);
+	void update(int deltaTime, float angle, bool &cambio, bool &acaba, bool &gameover);
 	void render();
 
 	void setTileMap(TileMap *tileMap);

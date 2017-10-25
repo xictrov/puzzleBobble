@@ -27,11 +27,11 @@ public:
 	void free();
 
 	int getTileSize() const { return tileSize; }
-	bool collision(const glm::ivec2 &pos,int color);
+	bool collision(const glm::ivec2 &pos,int color, bool &gameover);
 	bool collisionMoveLeft(const glm::ivec2 &pos, const glm::ivec2 &size) const;
 	bool collisionMoveRight(const glm::ivec2 &pos, const glm::ivec2 &size) const;
 	bool collisionMoveDown(const glm::ivec2 &pos, const glm::ivec2 &size, int *posY) const;
-	void colocaBola(int i, int j, int color, int Bolax, int Bolay);
+	void colocaBola(int i, int j, int color, int Bolax, int Bolay, bool &gameover);
 	void colocaBola(int i, int j, int color);
 
 private:

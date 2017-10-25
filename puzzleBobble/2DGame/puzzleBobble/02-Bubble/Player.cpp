@@ -37,7 +37,7 @@ void Player::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram, in
 
 }
 
-void Player::update(int deltaTime, float angle, bool &cambio, bool &acaba)
+void Player::update(int deltaTime, float angle, bool &cambio, bool &acaba, bool &gameover)
 {
 
 
@@ -50,7 +50,7 @@ void Player::update(int deltaTime, float angle, bool &cambio, bool &acaba)
 
 	posPlayer.x -= cos(angle) * 10;
 	posPlayer.y -= sin(angle) * 10;
-	acaba=map->collision(posPlayer+tileMapDispl, color);
+	acaba=map->collision(posPlayer+tileMapDispl, color, gameover);
 	sprite->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)));
 
 

@@ -16,6 +16,7 @@
 bool cambio = false;
 bool acaba = false;
 bool empieza = false;
+bool gameover=false;
 
 Scene::Scene()
 {
@@ -85,11 +86,12 @@ void Scene::update(int deltaTime)
 		empieza = true;
 	}
 	if (empieza) {
-		player->update(deltaTime, numRadBola, cambio, acaba);
+		player->update(deltaTime, numRadBola, cambio, acaba,gameover);
 		if (cambio) angle = 180 - angle;
 		cambio = false;
 	}
 	if (acaba) {
+
 		empieza = false;
 		acaba = false;
 		angle=90.0f;
@@ -97,6 +99,10 @@ void Scene::update(int deltaTime)
 		player->init(glm::ivec2(305.f, 390.f), texProgram,rand()%4);
 		//player->setPosition(glm::vec2(INIT_PLAYER_X_TILES * map->getTileSize(), INIT_PLAYER_Y_TILES * map->getTileSize()));
 		player->setTileMap(map);
+	}
+	if(gameover){
+			map = TileMap::createTileMap("levels/level01.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
+			gameover=false;
 	}
 
 

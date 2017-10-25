@@ -208,7 +208,7 @@ bool TileMap::collisionMoveDown(const glm::ivec2 &pos, const glm::ivec2 &size, i
 	return false;
 }
 
-bool TileMap::collision(const glm::ivec2 &pos,int color)
+bool TileMap::collision(const glm::ivec2 &pos,int color, bool &gameover)
 {
 	for (int j=0;j<mapSize.y;++j){
 		for (int i=0;i<mapSize.x;++i){
@@ -232,7 +232,7 @@ bool TileMap::collision(const glm::ivec2 &pos,int color)
 				double dist=(sqrt(pow(abs(BolaMapax-BolaJugadax),2)+pow(abs(BolaMapay-BolaJugaday),2)));
 				cout << "Distancia: " << dist << endl;
 				if(dist<=32){
-					colocaBola(j,i,color,BolaJugadax,BolaJugaday);
+					colocaBola(j,i,color,BolaJugadax,BolaJugaday,gameover);
 					return true;
 				}
 				if(BolaJugaday<60){
@@ -246,7 +246,7 @@ bool TileMap::collision(const glm::ivec2 &pos,int color)
 	return false;
 }
 
-void TileMap::colocaBola(int j, int i, int color, int Bolax, int Bolay)
+void TileMap::colocaBola(int j, int i, int color, int Bolax, int Bolay, bool &gameover)
 {
 	double dist_anterior = 100.0f;
 	int posfx = 0;
@@ -290,6 +290,7 @@ void TileMap::colocaBola(int j, int i, int color, int Bolax, int Bolay)
 	glDeleteBuffers(1, &vbo);
 	map[posfy*mapSize.x + posfx] = color+1;
 	prepareArrays(minCoords, program);
+	if(posfy==10) gameover=true;
 	}
 
 
