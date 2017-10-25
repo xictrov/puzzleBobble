@@ -1,5 +1,5 @@
 #include <GL/glew.h>
-#include <GL/gl.h>
+#include <OpenGL/gl.h>
 #include "TexturedQuad.h"
 
 

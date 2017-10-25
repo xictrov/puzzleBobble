@@ -236,7 +236,7 @@ bool TileMap::collision(const glm::ivec2 &pos,int color)
 					return true;
 				}
 				if(BolaJugaday<60){
-					colocaBola(0,(BolaJugadax-192.5f)/32,color);
+					colocaBola(0,(BolaJugadax-193.f)/32,color);
 					return true;
 				}
 
@@ -260,9 +260,10 @@ void TileMap::colocaBola(int j, int i, int color, int Bolax, int Bolay)
 	}
 	for (int jj = -1; jj < 2; ++jj) {
 		for (int ii = -1; ii < 2; ++ii) {
-			if (!(jj == 0 && ii == 0) && !(jj == -1 && ii == par) && !(jj == 1 && ii == par) ) {
+			if (!(jj == 0 && ii == 0) && !(jj == -1 && ii == par) && !(jj == 1 && ii == par) && (((j+jj)%2==0) || ((j+jj%2!=0 && (i+ii)<7)))) {
+						
 						int tile = map[(j + jj)*mapSize.x + (i + ii)];
-						if (tile == 0 ) {
+						if (tile == 0) {
 							glm::vec2 posTile;
 							if ((jj+j) % 2 == 0) {
 								posTile = glm::vec2(minCoords.x + (i + ii)*tileSize, minCoords.y + (j + jj)*tileSize);
@@ -275,11 +276,11 @@ void TileMap::colocaBola(int j, int i, int color, int Bolax, int Bolay)
 							int BolaMapay = posTile.y + tileSize / 2;
 
 							double dist = (sqrt(pow(abs(BolaMapax - Bolax), 2) + pow(abs(BolaMapay - Bolay), 2)));
-
+							cout << "i+ii" << i+ii << "   j+jj    " <<j+jj << endl << "Distancia: " << dist << endl;
 							if (dist_anterior > dist) {
-								dist_anterior = dist;
-								posfy = j + jj;
-								posfx = i + ii;
+									dist_anterior = dist;
+									posfy = j + jj;
+									posfx = i + ii;
 							}
 						}
 					}
