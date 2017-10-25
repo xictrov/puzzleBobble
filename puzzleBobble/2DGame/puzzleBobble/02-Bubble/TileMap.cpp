@@ -239,7 +239,7 @@ bool TileMap::collision(const glm::ivec2 &pos,int color)
 					colocaBola(0,(BolaJugadax-192.5f)/32,color);
 					return true;
 				}
-					
+
 			}
 		}
 	}
