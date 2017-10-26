@@ -29,6 +29,8 @@ public:
 	void update(int deltaTime);
 	void render();
 
+	bool getGameOver() { return gameOver; }
+
 private:
 	void initShaders();
 
@@ -42,6 +44,7 @@ private:
 	Quad *quad,*techo;
 	TexturedQuad *texQuad, *textecho;
 	Texture texs,texturetecho;
+	bool gameOver;
 };
 
 

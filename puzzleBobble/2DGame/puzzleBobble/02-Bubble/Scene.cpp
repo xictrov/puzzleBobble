@@ -3,9 +3,12 @@
 #include <cmath>
 #include <glm/gtc/matrix_transform.hpp>
 #include <GL/glew.h>
-#include <GLUT/glut.h>
+#include <GL/glut.h>
+#include <time.h> 
 #include "Scene.h"
 #include "Game.h"
+
+using namespace std;
 
 #define SCREEN_X 192
 #define SCREEN_Y 48
@@ -16,9 +19,10 @@
 bool cambio = false;
 bool acaba = false;
 bool empieza = false;
-bool gameover=false;
-int tiempo=0;
-int baja=0;
+bool gameover = false;
+int tiempo = 0;
+int baja = 0;
+float angleAux;
 
 Scene::Scene()
 {
@@ -81,17 +85,17 @@ void Scene::update(int deltaTime)
 	if(!gameover){
 
 		
-		if(tiempo%200==0){
+		if(tiempo%1000==0){
 			baja+=1;
-			map->BajaMapa(gameover);
+			map->bajaMapa(gameover);
 		}
 		if (Game::instance().getSpecialKey(GLUT_KEY_LEFT))
 		{
-			angle -= 1;
+			angle -= 2;
 		}
 		else if (Game::instance().getSpecialKey(GLUT_KEY_RIGHT))
 		{
-			angle += 1;
+			angle += 2;
 		}
 		if (angle > 170) angle = 170;
 		if (angle < 10) angle = 10;
@@ -103,6 +107,12 @@ void Scene::update(int deltaTime)
 
 
 		if (Game::instance().getSpecialKey(GLUT_KEY_UP)) {
+			angleAux = angle;
+			tiempo = 0;
+			empieza = true;
+		}
+		if (tiempo % 800 == 0) {
+			angleAux = angle;
 			empieza = true;
 		}
 		if (empieza) {
@@ -112,24 +122,16 @@ void Scene::update(int deltaTime)
 		}
 
 		if (acaba) {
-			player->init(glm::ivec2(305.f,390.f), texProgram,playernext->color);
+			player->init(glm::ivec2(305.f, 390.f), texProgram, playernext->color);
 			player->setTileMap(map);
 			empieza = false;
 			acaba = false;
-			angle=90.0f;
-			playernext->init(glm::ivec2(250.f, 390.f), texProgram,rand()%4);
+			angle = angleAux;
+			playernext->init(glm::ivec2(250.f, 390.f), texProgram, rand() % 4);
 			playernext->setTileMap(map);
 
 		}
-		if(tiempo%300==0){
-			empieza=true;
-			player->update(deltaTime, numRadBola, cambio,acaba,gameover);
-			if (cambio) angle = 180 - angle;
-			cambio = false;	
-
-		}
-
-		if(gameover){
+		if(gameover) {
 				baja=0;		
 				cambio = false;
 				acaba = false;
@@ -139,9 +141,6 @@ void Scene::update(int deltaTime)
 				playernext->setTileMap(map);
 				player->init(glm::ivec2(305.f, 390.f), texProgram,rand()%4);
 				player->setTileMap(map);
-
-
-
 		}
 	}
 

@@ -1,0 +1,9 @@
+﻿  Scene.cpp
+c:\users\vimar\desktop\puzzlebobble\puzzlebobble\2dgame\puzzlebobble\02-bubble\scene.cpp(44): warning C4244: 'argumento': conversión de 'time_t' a 'unsigned int'; posible pérdida de datos
+c:\users\vimar\desktop\puzzlebobble\puzzlebobble\2dgame\puzzlebobble\02-bubble\scene.cpp(103): warning C4244: 'inicializando': conversión de 'double' a 'float'; posible pérdida de datos
+c:\users\vimar\desktop\puzzlebobble\puzzlebobble\2dgame\puzzlebobble\02-bubble\scene.cpp(104): warning C4244: 'inicializando': conversión de 'double' a 'float'; posible pérdida de datos
+SOIL.lib(image_DXT.obj) : warning LNK4099: no se encontr¾ PDB 'vc100.pdb' con 'SOIL.lib(image_DXT.obj)' o en 'C:\Users\vimar\Desktop\puzzleBobble\puzzleBobble\2DGame\puzzleBobble\02-Bubble\Debug\vc100.pdb'; se vincularß el objeto sin tener en cuenta informaci¾n de depuraci¾n
+SOIL.lib(image_helper.obj) : warning LNK4099: no se encontr¾ PDB 'vc100.pdb' con 'SOIL.lib(image_helper.obj)' o en 'C:\Users\vimar\Desktop\puzzleBobble\puzzleBobble\2DGame\puzzleBobble\02-Bubble\Debug\vc100.pdb'; se vincularß el objeto sin tener en cuenta informaci¾n de depuraci¾n
+SOIL.lib(SOIL.obj) : warning LNK4099: no se encontr¾ PDB 'vc100.pdb' con 'SOIL.lib(SOIL.obj)' o en 'C:\Users\vimar\Desktop\puzzleBobble\puzzleBobble\2DGame\puzzleBobble\02-Bubble\Debug\vc100.pdb'; se vincularß el objeto sin tener en cuenta informaci¾n de depuraci¾n
+SOIL.lib(stb_image_aug.obj) : warning LNK4099: no se encontr¾ PDB 'vc100.pdb' con 'SOIL.lib(stb_image_aug.obj)' o en 'C:\Users\vimar\Desktop\puzzleBobble\puzzleBobble\2DGame\puzzleBobble\02-Bubble\Debug\vc100.pdb'; se vincularß el objeto sin tener en cuenta informaci¾n de depuraci¾n
+  02-Bubble.vcxproj -> C:\Users\vimar\Desktop\puzzleBobble\puzzleBobble\2DGame\puzzleBobble\02-Bubble\Debug\02-Bubble.exe

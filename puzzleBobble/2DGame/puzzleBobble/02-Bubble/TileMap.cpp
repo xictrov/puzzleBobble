@@ -83,6 +83,14 @@ bool TileMap::loadLevel(const string &levelFile)
 	tileTexSize = glm::vec2(1.f / tilesheetSize.x, 1.f / tilesheetSize.y);
 
 	map = new int[mapSize.x * mapSize.y];
+	visitedMap = new bool[mapSize.x * mapSize.y];
+	for (int j = 0; j < mapSize.y; j++)
+	{
+		for (int i = 0; i < mapSize.x; i++)
+		{
+			visitedMap[j*mapSize.x + i] = false;
+		}
+	}
 	for(int j=0; j<mapSize.y; j++)
 	{
 		for(int i=0; i<mapSize.x; i++)
@@ -243,7 +251,6 @@ bool TileMap::collision(const glm::ivec2 &pos,int color, bool &gameover)
 					colocaBola(0,(BolaJugadax-193.f)/32,color);
 					return true;
 				}
-
 			}
 		}
 	}
@@ -293,6 +300,21 @@ void TileMap::colocaBola(int j, int i, int color, int Bolax, int Bolay, bool &ga
 	glDeleteBuffers(1, &vbo);
 	map[posfy*mapSize.x + posfx] = color+1;
 	prepareArrays(minCoords, program,gameover);
+
+	searchBallsToDestroy(posfy, posfx);
+
+	if (ballsToDestroy.size() != 0) { ballsToDestroy.push_back(glm::ivec2(posfx, posfy)); }
+
+	if (ballsToDestroy.size() >= 3) deleteBalls(ballsToDestroy, gameover);
+
+	else clearVectors();
+
+	for (int k = 0; k < mapSize.x; ++k) {
+		if (map[0 * mapSize.x + k] != 0) searchAloneBalls(0, k);
+	}
+
+	deleteAloneBalls(gameover);
+
 	if(posfy>=10-bajada) {
 		gameover=true;
 		bajada=0;
@@ -312,25 +334,128 @@ void TileMap::colocaBola(int j, int i, int color)
 }
 
 
-void TileMap::BajaMapa(bool &gameover){
+void TileMap::bajaMapa(bool &gameover){
 	bajada+=1;
 	minCoords.y+=32;
-	if(gameover) bajada=0;
-	/*for(int j=0; j<mapSize.y; j++)
-	{
-		for(int i=0; i<mapSize.x; i++)
-		{
-			int tile = map[j * mapSize.x + i];
-			if(tile != 0){
-				map[j*mapSize.x+i]+=1;
-				map[j*mapSize.x+i]=1+map[j*mapSize.x+i]%4;
-			}
-
-		}
-	}*/
+	if (gameover) bajada=0;
+	glDeleteVertexArrays(1, &vao);
+	glDeleteBuffers(1, &vbo);
 	prepareArrays(minCoords,program,gameover);
 }
 
+void TileMap::searchBallsToDestroy(int j, int i)
+{
+	static vector<pair<int, int>> positions = {
+		{ -1, -1 },
+		{ -1,  0 },
+		{ 0, -1 },
+		{ 0,  1 },
+		{ 1,  0 },
+		{ 1, -1 },
+	};
+	int ni, nj;
+	glm::ivec2 vecino;
+
+	int color = map[j*mapSize.x + i];
+
+	visitedMap[j*mapSize.x + i] = true;
+
+	for (int k = 0; k < 6; ++k) {
+		nj = positions[k].first;
+		ni = positions[k].second;
+		if (j % 2 != 0 && (nj == -1 || nj == 1) && ni == -1) ni = 1;
+		vecino.x = i + ni;
+		vecino.y = j + nj;
+
+		if (vecino.x >= 0 && vecino.x <= mapSize.x &&
+			vecino.y >= 0 && vecino.y <= mapSize.y &&
+			!visitedMap[vecino.y*mapSize.x + vecino.x] &&
+			map[vecino.y*mapSize.x + vecino.x] == color) {
+
+			ballsToDestroy.push_back(vecino);
+
+			searchBallsToDestroy(vecino.y, vecino.x);
+		}
+	}
+}
+
+void TileMap::searchAloneBalls(int j, int i)
+{
+	static vector<pair<int, int>> positions = {
+		{ -1, -1 },
+		{ -1,  0 },
+		{ 0, -1 },
+		{ 0,  1 },
+		{ 1,  0 },
+		{ 1, -1 },
+	};
+	int ni, nj;
+	glm::ivec2 vecino;
+
+	visitedMap[j*mapSize.x + i] = true;
+
+	for (int k = 0; k < 6; ++k) {
+		nj = positions[k].first;
+		ni = positions[k].second;
+		if (j % 2 != 0 && (nj == -1 || nj == 1) && ni == -1) ni = 1;
+		vecino.x = i + ni;
+		vecino.y = j + nj;
+
+		if (vecino.x >= 0 && vecino.x < mapSize.x &&
+			vecino.y >= 0 && vecino.y < mapSize.y &&
+			!visitedMap[vecino.y*mapSize.x + vecino.x] &&
+			map[vecino.y*mapSize.x + vecino.x] != 0) {
+
+			searchAloneBalls(vecino.y, vecino.x);
+		}
+	}
+}
+
+void TileMap::deleteBalls(vector<glm::ivec2> &ballsToDelete, bool &gameover)
+{
+	int i, j;
+	for (int k = 0; k < ballsToDelete.size(); ++k) {
+		i = ballsToDelete[k].x;
+		j = ballsToDelete[k].y;
+		map[j*mapSize.x + i] = 0;
+	}
+
+	clearVectors();
+
+	glDeleteVertexArrays(1, &vao);
+	glDeleteBuffers(1, &vbo);
+	prepareArrays(minCoords, program, gameover);
+}
+
+void TileMap::deleteAloneBalls(bool &gameover)
+{
+	for (int j = 0; j < mapSize.y; j++)
+	{
+		for (int i = 0; i < mapSize.x; i++)
+		{
+			if (visitedMap[j*mapSize.x + i] == false && map[j*mapSize.x + i] != 0) map[j*mapSize.x + i] = 0;
+		}
+	}
+
+	clearVectors();
+
+	glDeleteVertexArrays(1, &vao);
+	glDeleteBuffers(1, &vbo);
+	prepareArrays(minCoords, program, gameover);
+}
+
+void TileMap::clearVectors()
+{
+	ballsToDestroy.clear();
+
+	for (int j = 0; j < mapSize.y; j++)
+	{
+		for (int i = 0; i < mapSize.x; i++)
+		{
+			visitedMap[j*mapSize.x + i] = false;
+		}
+	}
+}
 
 
 
