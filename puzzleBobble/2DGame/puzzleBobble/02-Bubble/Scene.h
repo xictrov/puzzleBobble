@@ -34,7 +34,7 @@ private:
 
 private:
 	TileMap *map;
-	Player *player;
+	Player *player, *playernext;
 	Arrow *arrow;
 	ShaderProgram texProgram, simpleProgram;
 	float currentTime, angle;

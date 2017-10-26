@@ -113,7 +113,10 @@ void TileMap::prepareArrays(const glm::vec2 &minCoords, ShaderProgram &program, 
 			tile = map[j * mapSize.x + i];
 			if(tile != 0)
 			{
-				if(j+bajada >= 10) gameover=true;
+				if(j+bajada >= 10) {
+					gameover=true;
+					bajada=0;
+				}
 				// Non-empty tile
 				nTiles++;
 
@@ -236,7 +239,6 @@ bool TileMap::collision(const glm::ivec2 &pos,int color, bool &gameover)
 					colocaBola(j,i,color,BolaJugadax,BolaJugaday,gameover);
 					return true;
 				}
-				cout << bajada << endl;
 				if(BolaJugaday<60+bajada*32){
 					colocaBola(0,(BolaJugadax-193.f)/32,color);
 					return true;
@@ -313,9 +315,20 @@ void TileMap::colocaBola(int j, int i, int color)
 void TileMap::BajaMapa(bool &gameover){
 	bajada+=1;
 	minCoords.y+=32;
-	prepareArrays(minCoords,program,gameover);
 	if(gameover) bajada=0;
+	/*for(int j=0; j<mapSize.y; j++)
+	{
+		for(int i=0; i<mapSize.x; i++)
+		{
+			int tile = map[j * mapSize.x + i];
+			if(tile != 0){
+				map[j*mapSize.x+i]+=1;
+				map[j*mapSize.x+i]=1+map[j*mapSize.x+i]%4;
+			}
 
+		}
+	}*/
+	prepareArrays(minCoords,program,gameover);
 }
 
 
