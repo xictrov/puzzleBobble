@@ -3,8 +3,8 @@ TILEMAP
 32 32 							-- Tile size & block size
 images/Bolas.png 	-- Tilesheet
 1 4 	-- Number of tiles in tilesheet	
-00000000
-00000100
+00000001
+00000300
 00000000
 00000000
 00000000

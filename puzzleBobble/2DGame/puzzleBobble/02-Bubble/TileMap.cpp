@@ -6,6 +6,7 @@
 
 
 using namespace std;
+int bajada=0;
 
 
 TileMap *TileMap::createTileMap(const string &levelFile, const glm::vec2 &minCoords, ShaderProgram &program)
@@ -21,7 +22,9 @@ TileMap::TileMap(const string &levelFile, const glm::vec2 &minCoords, ShaderProg
 	loadLevel(levelFile);
 	this->minCoords=minCoords;
 	this->program=program;
-	prepareArrays(minCoords, program);
+	this->level=levelFile;
+	bool aux=false;
+	prepareArrays(minCoords, program,aux);
 }
 
 TileMap::~TileMap()
@@ -96,7 +99,7 @@ bool TileMap::loadLevel(const string &levelFile)
 	return true;
 }
 
-void TileMap::prepareArrays(const glm::vec2 &minCoords, ShaderProgram &program)
+void TileMap::prepareArrays(const glm::vec2 &minCoords, ShaderProgram &program, bool &gameover)
 {
 	int tile, nTiles = 0;
 	glm::vec2 posTile, texCoordTile[2], halfTexel;
@@ -110,6 +113,7 @@ void TileMap::prepareArrays(const glm::vec2 &minCoords, ShaderProgram &program)
 			tile = map[j * mapSize.x + i];
 			if(tile != 0)
 			{
+				if(j+bajada >= 10) gameover=true;
 				// Non-empty tile
 				nTiles++;
 
@@ -227,15 +231,13 @@ bool TileMap::collision(const glm::ivec2 &pos,int color, bool &gameover)
 				int BolaMapax=posTile.x+tileSize/2;
 				int BolaMapay=posTile.y+tileSize/2;
 
-				cout << BolaJugadax << ": BolaJugadaX     " ;
-				cout << BolaJugaday << ": BolaJugadaY" << endl;
 				double dist=(sqrt(pow(abs(BolaMapax-BolaJugadax),2)+pow(abs(BolaMapay-BolaJugaday),2)));
-				cout << "Distancia: " << dist << endl;
 				if(dist<=32){
 					colocaBola(j,i,color,BolaJugadax,BolaJugaday,gameover);
 					return true;
 				}
-				if(BolaJugaday<60){
+				cout << bajada << endl;
+				if(BolaJugaday<60+bajada*32){
 					colocaBola(0,(BolaJugadax-193.f)/32,color);
 					return true;
 				}
@@ -276,7 +278,6 @@ void TileMap::colocaBola(int j, int i, int color, int Bolax, int Bolay, bool &ga
 							int BolaMapay = posTile.y + tileSize / 2;
 
 							double dist = (sqrt(pow(abs(BolaMapax - Bolax), 2) + pow(abs(BolaMapay - Bolay), 2)));
-							cout << "i+ii" << i+ii << "   j+jj    " <<j+jj << endl << "Distancia: " << dist << endl;
 							if (dist_anterior > dist) {
 									dist_anterior = dist;
 									posfy = j + jj;
@@ -289,9 +290,12 @@ void TileMap::colocaBola(int j, int i, int color, int Bolax, int Bolay, bool &ga
 	glDeleteVertexArrays(1, &vao);
 	glDeleteBuffers(1, &vbo);
 	map[posfy*mapSize.x + posfx] = color+1;
-	prepareArrays(minCoords, program);
-	if(posfy==10) gameover=true;
+	prepareArrays(minCoords, program,gameover);
+	if(posfy>=10-bajada) {
+		gameover=true;
+		bajada=0;
 	}
+}
 
 
 
@@ -301,10 +305,18 @@ void TileMap::colocaBola(int j, int i, int color)
 	glDeleteVertexArrays(1, &vao);
 	glDeleteBuffers(1, &vbo);
 	map[j*mapSize.x + i] = color+1;
-	prepareArrays(minCoords, program);
+	bool aux=false;
+	prepareArrays(minCoords, program,aux);
 }
 
 
+void TileMap::BajaMapa(bool &gameover){
+	bajada+=1;
+	minCoords.y+=32;
+	prepareArrays(minCoords,program,gameover);
+	if(gameover) bajada=0;
+
+}
 
 
 

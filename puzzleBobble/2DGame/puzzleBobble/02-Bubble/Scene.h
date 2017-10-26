@@ -39,9 +39,9 @@ private:
 	ShaderProgram texProgram, simpleProgram;
 	float currentTime, angle;
 	glm::mat4 projection;
-	Quad *quad;
-	TexturedQuad *texQuad;
-	Texture texs;
+	Quad *quad,*techo;
+	TexturedQuad *texQuad, *textecho;
+	Texture texs,texturetecho;
 };
 
 

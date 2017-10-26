@@ -33,10 +33,11 @@ public:
 	bool collisionMoveDown(const glm::ivec2 &pos, const glm::ivec2 &size, int *posY) const;
 	void colocaBola(int i, int j, int color, int Bolax, int Bolay, bool &gameover);
 	void colocaBola(int i, int j, int color);
+	void BajaMapa(bool &gameover);
 
 private:
 	bool loadLevel(const string &levelFile);
-	void prepareArrays(const glm::vec2 &minCoords, ShaderProgram &program);
+	void prepareArrays(const glm::vec2 &minCoords, ShaderProgram &program, bool &gameover);
 
 private:
 	GLuint vao;
@@ -48,6 +49,7 @@ private:
 	Texture tilesheet;
 	glm::vec2 tileTexSize;
 	glm::vec2 minCoords;
+	string level;
 	int *map;
 
 };

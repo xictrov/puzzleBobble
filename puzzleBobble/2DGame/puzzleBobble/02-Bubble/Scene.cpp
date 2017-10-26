@@ -17,6 +17,8 @@ bool cambio = false;
 bool acaba = false;
 bool empieza = false;
 bool gameover=false;
+int tiempo=0;
+int baja=0;
 
 Scene::Scene()
 {
@@ -65,6 +67,7 @@ void Scene::init()
 void Scene::update(int deltaTime)
 {
 	currentTime += deltaTime;
+	tiempo+=1;
 
 	if (Game::instance().getSpecialKey(GLUT_KEY_LEFT))
 	{
@@ -88,21 +91,33 @@ void Scene::update(int deltaTime)
 	if (empieza) {
 		player->update(deltaTime, numRadBola, cambio, acaba,gameover);
 		if (cambio) angle = 180 - angle;
-		cambio = false;
+		cambio = false;	
 	}
+
 	if (acaba) {
 
 		empieza = false;
 		acaba = false;
 		angle=90.0f;
-		player = new Player();
 		player->init(glm::ivec2(305.f, 390.f), texProgram,rand()%4);
-		//player->setPosition(glm::vec2(INIT_PLAYER_X_TILES * map->getTileSize(), INIT_PLAYER_Y_TILES * map->getTileSize()));
 		player->setTileMap(map);
+
 	}
-	if(gameover){
-			map = TileMap::createTileMap("levels/level01.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
+	if(tiempo%100==0){
+		baja+=1;
+		map->BajaMapa(gameover);
+	}
+
+	if(gameover){	
+			baja=0;		
+			cambio = false;
+			acaba = false;
+			empieza = false;
 			gameover=false;
+			map = TileMap::createTileMap("levels/level01.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
+			player->init(glm::ivec2(305.f, 390.f), texProgram,rand()%4);
+			player->setTileMap(map);
+
 	}
 
 
@@ -133,6 +148,21 @@ void Scene::render()
 	modelview = glm::mat4(1.0f);
 	texProgram.setUniformMatrix4f("modelview", modelview);
 	texProgram.setUniform2f("texCoordDispl", 0.f, 0.f);
+
+
+	glm::vec2 geom[2] = { glm::vec2(SCREEN_X, SCREEN_Y), glm::vec2(SCREEN_X+250, SCREEN_Y+baja*32.f) };
+	glm::vec2 texCoords[2] = { glm::vec2(0.f, 0.f), glm::vec2(1.f, 1.f) };
+	techo = Quad::createQuad(SCREEN_X, SCREEN_Y, SCREEN_X+250, baja*32.f, simpleProgram);
+	textecho = TexturedQuad::createTexturedQuad(geom, texCoords, texProgram);
+	// Load textures
+	texturetecho.loadFromFile("images/Bolas.png", TEXTURE_PIXEL_FORMAT_RGBA);
+	texProgram.use();
+	texProgram.setUniformMatrix4f("projection", projection);
+	texProgram.setUniform4f("color", 1.0f, 1.0f, 1.0f, 1.0f);
+
+	texProgram.setUniformMatrix4f("modelview", modelview);
+	texProgram.setUniform2f("texCoordDispl", 0.f, 0.f);
+	textecho->render(texturetecho);
 
 	map->render();
 
