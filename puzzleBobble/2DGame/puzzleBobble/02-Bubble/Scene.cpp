@@ -20,7 +20,8 @@ bool cambio = false;
 bool acaba = false;
 bool empieza = false;
 bool gameover = false;
-int tiempo = 0;
+int tiempoDisparo = 0;
+int tiempoTecho = 0;
 int baja = 0;
 float angleAux;
 
@@ -51,9 +52,12 @@ void Scene::init()
 
 	// Load textures
 	texs.loadFromFile("images/gameBackground.png", TEXTURE_PIXEL_FORMAT_RGBA);
+	texturetecho.loadFromFile("images/techo.png", TEXTURE_PIXEL_FORMAT_RGBA);
 
 
 	map = TileMap::createTileMap("levels/level01.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
+
+	mapa = map->convertToSprites();
 
 	player = new Player();
 	player->init(glm::ivec2(305.f, 390.f), texProgram,rand()%4);
@@ -61,7 +65,7 @@ void Scene::init()
 	player->setTileMap(map);
 
 	playernext = new Player();
-	playernext->init(glm::ivec2(250.f, 390.f), texProgram,rand()%4);
+	playernext->init(glm::ivec2(250.f, 425.f), texProgram,rand()%4);
 	//player->setPosition(glm::vec2(INIT_PLAYER_X_TILES * map->getTileSize(), INIT_PLAYER_Y_TILES * map->getTileSize()));
 	playernext->setTileMap(map);
 
@@ -72,22 +76,27 @@ void Scene::init()
 	projection = glm::ortho(0.f, float(SCREEN_WIDTH -1), float(SCREEN_HEIGHT -1), 0.f);
 	currentTime = 0.0f;
 	angle = 90.0f;
+
+
+	glm::vec2 geomTecho[2] = { glm::vec2(SCREEN_X, -480.f + SCREEN_Y + baja*32.f), glm::vec2(SCREEN_X + 250, SCREEN_Y + baja*32.f) };
+	glm::vec2 texCoordsTecho[2] = { glm::vec2(0.f, 0.f), glm::vec2(1.f, 1.f) };
+	techo = Quad::createQuad(SCREEN_X, -480.f + SCREEN_Y + (baja + 1) * 32, SCREEN_X + 250, SCREEN_Y + (baja + 1)*32.f, simpleProgram);
+	textecho = TexturedQuad::createTexturedQuad(geomTecho, texCoordsTecho, texProgram);
 }
 
 void Scene::update(int deltaTime)
 {
 	currentTime += deltaTime;
-	tiempo+=1;
+	tiempoDisparo+=1;
+	tiempoTecho += 1;
 	if(Game::instance().getSpecialKey(GLUT_KEY_DOWN))
 	{
 		gameover=false;
 	}
 	if(!gameover){
-
-		
-		if(tiempo%1000==0){
-			baja+=1;
-			map->bajaMapa(gameover);
+		if(tiempoTecho%300==0){
+			//baja+=1;
+			//map->bajaMapa(gameover);
 		}
 		if (Game::instance().getSpecialKey(GLUT_KEY_LEFT))
 		{
@@ -102,49 +111,49 @@ void Scene::update(int deltaTime)
 
 		float numRadBola = angle * (M_PI / 180);
 		float numRadArrow = (angle - 90.f) * (M_PI / 180);
-		if(!empieza)
-		arrow->update(deltaTime, numRadArrow);
 
+		if(!empieza) arrow->update(deltaTime, numRadArrow);
 
 		if (Game::instance().getSpecialKey(GLUT_KEY_UP)) {
 			angleAux = angle;
-			tiempo = 0;
+			tiempoDisparo = 0;
 			empieza = true;
 		}
-		if (tiempo % 800 == 0) {
+		if (tiempoDisparo % 600 == 0) {
 			angleAux = angle;
 			empieza = true;
 		}
 		if (empieza) {
-			player->update(deltaTime, numRadBola, cambio, acaba,gameover);
+			player->update(deltaTime, numRadBola, cambio, acaba, gameover);
 			if (cambio) angle = 180 - angle;
 			cambio = false;	
 		}
-
 		if (acaba) {
 			player->init(glm::ivec2(305.f, 390.f), texProgram, playernext->color);
 			player->setTileMap(map);
 			empieza = false;
 			acaba = false;
 			angle = angleAux;
-			playernext->init(glm::ivec2(250.f, 390.f), texProgram, rand() % 4);
+			playernext->init(glm::ivec2(250.f, 425.f), texProgram, rand() % 4);
 			playernext->setTileMap(map);
-
 		}
 		if(gameover) {
 				baja=0;		
 				cambio = false;
 				acaba = false;
 				empieza = false;
+				tiempoDisparo = 0;
+				tiempoTecho = 0;
+				map->free();
 				map = TileMap::createTileMap("levels/level01.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
-				playernext->init(glm::ivec2(250.f, 390.f), texProgram,rand()%4);
+				playernext->init(glm::ivec2(250.f, 425.f), texProgram,rand()%4);
 				playernext->setTileMap(map);
 				player->init(glm::ivec2(305.f, 390.f), texProgram,rand()%4);
 				player->setTileMap(map);
+				map->convertToSprites();
 		}
 	}
-
-
+	updateSprites(deltaTime);
 }
 
 void Scene::render()
@@ -173,13 +182,14 @@ void Scene::render()
 	texProgram.setUniformMatrix4f("modelview", modelview);
 	texProgram.setUniform2f("texCoordDispl", 0.f, 0.f);
 
+	techo->free();
+	textecho->free();
 
-	glm::vec2 geom[2] = { glm::vec2(SCREEN_X, -480.f+SCREEN_Y+baja*32.f), glm::vec2(SCREEN_X+250, SCREEN_Y+baja*32.f) };
-	glm::vec2 texCoords[2] = { glm::vec2(0.f, 0.f), glm::vec2(1.f, 1.f) };
-	techo = Quad::createQuad(SCREEN_X, -480.f+SCREEN_Y+(baja+1)*32, SCREEN_X+250, SCREEN_Y+(baja+1)*32.f, simpleProgram);
-	textecho = TexturedQuad::createTexturedQuad(geom, texCoords, texProgram);
+	//glm::vec2 geomTecho[2] = { glm::vec2(SCREEN_X, -480.f+SCREEN_Y+baja*32.f), glm::vec2(SCREEN_X+256, SCREEN_Y+baja*32.f) };
+	//glm::vec2 texCoordsTecho[2] = { glm::vec2(0.f, 0.f), glm::vec2(1.f, 1.f) };
+	//techo = Quad::createQuad(SCREEN_X, -480.f+SCREEN_Y+(baja+1)*32, SCREEN_X+250, SCREEN_Y+(baja+1)*32.f, simpleProgram);
+	//textecho = TexturedQuad::createTexturedQuad(geomTecho, texCoordsTecho, texProgram);
 	// Load textures
-	texturetecho.loadFromFile("images/Bolas.png", TEXTURE_PIXEL_FORMAT_RGBA);
 	texProgram.use();
 	texProgram.setUniformMatrix4f("projection", projection);
 	texProgram.setUniform4f("color", 1.0f, 1.0f, 1.0f, 1.0f);
@@ -188,7 +198,9 @@ void Scene::render()
 	texProgram.setUniform2f("texCoordDispl", 0.f, 0.f);
 	textecho->render(texturetecho);
 
-	map->render();
+	//map->render();
+
+	renderSprites();
 
 	arrow->render();
 
@@ -227,6 +239,30 @@ void Scene::initShaders()
 	texProgram.bindFragmentOutput("outColor");
 	vShader.free();
 	fShader.free();
+}
+
+void Scene::renderSprites() 
+{
+	glm::ivec2 mapSize = map->getMapSize();
+	for (int j = 0; j < mapSize.y; ++j) {
+		for (int i = 0; i < mapSize.x; ++i) {
+			if ((*mapa)[j*mapSize.x + i] != NULL) {
+				(*mapa)[j*mapSize.x + i]->render();
+			}
+		}
+	}
+}
+
+void Scene::updateSprites(int deltaTime)
+{
+	glm::ivec2 mapSize = map->getMapSize();
+	for (int j = 0; j < mapSize.y; ++j) {
+		for (int i = 0; i < mapSize.x; ++i) {
+			if ((*mapa)[j*mapSize.x + i] != NULL) {
+				(*mapa)[j*mapSize.x + i]->update(deltaTime,0.0f);
+			}
+		}
+	}
 }
 
 

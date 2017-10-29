@@ -9,6 +9,7 @@
 #include "Quad.h"
 #include "TexturedQuad.h"
 #include "Arrow.h"
+#include "BolaMapa.h"
 
 #define SCREEN_WIDTH 640.f
 #define SCREEN_HEIGHT 480.f
@@ -29,10 +30,10 @@ public:
 	void update(int deltaTime);
 	void render();
 
-	bool getGameOver() { return gameOver; }
-
 private:
 	void initShaders();
+	void renderSprites();
+	void updateSprites(int deltatime);
 
 private:
 	TileMap *map;
@@ -44,7 +45,7 @@ private:
 	Quad *quad,*techo;
 	TexturedQuad *texQuad, *textecho;
 	Texture texs,texturetecho;
-	bool gameOver;
+	vector<BolaMapa *> *mapa;
 };
 
 

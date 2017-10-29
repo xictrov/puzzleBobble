@@ -4,6 +4,10 @@
 #include "Sprite.h"
 
 
+Sprite::~Sprite() {
+	free();
+}
+
 Sprite *Sprite::createSprite(const glm::vec2 &quadSize, const glm::vec2 &sizeInSpritesheet, Texture *spritesheet, ShaderProgram *program)
 {
 	Sprite *quad = new Sprite(quadSize, sizeInSpritesheet, spritesheet, program);
@@ -34,6 +38,7 @@ Sprite::Sprite(const glm::vec2 &quadSize, const glm::vec2 &sizeInSpritesheet, Te
 	position = glm::vec2(0.f);
 	spriteSize = quadSize;
 	angleSprite = 0.0f;
+	animRepetitions = 0;
 }
 
 void Sprite::update(int deltaTime, float angle)
@@ -44,6 +49,7 @@ void Sprite::update(int deltaTime, float angle)
 		while(timeAnimation > animations[currentAnimation].millisecsPerKeyframe)
 		{
 			timeAnimation -= animations[currentAnimation].millisecsPerKeyframe;
+			if (currentKeyframe + 1 == animations[currentAnimation].keyframeDispl.size()) ++animRepetitions;
 			currentKeyframe = (currentKeyframe + 1) % animations[currentAnimation].keyframeDispl.size();
 		}
 		texCoordDispl = animations[currentAnimation].keyframeDispl[currentKeyframe];
@@ -112,6 +118,8 @@ void Sprite::setPosition(const glm::vec2 &pos)
 {
 	position = pos;
 }
+
+
 
 
 

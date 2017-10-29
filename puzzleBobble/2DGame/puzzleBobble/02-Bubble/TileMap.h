@@ -4,6 +4,7 @@
 
 #include <glm/glm.hpp>
 #include <vector>
+#include "BolaMapa.h"
 #include "Texture.h"
 #include "ShaderProgram.h"
 
@@ -28,7 +29,8 @@ public:
 	void free();
 
 	int getTileSize() const { return tileSize; }
-	bool collision(const glm::ivec2 &pos,int color, bool &gameover);
+	glm::ivec2 getMapSize() const { return mapSize; }
+	bool collision(const glm::ivec2 &pos,int color, bool &gameover, int currentTime);
 	bool collisionMoveLeft(const glm::ivec2 &pos, const glm::ivec2 &size) const;
 	bool collisionMoveRight(const glm::ivec2 &pos, const glm::ivec2 &size) const;
 	bool collisionMoveDown(const glm::ivec2 &pos, const glm::ivec2 &size, int *posY) const;
@@ -39,6 +41,7 @@ public:
 	void deleteBalls(std::vector<glm::ivec2> &positions, bool &gameover);
 	void searchAloneBalls(int j, int i);
 	void deleteAloneBalls(bool &gameover);
+	vector<BolaMapa *> * convertToSprites();
 
 private:
 	bool loadLevel(const string &levelFile);
@@ -56,9 +59,11 @@ private:
 	glm::vec2 tileTexSize;
 	glm::vec2 minCoords;
 	string level;
-	int *map;
+	int *tileMap;
 	bool *visitedMap;
 	std::vector<glm::ivec2> ballsToDestroy;
+	std::vector<BolaMapa *> spriteMap;
+	int deltaTime;
 
 };
 

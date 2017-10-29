@@ -17,6 +17,9 @@ class Sprite
 {
 
 public:
+
+	~Sprite();
+
 	// Textured quads can only be created inside an OpenGL context
 	static Sprite *createSprite(const glm::vec2 &quadSize, const glm::vec2 &sizeInSpritesheet, Texture *spritesheet, ShaderProgram *program);
 
@@ -34,6 +37,8 @@ public:
 
 	void setPosition(const glm::vec2 &pos);
 
+	int getAnimRepetitions() { return animRepetitions; }
+
 private:
 	Texture *texture;
 	ShaderProgram *shaderProgram;
@@ -46,6 +51,7 @@ private:
 	glm::vec2 texCoordDispl;
 	vector<AnimKeyframes> animations;
 	float angleSprite;
+	int animRepetitions;
 
 };
 

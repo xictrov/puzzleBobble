@@ -1,36 +1,38 @@
-#ifndef _PLAYER_INCLUDE
-#define _PLAYER_INCLUDE
+#ifndef _BOLAMAPA_INCLUDE
+#define _BOLAMAPA_INCLUDE
 
 
 #include "Sprite.h"
-#include "TileMap.h"
 
 
 // Player is basically a Sprite that represents the player. As such it has
 // all properties it needs to track its movement, jumping, and collisions.
 
 
-class Player
+class BolaMapa
 {
 
 public:
 
 	int color;
+	~BolaMapa();
 	void init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram, int colorbola);
-	void update(int deltaTime, float angle, bool &cambio, bool &acaba, bool &gameover);
+	void update(int deltaTime, float angle);
 	void render();
 
-	void setTileMap(TileMap *tileMap);
 	void setPosition(const glm::vec2 &pos);
 
+	void explode();
+
+	int getAnimRepetitions();
+
 private:
-	bool bJumping;
-	glm::ivec2 tileMapDispl, posPlayer;
-	glm::fvec2 posPlayerF;
+	bool bJumping, explota;
+	glm::ivec2 tileMapDispl, posBolaMapa;
+	glm::fvec2 posBolaMapaF;
 	int jumpAngle, startY;
 	Texture spritesheet, explosionsheet;
 	Sprite *sprite, *explosionSprite;
-	TileMap *map;
 
 };
 
