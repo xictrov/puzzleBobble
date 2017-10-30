@@ -2,7 +2,7 @@
 #include <cmath>
 #include <iostream>
 #include <GL/glew.h>
-#include <GL/glut.h>
+#include <GLUT/glut.h>
 #include "BolaMapa.h"
 #include "Game.h"
 
@@ -56,7 +56,7 @@ void BolaMapa::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram, 
 
 void BolaMapa::update(int deltaTime, float angle)
 {
-	sprite->update(deltaTime, angle);	
+	sprite->update(deltaTime, angle);
 }
 
 void BolaMapa::render()
@@ -70,12 +70,14 @@ void BolaMapa::setPosition(const glm::vec2 &pos)
 	sprite->setPosition(glm::vec2(float(tileMapDispl.x + posBolaMapa.x), float(tileMapDispl.y + posBolaMapa.y)));
 }
 
-void BolaMapa::explode() 
+void BolaMapa::explode()
 {
-	sprite->changeAnimation(EXPLOSION);
+	for (int i=0;i<6;++i){
+		sprite->changeAnimation(EXPLOSION);
+	}
 }
 
-int BolaMapa::getAnimRepetitions() 
+int BolaMapa::getAnimRepetitions()
 {
 	return sprite->getAnimRepetitions();
 }

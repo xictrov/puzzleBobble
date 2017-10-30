@@ -1,7 +1,9 @@
 #include <GL/glew.h>
-#include <GL/gl.h>
+#include <OpenGL/gl.h>
 #include <glm/gtc/matrix_transform.hpp>
 #include "Sprite.h"
+#include <iostream>
+using namespace std;
 
 
 Sprite::~Sprite() {
@@ -49,7 +51,7 @@ void Sprite::update(int deltaTime, float angle)
 		while(timeAnimation > animations[currentAnimation].millisecsPerKeyframe)
 		{
 			timeAnimation -= animations[currentAnimation].millisecsPerKeyframe;
-			if (currentKeyframe + 1 == animations[currentAnimation].keyframeDispl.size()) ++animRepetitions;
+			if (currentKeyframe + 2 == animations[currentAnimation].keyframeDispl.size()) ++animRepetitions;
 			currentKeyframe = (currentKeyframe + 1) % animations[currentAnimation].keyframeDispl.size();
 		}
 		texCoordDispl = animations[currentAnimation].keyframeDispl[currentKeyframe];

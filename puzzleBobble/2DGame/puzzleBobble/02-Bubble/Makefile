@@ -1,5 +1,5 @@
 INC = -I/usr/local/Cellar/glm/0.9.8.3/include -I/usr/local/Cellar/freetype/2.7.1/include/freetype2
-FLAGS = -Wall
+FLAGS = -Wall -std=c++11
 LIBS = -framework OpenGL -framework GLUT -lglew -lSOIL -lfreetype
 CPP_FILES := $(wildcard *.cpp)
 OBJ_FILES := $(addprefix obj/,$(notdir $(CPP_FILES:.cpp=.o)))

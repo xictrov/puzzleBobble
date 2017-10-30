@@ -3,8 +3,8 @@
 #include <cmath>
 #include <glm/gtc/matrix_transform.hpp>
 #include <GL/glew.h>
-#include <GL/glut.h>
-#include <time.h> 
+#include <GLUT/glut.h>
+#include <time.h>
 #include "Scene.h"
 #include "Game.h"
 
@@ -126,7 +126,7 @@ void Scene::update(int deltaTime)
 		if (empieza) {
 			player->update(deltaTime, numRadBola, cambio, acaba, gameover);
 			if (cambio) angle = 180 - angle;
-			cambio = false;	
+			cambio = false;
 		}
 		if (acaba) {
 			player->init(glm::ivec2(305.f, 390.f), texProgram, playernext->color);
@@ -138,7 +138,7 @@ void Scene::update(int deltaTime)
 			playernext->setTileMap(map);
 		}
 		if(gameover) {
-				baja=0;		
+				baja=0;
 				cambio = false;
 				acaba = false;
 				empieza = false;
@@ -241,26 +241,41 @@ void Scene::initShaders()
 	fShader.free();
 }
 
-void Scene::renderSprites() 
+void Scene::renderSprites()
 {
 	glm::ivec2 mapSize = map->getMapSize();
 	for (int j = 0; j < mapSize.y; ++j) {
 		for (int i = 0; i < mapSize.x; ++i) {
 			if ((*mapa)[j*mapSize.x + i] != NULL) {
-				(*mapa)[j*mapSize.x + i]->render();
+				if((*mapa)[j*mapSize.x+i]->getAnimRepetitions()==1) {
+					(*mapa)[j*mapSize.x+i]=NULL;
+					delete (*mapa)[j*mapSize.x+i];
+				}
+				else {
+					(*mapa)[j*mapSize.x + i]->render();
+				}
 			}
+			//if ((*mapa)[j*mapSize.x + i]->getAnimRepetitions() == 1) delete (*mapa)[j*mapSize.x + i];
 		}
 	}
 }
 
 void Scene::updateSprites(int deltaTime)
 {
+	int contador=0;
 	glm::ivec2 mapSize = map->getMapSize();
 	for (int j = 0; j < mapSize.y; ++j) {
 		for (int i = 0; i < mapSize.x; ++i) {
 			if ((*mapa)[j*mapSize.x + i] != NULL) {
-				(*mapa)[j*mapSize.x + i]->update(deltaTime,0.0f);
+				if((*mapa)[j*mapSize.x+i]->getAnimRepetitions()==1) {
+					(*mapa)[j*mapSize.x+i]=NULL;
+					delete (*mapa)[j*mapSize.x+i];
+				}
+				else{
+					(*mapa)[j*mapSize.x + i]->update(deltaTime,0.0f);
+				}
 			}
+ 			//if ((*mapa)[j*mapSize.x + i]->getAnimRepetitions() == 1) delete (*mapa)[j*mapSize.x + i];
 		}
 	}
 }

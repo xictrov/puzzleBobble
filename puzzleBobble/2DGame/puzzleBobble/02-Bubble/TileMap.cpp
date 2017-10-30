@@ -275,7 +275,7 @@ void TileMap::colocaBola(int j, int i, int color, int Bolax, int Bolay, bool &ga
 	for (int jj = -1; jj < 2; ++jj) {
 		for (int ii = -1; ii < 2; ++ii) {
 			if (!(jj == 0 && ii == 0) && !(jj == -1 && ii == par) && !(jj == 1 && ii == par) && (((j+jj)%2==0) || ((j+jj%2!=0 && (i+ii)<7)))) {
-						
+
 						int tile = tileMap[(j + jj)*mapSize.x + (i + ii)];
 						if (tile == 0) {
 							glm::vec2 posTile;
@@ -365,7 +365,7 @@ void TileMap::bajaMapa(bool &gameover){
 
 void TileMap::searchBallsToDestroy(int j, int i)
 {
-	static vector<pair<int, int>> positions = {
+	static vector<pair<int, int> > positions = {
 		{ -1, -1 },
 		{ -1,  0 },
 		{ 0, -1 },
@@ -401,7 +401,7 @@ void TileMap::searchBallsToDestroy(int j, int i)
 
 void TileMap::searchAloneBalls(int j, int i)
 {
-	static vector<pair<int, int>> positions = {
+	static vector<pair<int, int> > positions = {
 		{ -1, -1 },
 		{ -1,  0 },
 		{ 0, -1 },
@@ -433,13 +433,14 @@ void TileMap::searchAloneBalls(int j, int i)
 
 void TileMap::deleteBalls(vector<glm::ivec2> &ballsToDelete, bool &gameover)
 {
+	cout << "entra aqui" << endl;
 	int i, j;
 	for (int k = 0; k < ballsToDelete.size(); ++k) {
 		i = ballsToDelete[k].x;
 		j = ballsToDelete[k].y;
 		tileMap[j*mapSize.x + i] = 0;
 		spriteMap[j*mapSize.x + i]->explode();
-		//if (spriteMap[j*mapSize.x + i]->getAnimRepetitions() == 1) delete spriteMap[j*mapSize.x + i];
+		if (spriteMap[j*mapSize.x + i]->getAnimRepetitions() == 1) spriteMap[j*mapSize.x + i]=NULL;
 	}
 
 	clearVectors();
@@ -458,7 +459,7 @@ void TileMap::deleteAloneBalls(bool &gameover)
 			if (visitedMap[j*mapSize.x + i] == false && tileMap[j*mapSize.x + i] != 0) {
 				tileMap[j*mapSize.x + i] = 0;
 				spriteMap[j*mapSize.x + i]->explode();
-				//if (spriteMap[j*mapSize.x + i]->getAnimRepetitions() == 1) delete spriteMap[j*mapSize.x + i];
+				if (spriteMap[j*mapSize.x + i]->getAnimRepetitions() == 1) spriteMap[j*mapSize.x + i]=NULL;
 			}
 		}
 	}
