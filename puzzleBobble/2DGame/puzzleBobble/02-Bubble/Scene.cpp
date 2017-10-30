@@ -146,11 +146,11 @@ void Scene::update(int deltaTime)
 				tiempoTecho = 0;
 				map->free();
 				map = TileMap::createTileMap("levels/level01.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
+				mapa = map->convertToSprites();
 				playernext->init(glm::ivec2(250.f, 425.f), texProgram,rand()%4);
 				playernext->setTileMap(map);
 				player->init(glm::ivec2(305.f, 390.f), texProgram,rand()%4);
 				player->setTileMap(map);
-				map->convertToSprites();
 		}
 	}
 	updateSprites(deltaTime);
@@ -248,8 +248,8 @@ void Scene::renderSprites()
 		for (int i = 0; i < mapSize.x; ++i) {
 			if ((*mapa)[j*mapSize.x + i] != NULL) {
 				if((*mapa)[j*mapSize.x+i]->getAnimRepetitions()==1) {
-					(*mapa)[j*mapSize.x+i]=NULL;
 					delete (*mapa)[j*mapSize.x+i];
+					(*mapa)[j*mapSize.x + i] = NULL;
 				}
 				else {
 					(*mapa)[j*mapSize.x + i]->render();
@@ -268,14 +268,28 @@ void Scene::updateSprites(int deltaTime)
 		for (int i = 0; i < mapSize.x; ++i) {
 			if ((*mapa)[j*mapSize.x + i] != NULL) {
 				if((*mapa)[j*mapSize.x+i]->getAnimRepetitions()==1) {
-					(*mapa)[j*mapSize.x+i]=NULL;
 					delete (*mapa)[j*mapSize.x+i];
+					(*mapa)[j*mapSize.x + i] = NULL;
 				}
 				else{
 					(*mapa)[j*mapSize.x + i]->update(deltaTime,0.0f);
 				}
 			}
  			//if ((*mapa)[j*mapSize.x + i]->getAnimRepetitions() == 1) delete (*mapa)[j*mapSize.x + i];
+		}
+	}
+}
+
+void Scene::cleanSprites() 
+{
+		glm::ivec2 mapSize = map->getMapSize();
+	for (int j = 0; j < mapSize.y; ++j) {
+		for (int i = 0; i < mapSize.x; ++i) {
+			if ((*mapa)[j*mapSize.x + i] != NULL) {
+					delete (*mapa)[j*mapSize.x+i];
+					(*mapa)[j*mapSize.x + i] = NULL;
+			}
+			//if ((*mapa)[j*mapSize.x + i]->getAnimRepetitions() == 1) delete (*mapa)[j*mapSize.x + i];
 		}
 	}
 }

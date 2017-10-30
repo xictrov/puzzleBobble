@@ -34,6 +34,7 @@ private:
 	void initShaders();
 	void renderSprites();
 	void updateSprites(int deltatime);
+	void cleanSprites();
 
 private:
 	TileMap *map;
