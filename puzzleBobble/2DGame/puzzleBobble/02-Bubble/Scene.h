@@ -43,9 +43,9 @@ private:
 	ShaderProgram texProgram, simpleProgram;
 	float currentTime, angle;
 	glm::mat4 projection;
-	Quad *quad,*techo;
-	TexturedQuad *texQuad, *textecho;
-	Texture texs,texturetecho;
+	Quad *quad,*techo,*superior;
+	TexturedQuad *texQuad, *textecho,*texsuperior;
+	Texture texs,texturetecho, texturesuperior;
 	vector<BolaMapa *> *mapa;
 };
 
