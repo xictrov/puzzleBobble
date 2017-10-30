@@ -3,7 +3,7 @@
 #include <cmath>
 #include <glm/gtc/matrix_transform.hpp>
 #include <GL/glew.h>
-#include <GL/glut.h>
+#include <GLUT/glut.h>
 #include <time.h>
 #include "Scene.h"
 #include "Game.h"
@@ -55,7 +55,7 @@ void Scene::init()
 	texturetecho.loadFromFile("images/techo.png", TEXTURE_PIXEL_FORMAT_RGBA);
 
 
-	map = TileMap::createTileMap("levels/level01.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
+	map = TileMap::createTileMap("levels/level02.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
 
 	mapa = map->convertToSprites();
 
@@ -95,8 +95,9 @@ void Scene::update(int deltaTime)
 	}
 	if(!gameover){
 		if(tiempoTecho%300==0){
-			//baja+=1;
-			//map->bajaMapa(gameover);
+			baja+=1;
+			map->bajaMapa(gameover);
+			mapa=map->convertToSprites();
 		}
 		if (Game::instance().getSpecialKey(GLUT_KEY_LEFT))
 		{
@@ -144,8 +145,8 @@ void Scene::update(int deltaTime)
 				empieza = false;
 				tiempoDisparo = 0;
 				tiempoTecho = 0;
-				map->free();
-				map = TileMap::createTileMap("levels/level01.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
+				delete map;
+				map = TileMap::createTileMap("levels/level02.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
 				mapa = map->convertToSprites();
 				playernext->init(glm::ivec2(250.f, 425.f), texProgram,rand()%4);
 				playernext->setTileMap(map);
@@ -185,10 +186,10 @@ void Scene::render()
 	techo->free();
 	textecho->free();
 
-	//glm::vec2 geomTecho[2] = { glm::vec2(SCREEN_X, -480.f+SCREEN_Y+baja*32.f), glm::vec2(SCREEN_X+256, SCREEN_Y+baja*32.f) };
-	//glm::vec2 texCoordsTecho[2] = { glm::vec2(0.f, 0.f), glm::vec2(1.f, 1.f) };
-	//techo = Quad::createQuad(SCREEN_X, -480.f+SCREEN_Y+(baja+1)*32, SCREEN_X+250, SCREEN_Y+(baja+1)*32.f, simpleProgram);
-	//textecho = TexturedQuad::createTexturedQuad(geomTecho, texCoordsTecho, texProgram);
+	glm::vec2 geomTecho[2] = { glm::vec2(SCREEN_X, -480.f+SCREEN_Y+baja*32.f), glm::vec2(SCREEN_X+256, SCREEN_Y+baja*32.f) };
+	glm::vec2 texCoordsTecho[2] = { glm::vec2(0.f, 0.f), glm::vec2(1.f, 1.f) };
+	techo = Quad::createQuad(SCREEN_X, -480.f+SCREEN_Y+(baja+1)*32, SCREEN_X+250, SCREEN_Y+(baja+1)*32.f, simpleProgram);
+	textecho = TexturedQuad::createTexturedQuad(geomTecho, texCoordsTecho, texProgram);
 	// Load textures
 	texProgram.use();
 	texProgram.setUniformMatrix4f("projection", projection);
@@ -282,7 +283,7 @@ void Scene::updateSprites(int deltaTime)
 
 void Scene::cleanSprites() 
 {
-		glm::ivec2 mapSize = map->getMapSize();
+	glm::ivec2 mapSize = map->getMapSize();
 	for (int j = 0; j < mapSize.y; ++j) {
 		for (int i = 0; i < mapSize.x; ++i) {
 			if ((*mapa)[j*mapSize.x + i] != NULL) {

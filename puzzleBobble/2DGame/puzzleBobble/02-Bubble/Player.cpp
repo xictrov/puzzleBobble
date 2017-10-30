@@ -2,7 +2,7 @@
 #include <cmath>
 #include <iostream>
 #include <GL/glew.h>
-#include <GL/glut.h>
+#include <GLUT/glut.h>
 #include "Player.h"
 #include "Game.h"
 

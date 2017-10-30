@@ -2,7 +2,7 @@
 #include <cmath>
 #include <iostream>
 #include <GL/glew.h>
-#include <GL/glut.h>
+#include <GLUT/glut.h>
 #include "BolaMapa.h"
 #include "Game.h"
 
@@ -14,15 +14,12 @@
 
 enum PlayerAnims
 {
-	COLOR, EXPLOSION
-};
-
-enum explosionAnims {
-	ONE, TWO, THREE, FOUR, FIVE
+	COLOR, EXPLOSION, FALL_DOWN
 };
 
 BolaMapa::~BolaMapa() {
-	delete sprite;
+	if (sprite != NULL)
+		delete sprite;
 }
 
 void BolaMapa::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram, int colorbola)
@@ -75,6 +72,11 @@ void BolaMapa::explode()
 	for (int i=0;i<6;++i){
 		sprite->changeAnimation(EXPLOSION);
 	}
+}
+
+void BolaMapa::fallDown() 
+{
+	
 }
 
 int BolaMapa::getAnimRepetitions()
