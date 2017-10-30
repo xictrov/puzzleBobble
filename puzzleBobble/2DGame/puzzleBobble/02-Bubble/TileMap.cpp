@@ -308,13 +308,19 @@ void TileMap::colocaBola(int j, int i, int color, int Bolax, int Bolay, bool &ga
 
 	if (posfy % 2 == 0) {
 		posTile = glm::vec2(minCoords.x + posfx*tileSize, minCoords.y + posfy*tileSize);
-		if (spriteMap[posfy*mapSize.x + posfx] != NULL) delete spriteMap[posfy*mapSize.x + posfx];
+		if (spriteMap[posfy*mapSize.x + posfx] != NULL) {
+			delete spriteMap[posfy*mapSize.x + posfx];
+			spriteMap[posfy*mapSize.x + posfx] = NULL;
+		}
 		spriteMap[posfy*mapSize.x + posfx] = new BolaMapa();
 		spriteMap[posfy*mapSize.x + posfx]->init(posTile, program, color + 1);
 	}
 	else {
 		posTile = glm::vec2(minCoords.x + posfx*tileSize + tileSize / 2, minCoords.y + posfy*tileSize);
-		if (spriteMap[posfy*mapSize.x + posfx] != NULL) delete spriteMap[posfy*mapSize.x + posfx];
+		if (spriteMap[posfy*mapSize.x + posfx] != NULL) {
+			delete spriteMap[posfy*mapSize.x + posfx];
+			spriteMap[posfy*mapSize.x + posfx] = NULL;
+		}
 		spriteMap[posfy*mapSize.x + posfx] = new BolaMapa();
 		spriteMap[posfy*mapSize.x + posfx]->init(posTile, program, color + 1);
 	}
@@ -355,13 +361,19 @@ void TileMap::colocaBola(int j, int i, int color)
 
 	if (j % 2 == 0) {
 		posTile = glm::vec2(minCoords.x + i*tileSize, minCoords.y + j*tileSize);
-		if (spriteMap[j*mapSize.x + i] != NULL) delete spriteMap[j*mapSize.x + i];
+		if (spriteMap[j*mapSize.x + i] != NULL) {
+			delete spriteMap[j*mapSize.x + i];
+			spriteMap[j*mapSize.x + i] = NULL;
+		}
 		spriteMap[j*mapSize.x + i] = new BolaMapa();
 		spriteMap[j*mapSize.x + i]->init(posTile, program, color + 1);
 	}
 	else {
 		posTile = glm::vec2(minCoords.x + i*tileSize + tileSize / 2, minCoords.y + j*tileSize);
-		if (spriteMap[j*mapSize.x + i] != NULL) delete spriteMap[j*mapSize.x + i];
+		if (spriteMap[j*mapSize.x + i] != NULL) {
+			delete spriteMap[j*mapSize.x + i];
+			spriteMap[j*mapSize.x + i] = NULL;
+		}
 		spriteMap[j*mapSize.x + i] = new BolaMapa();
 		spriteMap[j*mapSize.x + i]->init(posTile, program, color + 1);
 	}
@@ -458,6 +470,7 @@ void TileMap::deleteBalls(vector<glm::ivec2> &ballsToDelete, bool &gameover)
 		tileMap[j*mapSize.x + i] = 0;
 		spriteMap[j*mapSize.x + i]->explode();
 		if (spriteMap[j*mapSize.x + i]->getAnimRepetitions() == 1) {
+			delete spriteMap[j*mapSize.x + i];
 			spriteMap[j*mapSize.x + i] = NULL;
 		}
 
@@ -480,7 +493,8 @@ void TileMap::deleteAloneBalls(bool &gameover)
 				tileMap[j*mapSize.x + i] = 0;
 				spriteMap[j*mapSize.x + i]->explode();
 				if (spriteMap[j*mapSize.x + i]->getAnimRepetitions() == 1) {
-				spriteMap[j*mapSize.x + i] = NULL;
+					delete spriteMap[j*mapSize.x + i];
+				    spriteMap[j*mapSize.x + i] = NULL;
 				}
 			}
 		}
