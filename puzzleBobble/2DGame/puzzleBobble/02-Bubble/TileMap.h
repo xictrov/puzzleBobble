@@ -35,7 +35,7 @@ public:
 	bool collisionMoveRight(const glm::ivec2 &pos, const glm::ivec2 &size) const;
 	bool collisionMoveDown(const glm::ivec2 &pos, const glm::ivec2 &size, int *posY) const;
 	void colocaBola(int i, int j, int color, int Bolax, int Bolay, bool &gameover);
-	void colocaBola(int i, int j, int color);
+	void colocaBolaTecho(int i, int j, int color, bool &gameover);
 	void bajaMapa(bool &gameover);
 	void searchBallsToDestroy(int j, int i);
 	void deleteBalls(std::vector<glm::ivec2> &positions, bool &gameover);
@@ -47,6 +47,8 @@ private:
 	bool loadLevel(const string &levelFile);
 	void prepareArrays(const glm::vec2 &minCoords, ShaderProgram &program, bool &gameover);
 	void clearVectors();
+	void search(int j, int i, bool &gameover);
+	void addSprite(int j, int i, int color);
 
 private:
 	GLuint vao;
