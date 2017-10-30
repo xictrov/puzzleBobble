@@ -1,8 +1,10 @@
-﻿  TileMap.cpp
-c:\users\victor\desktop\puzzlebobble\puzzlebobble\2dgame\puzzlebobble\02-bubble\tilemap.cpp(245): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
-c:\users\victor\desktop\puzzlebobble\puzzlebobble\2dgame\puzzlebobble\02-bubble\tilemap.cpp(246): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
-c:\users\victor\desktop\puzzlebobble\puzzlebobble\2dgame\puzzlebobble\02-bubble\tilemap.cpp(254): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-c:\users\victor\desktop\puzzlebobble\puzzlebobble\2dgame\puzzlebobble\02-bubble\tilemap.cpp(289): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
-c:\users\victor\desktop\puzzlebobble\puzzlebobble\2dgame\puzzlebobble\02-bubble\tilemap.cpp(290): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
-c:\users\victor\desktop\puzzlebobble\puzzlebobble\2dgame\puzzlebobble\02-bubble\tilemap.cpp(412): warning C4018: '<': signed/unsigned mismatch
+﻿  BolaMapa.cpp
+  Generating Code...
+  Skipping... (no relevant changes detected)
+  main.cpp
+  TileMap.cpp
+  Scene.cpp
+  Player.cpp
+  Game.cpp
+  Arrow.cpp
   02-Bubble.vcxproj -> C:\Users\Victor\Desktop\puzzleBobble\puzzleBobble\2DGame\puzzleBobble\02-Bubble\Debug\02-Bubble.exe

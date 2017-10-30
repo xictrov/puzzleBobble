@@ -309,8 +309,12 @@ void TileMap::colocaBola(int j, int i, int color, int Bolax, int Bolay, bool &ga
 	prepareArrays(minCoords, program,gameover);
 
 	search(posfy,posfx,gameover);
-}
 
+	if (posfy >= 10 - bajada) {
+		gameover = true;
+		bajada = 0;
+	}
+}
 
 
 void TileMap::colocaBolaTecho(int j, int i, int color, bool &gameover)
@@ -493,11 +497,6 @@ void TileMap::search(int j, int i, bool &gameover)
 	}
 
 	deleteAloneBalls(gameover);
-
-	if (j >= 10 - bajada) {
-		gameover = true;
-		bajada = 0;
-	}
 }
 
 void TileMap::addSprite(int j, int i, int color) 

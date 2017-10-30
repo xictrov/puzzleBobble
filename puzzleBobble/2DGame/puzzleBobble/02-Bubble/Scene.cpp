@@ -55,7 +55,7 @@ void Scene::init()
 	texturetecho.loadFromFile("images/techo.png", TEXTURE_PIXEL_FORMAT_RGBA);
 
 
-	map = TileMap::createTileMap("levels/level01.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
+	map = TileMap::createTileMap("levels/level02.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
 
 	mapa = map->convertToSprites();
 
@@ -144,8 +144,8 @@ void Scene::update(int deltaTime)
 				empieza = false;
 				tiempoDisparo = 0;
 				tiempoTecho = 0;
-				map->free();
-				map = TileMap::createTileMap("levels/level01.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
+				delete map;
+				map = TileMap::createTileMap("levels/level02.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
 				mapa = map->convertToSprites();
 				playernext->init(glm::ivec2(250.f, 425.f), texProgram,rand()%4);
 				playernext->setTileMap(map);
@@ -282,7 +282,7 @@ void Scene::updateSprites(int deltaTime)
 
 void Scene::cleanSprites() 
 {
-		glm::ivec2 mapSize = map->getMapSize();
+	glm::ivec2 mapSize = map->getMapSize();
 	for (int j = 0; j < mapSize.y; ++j) {
 		for (int i = 0; i < mapSize.x; ++i) {
 			if ((*mapa)[j*mapSize.x + i] != NULL) {

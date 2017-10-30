@@ -15,7 +15,9 @@ class BolaMapa
 public:
 
 	int color;
+
 	~BolaMapa();
+
 	void init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram, int colorbola);
 	void update(int deltaTime, float angle);
 	void render();
@@ -23,6 +25,7 @@ public:
 	void setPosition(const glm::vec2 &pos);
 
 	void explode();
+	void fallDown();
 
 	int getAnimRepetitions();
 
@@ -32,7 +35,7 @@ private:
 	glm::fvec2 posBolaMapaF;
 	int jumpAngle, startY;
 	Texture spritesheet, explosionsheet;
-	Sprite *sprite, *explosionSprite;
+	Sprite *sprite;
 
 };
 
