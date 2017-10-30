@@ -20,6 +20,7 @@ bool cambio = false;
 bool acaba = false;
 bool empieza = false;
 bool gameover = false;
+int contadorNivel = 1;
 int tiempoDisparo = 0;
 int tiempoTecho = 0;
 int baja = 0;
@@ -52,12 +53,13 @@ void Scene::init()
 
 	// Load textures
 	texs.loadFromFile("images/gameBackground.png", TEXTURE_PIXEL_FORMAT_RGBA);
-
+	
 	texturesuperior.loadFromFile("images/parteSuperiorMapa.png", TEXTURE_PIXEL_FORMAT_RGBA);
 	texturetecho.loadFromFile("images/techo.png", TEXTURE_PIXEL_FORMAT_RGBA);
 
+	lvlNumber = "levels/level01.txt";
 
-	map = TileMap::createTileMap("levels/level01.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
+	map = TileMap::createTileMap(lvlNumber, glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
 
 	mapa = map->convertToSprites();
 
@@ -79,17 +81,18 @@ void Scene::init()
 	currentTime = 0.0f;
 	angle = 90.0f;
 
+	winlvl = false;
+
 
 	glm::vec2 geomTecho[2] = { glm::vec2(SCREEN_X, -480.f + SCREEN_Y + baja*32.f), glm::vec2(SCREEN_X + 250, SCREEN_Y + baja*32.f) };
 	glm::vec2 texCoordsTecho[2] = { glm::vec2(0.f, 0.f), glm::vec2(1.f, 1.f) };
 	techo = Quad::createQuad(SCREEN_X, -480.f + SCREEN_Y + (baja + 1) * 32, SCREEN_X + 250, SCREEN_Y + (baja + 1)*32.f, simpleProgram);
 	textecho = TexturedQuad::createTexturedQuad(geomTecho, texCoordsTecho, texProgram);
 
-	glm::vec2 geomSuperior[2] = { glm::vec2(SCREEN_X, 0 ), glm::vec2(SCREEN_X + 256, SCREEN_Y ) };
+	glm::vec2 geomSuperior[2] = { glm::vec2(SCREEN_X, 0), glm::vec2(SCREEN_X + 256, SCREEN_Y) };
 	glm::vec2 texCoordsSuperior[2] = { glm::vec2(0.f, 0.f), glm::vec2(1.f, 1.f) };
-	superior = Quad::createQuad(SCREEN_X, 0 , SCREEN_X + 256, SCREEN_Y , simpleProgram);
+	superior = Quad::createQuad(SCREEN_X, 0, SCREEN_X + 256, SCREEN_Y, simpleProgram);
 	texsuperior = TexturedQuad::createTexturedQuad(geomSuperior, texCoordsSuperior, texProgram);
-
 }
 
 void Scene::update(int deltaTime)
@@ -97,16 +100,26 @@ void Scene::update(int deltaTime)
 	currentTime += deltaTime;
 	tiempoDisparo+=1;
 	tiempoTecho += 1;
+
+	compruebaMapa();
+
+	if (winlvl) {
+		++contadorNivel;
+		setNewLvl(contadorNivel);
+	}
+
 	if(Game::instance().getSpecialKey(GLUT_KEY_DOWN))
 	{
-		gameover=false;
+		gameover = false;
+		winlvl = false;
 	}
 	if(!gameover){
+
 		if(tiempoTecho%300==0){
-			baja+=1;
+			baja += 1;
 			map->bajaMapa(gameover);
 			cleanSprites();
-			mapa=map->convertToSprites();
+			mapa = map->convertToSprites();
 		}
 		if (Game::instance().getSpecialKey(GLUT_KEY_LEFT))
 		{
@@ -148,19 +161,7 @@ void Scene::update(int deltaTime)
 			playernext->setTileMap(map);
 		}
 		if(gameover) {
-				baja=0;
-				cambio = false;
-				acaba = false;
-				empieza = false;
-				tiempoDisparo = 0;
-				tiempoTecho = 0;
-				delete map;
-				map = TileMap::createTileMap("levels/level01.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
-				mapa = map->convertToSprites();
-				playernext->init(glm::ivec2(250.f, 425.f), texProgram,rand()%4);
-				playernext->setTileMap(map);
-				player->init(glm::ivec2(305.f, 390.f), texProgram,rand()%4);
-				player->setTileMap(map);
+			setNewLvl(contadorNivel);
 		}
 	}
 	updateSprites(deltaTime);
@@ -192,11 +193,12 @@ void Scene::render()
 	texProgram.setUniformMatrix4f("modelview", modelview);
 	texProgram.setUniform2f("texCoordDispl", 0.f, 0.f);
 
+	techo->free();
+	textecho->free();
 
-
-	glm::vec2 geomTecho[2] = { glm::vec2(SCREEN_X, -480.f+SCREEN_Y+baja*32.f), glm::vec2(SCREEN_X+256, SCREEN_Y+baja*32.f) };
+	glm::vec2 geomTecho[2] = { glm::vec2(SCREEN_X, -480.f + SCREEN_Y + baja*32.f), glm::vec2(SCREEN_X + 256, SCREEN_Y + baja*32.f) };
 	glm::vec2 texCoordsTecho[2] = { glm::vec2(0.f, 0.f), glm::vec2(1.f, 1.f) };
-	techo = Quad::createQuad(SCREEN_X, -480.f+SCREEN_Y+(baja+1)*32, SCREEN_X+250, SCREEN_Y+(baja+1)*32.f, simpleProgram);
+	techo = Quad::createQuad(SCREEN_X, -480.f + SCREEN_Y + (baja + 1) * 32, SCREEN_X + 250, SCREEN_Y + (baja + 1)*32.f, simpleProgram);
 	textecho = TexturedQuad::createTexturedQuad(geomTecho, texCoordsTecho, texProgram);
 	// Load textures
 	texProgram.use();
@@ -207,16 +209,12 @@ void Scene::render()
 	texProgram.setUniform2f("texCoordDispl", 0.f, 0.f);
 	textecho->render(texturetecho);
 
-	quad->free();
-	techo->free();
+	superior->free();
+	texsuperior->free();
 
-	//map->render();
-
-
-
-	glm::vec2 geomSuperior[2] = { glm::vec2(SCREEN_X, 0 ), glm::vec2(SCREEN_X + 256, SCREEN_Y ) };
+	glm::vec2 geomSuperior[2] = { glm::vec2(SCREEN_X, 0), glm::vec2(SCREEN_X + 256, SCREEN_Y) };
 	glm::vec2 texCoordsSuperior[2] = { glm::vec2(0.f, 0.f), glm::vec2(1.f, 1.f) };
-	superior = Quad::createQuad(SCREEN_X, 0 , SCREEN_X + 256, SCREEN_Y , simpleProgram);
+	superior = Quad::createQuad(SCREEN_X, 0, SCREEN_X + 256, SCREEN_Y, simpleProgram);
 	texsuperior = TexturedQuad::createTexturedQuad(geomSuperior, texCoordsSuperior, texProgram);
 
 	texProgram.use();
@@ -227,8 +225,7 @@ void Scene::render()
 	texProgram.setUniform2f("texCoordDispl", 0.f, 0.f);
 	texsuperior->render(texturesuperior);
 
-	superior->free();
-
+	//map->render();
 
 	arrow->render();
 
@@ -237,8 +234,6 @@ void Scene::render()
 	playernext->render();
 
 	renderSprites();
-
-
 
 }
 
@@ -311,7 +306,7 @@ void Scene::updateSprites(int deltaTime)
 	}
 }
 
-void Scene::cleanSprites()
+void Scene::cleanSprites() 
 {
 	glm::ivec2 mapSize = map->getMapSize();
 	for (int j = 0; j < mapSize.y; ++j) {
@@ -325,5 +320,31 @@ void Scene::cleanSprites()
 	}
 }
 
+void Scene::compruebaMapa() 
+{
+	winlvl = map->lvlClear();
+}
 
+void Scene::setNewLvl(int lvl)
+{
+	char number = lvl + '0';
+
+	lvlNumber[13] = number;
+
+	cout << lvlNumber << endl;
+
+	baja = 0;
+	cambio = false;
+	acaba = false;
+	empieza = false;
+	tiempoDisparo = 0;
+	tiempoTecho = 0;
+	delete map;
+	map = TileMap::createTileMap(lvlNumber, glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
+	mapa = map->convertToSprites();
+	playernext->init(glm::ivec2(250.f, 425.f), texProgram, rand() % 4);
+	playernext->setTileMap(map);
+	player->init(glm::ivec2(305.f, 390.f), texProgram, rand() % 4);
+	player->setTileMap(map);
+}
 

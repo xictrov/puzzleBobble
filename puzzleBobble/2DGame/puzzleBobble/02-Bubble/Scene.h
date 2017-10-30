@@ -35,6 +35,8 @@ private:
 	void renderSprites();
 	void updateSprites(int deltatime);
 	void cleanSprites();
+	void compruebaMapa();
+	void setNewLvl(int lvl);
 
 private:
 	TileMap *map;
@@ -43,10 +45,12 @@ private:
 	ShaderProgram texProgram, simpleProgram;
 	float currentTime, angle;
 	glm::mat4 projection;
-	Quad *quad,*techo,*superior;
-	TexturedQuad *texQuad, *textecho,*texsuperior;
-	Texture texs,texturetecho, texturesuperior;
+	Quad *quad, *techo, *superior;
+	TexturedQuad *texQuad, *textecho, *texsuperior;
+	Texture texs, texturetecho, texturesuperior;
 	vector<BolaMapa *> *mapa;
+	string lvlNumber;
+	bool winlvl;
 };
 
 

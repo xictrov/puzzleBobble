@@ -8,7 +8,7 @@
 using namespace std;
 int bajada=0;
 bool primero = true;
-int puntuacion=0;
+int puntuacion = 0;
 
 TileMap *TileMap::createTileMap(const string &levelFile, const glm::vec2 &minCoords, ShaderProgram &program)
 {
@@ -125,7 +125,7 @@ void TileMap::prepareArrays(const glm::vec2 &minCoords, ShaderProgram &program, 
 			if(tile != 0)
 			{
 				if(j+bajada >= 10) {
-					puntuacion=0;
+					puntuacion = 0;
 					gameover=true;
 					bajada=0;
 				}
@@ -308,13 +308,13 @@ void TileMap::colocaBola(int j, int i, int color, int Bolax, int Bolay, bool &ga
 
 	addSprite(posfy, posfx, color);
 
-	prepareArrays(minCoords, program,gameover);
+	if (!lvlClear()) prepareArrays(minCoords, program,gameover);
 
 	search(posfy,posfx,gameover);
 
 	if (posfy >= 10 - bajada) {
 		gameover = true;
-		puntuacion=0;
+		puntuacion = 0;
 		bajada = 0;
 	}
 }
@@ -330,7 +330,8 @@ void TileMap::colocaBolaTecho(int j, int i, int color, bool &gameover)
 	addSprite(j, i, color);
 
 	bool aux=false;
-	prepareArrays(minCoords, program,aux);
+
+	if (!lvlClear()) prepareArrays(minCoords, program, aux);
 
 	search(j, i, gameover);
 }
@@ -339,14 +340,13 @@ void TileMap::colocaBolaTecho(int j, int i, int color, bool &gameover)
 void TileMap::bajaMapa(bool &gameover){
 	bajada+=1;
 	minCoords.y+=32;
-	if (gameover){
-
-		bajada=0;
-		puntuacion=0;
+	if (gameover) {
+		bajada = 0;
+		puntuacion = 0;
 	}
 	glDeleteVertexArrays(1, &vao);
 	glDeleteBuffers(1, &vbo);
-	prepareArrays(minCoords,program,gameover);
+	if (!lvlClear()) prepareArrays(minCoords, program, gameover);
 }
 
 void TileMap::searchBallsToDestroy(int j, int i)
@@ -436,7 +436,7 @@ void TileMap::deleteBalls(vector<glm::ivec2> &ballsToDelete, bool &gameover)
 
 	glDeleteVertexArrays(1, &vao);
 	glDeleteBuffers(1, &vbo);
-	prepareArrays(minCoords, program, gameover);
+	if (!lvlClear()) prepareArrays(minCoords, program, gameover);
 }
 
 void TileMap::deleteAloneBalls(bool &gameover)
@@ -460,7 +460,7 @@ void TileMap::deleteAloneBalls(bool &gameover)
 
 	glDeleteVertexArrays(1, &vao);
 	glDeleteBuffers(1, &vbo);
-	prepareArrays(minCoords, program, gameover);
+	if (!lvlClear()) prepareArrays(minCoords, program, gameover);
 }
 
 void TileMap::clearVectors()
@@ -489,15 +489,14 @@ vector<BolaMapa *> * TileMap::convertToSprites()
 	return &spriteMap;
 }
 
-void TileMap::search(int j, int i, bool &gameover)
+void TileMap::search(int j, int i, bool &gameover) 
 {
 	searchBallsToDestroy(j,i);
 
 	if (ballsToDestroy.size() != 0) { ballsToDestroy.push_back(glm::ivec2(i, j)); }
 
 	if (ballsToDestroy.size() >= 3) {
-		puntuacion+=ballsToDestroy.size()*10;
-		cout << puntuacion << endl;
+		puntuacion += ballsToDestroy.size() * 10;
 		deleteBalls(ballsToDestroy, gameover);
 	}
 
@@ -510,13 +509,13 @@ void TileMap::search(int j, int i, bool &gameover)
 	deleteAloneBalls(gameover);
 }
 
-void TileMap::addSprite(int j, int i, int color)
+void TileMap::addSprite(int j, int i, int color) 
 {
 	glm::vec2 posTile;
 
 	if (j % 2 == 0) posTile = glm::vec2(minCoords.x + i*tileSize, minCoords.y + j*tileSize);
 	else posTile = glm::vec2(minCoords.x + i*tileSize + tileSize / 2, minCoords.y + j*tileSize);
-
+	
 	if (spriteMap[j*mapSize.x + i] != NULL) {
 		delete spriteMap[j*mapSize.x + i];
 		spriteMap[j*mapSize.x + i] = NULL;
@@ -525,6 +524,15 @@ void TileMap::addSprite(int j, int i, int color)
 		spriteMap[j*mapSize.x + i] = new BolaMapa();
 		spriteMap[j*mapSize.x + i]->init(posTile, program, color + 1);
 	}
+}
+
+bool TileMap::lvlClear()
+{
+	bool lvlclear = true;
+	for (int i = 0; i < mapSize.x; ++i) {
+		if (tileMap[0 * mapSize.x + i] != 0) lvlclear = false;
+	}
+	return lvlclear;
 }
 
 

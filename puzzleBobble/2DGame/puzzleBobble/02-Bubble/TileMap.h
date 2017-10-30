@@ -42,6 +42,7 @@ public:
 	void searchAloneBalls(int j, int i);
 	void deleteAloneBalls(bool &gameover);
 	vector<BolaMapa *> * convertToSprites();
+	bool lvlClear();
 
 private:
 	bool loadLevel(const string &levelFile);
