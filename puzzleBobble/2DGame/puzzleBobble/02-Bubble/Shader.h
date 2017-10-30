@@ -4,7 +4,7 @@
 
 #include <string>
 #include <GL/glew.h>
-#include <OpenGL/gl.h>
+#include <GL/gl.h>
 
 
 using namespace std;

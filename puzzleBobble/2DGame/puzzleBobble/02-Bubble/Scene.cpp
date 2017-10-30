@@ -3,7 +3,7 @@
 #include <cmath>
 #include <glm/gtc/matrix_transform.hpp>
 #include <GL/glew.h>
-#include <GLUT/glut.h>
+#include <GL/glut.h>
 #include <time.h>
 #include "Scene.h"
 #include "Game.h"
