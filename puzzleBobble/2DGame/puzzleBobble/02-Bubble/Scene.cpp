@@ -170,13 +170,14 @@ void Scene::update(int deltaTime)
 			setNewLvl(contadorNivel);
 		}
 	}
-	winlvl = false;
-	updateSprites(deltaTime);
 
 	if (winlvl) {
 		++contadorNivel;
 		setNewLvl(contadorNivel);
 	}
+
+	winlvl = false;
+	updateSprites(deltaTime);
 }
 
 void Scene::render()

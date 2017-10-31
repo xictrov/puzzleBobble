@@ -1,2 +1,7 @@
-﻿  BolaMapa.cpp
+﻿  Scene.cpp
+c:\users\vimar\desktop\puzzlebobble\puzzlebobble\2dgame\puzzlebobble\02-bubble\scene.cpp(46): warning C4244: 'argumento': conversión de 'time_t' a 'unsigned int'; posible pérdida de datos
+c:\users\vimar\desktop\puzzlebobble\puzzlebobble\2dgame\puzzlebobble\02-bubble\scene.cpp(68): warning C4018: '<': no coinciden signed/unsigned
+c:\users\vimar\desktop\puzzlebobble\puzzlebobble\2dgame\puzzlebobble\02-bubble\scene.cpp(111): warning C4018: '<': no coinciden signed/unsigned
+c:\users\vimar\desktop\puzzlebobble\puzzlebobble\2dgame\puzzlebobble\02-bubble\scene.cpp(138): warning C4244: 'inicializando': conversión de 'double' a 'float'; posible pérdida de datos
+c:\users\vimar\desktop\puzzlebobble\puzzlebobble\2dgame\puzzlebobble\02-bubble\scene.cpp(139): warning C4244: 'inicializando': conversión de 'double' a 'float'; posible pérdida de datos
   02-Bubble.vcxproj -> C:\Users\vimar\Desktop\puzzleBobble\puzzleBobble\2DGame\puzzleBobble\02-Bubble\Debug\02-Bubble.exe
