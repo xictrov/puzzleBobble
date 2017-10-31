@@ -489,7 +489,7 @@ vector<BolaMapa *> * TileMap::convertToSprites()
 	return &spriteMap;
 }
 
-void TileMap::search(int j, int i, bool &gameover) 
+void TileMap::search(int j, int i, bool &gameover)
 {
 	searchBallsToDestroy(j,i);
 
@@ -509,13 +509,13 @@ void TileMap::search(int j, int i, bool &gameover)
 	deleteAloneBalls(gameover);
 }
 
-void TileMap::addSprite(int j, int i, int color) 
+void TileMap::addSprite(int j, int i, int color)
 {
 	glm::vec2 posTile;
 
 	if (j % 2 == 0) posTile = glm::vec2(minCoords.x + i*tileSize, minCoords.y + j*tileSize);
 	else posTile = glm::vec2(minCoords.x + i*tileSize + tileSize / 2, minCoords.y + j*tileSize);
-	
+
 	if (spriteMap[j*mapSize.x + i] != NULL) {
 		delete spriteMap[j*mapSize.x + i];
 		spriteMap[j*mapSize.x + i] = NULL;

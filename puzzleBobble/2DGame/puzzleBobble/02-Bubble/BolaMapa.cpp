@@ -74,9 +74,9 @@ void BolaMapa::explode()
 	}
 }
 
-void BolaMapa::fallDown() 
+void BolaMapa::fallDown()
 {
-	
+
 }
 
 int BolaMapa::getAnimRepetitions()

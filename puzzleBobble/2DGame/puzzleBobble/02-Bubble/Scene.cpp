@@ -53,7 +53,7 @@ void Scene::init()
 
 	// Load textures
 	texs.loadFromFile("images/gameBackground.png", TEXTURE_PIXEL_FORMAT_RGBA);
-	
+
 	texturesuperior.loadFromFile("images/parteSuperiorMapa.png", TEXTURE_PIXEL_FORMAT_RGBA);
 	texturetecho.loadFromFile("images/techo.png", TEXTURE_PIXEL_FORMAT_RGBA);
 
@@ -113,7 +113,7 @@ void Scene::update(int deltaTime)
 		gameover = false;
 		winlvl = false;
 	}
-	if(!gameover){
+	if(!gameover && !winlvl){
 
 		if(tiempoTecho%300==0){
 			baja += 1;
@@ -306,7 +306,7 @@ void Scene::updateSprites(int deltaTime)
 	}
 }
 
-void Scene::cleanSprites() 
+void Scene::cleanSprites()
 {
 	glm::ivec2 mapSize = map->getMapSize();
 	for (int j = 0; j < mapSize.y; ++j) {
@@ -320,7 +320,7 @@ void Scene::cleanSprites()
 	}
 }
 
-void Scene::compruebaMapa() 
+void Scene::compruebaMapa()
 {
 	winlvl = map->lvlClear();
 }
@@ -333,10 +333,12 @@ void Scene::setNewLvl(int lvl)
 
 	cout << lvlNumber << endl;
 
+	winlvl=false;
 	baja = 0;
 	cambio = false;
 	acaba = false;
 	empieza = false;
+	gameover=false;
 	tiempoDisparo = 0;
 	tiempoTecho = 0;
 	delete map;
