@@ -4,6 +4,7 @@
 
 #include <glm/glm.hpp>
 #include <vector>
+#include <set>
 #include "BolaMapa.h"
 #include "Texture.h"
 #include "ShaderProgram.h"
@@ -43,6 +44,7 @@ public:
 	void deleteAloneBalls(bool &gameover);
 	vector<BolaMapa *> * convertToSprites();
 	bool lvlClear();
+	set<int> checkColors();
 
 private:
 	bool loadLevel(const string &levelFile);

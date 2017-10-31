@@ -37,6 +37,7 @@ private:
 	void cleanSprites();
 	void compruebaMapa();
 	void setNewLvl(int lvl);
+	void checkColors();
 
 private:
 	TileMap *map;
@@ -51,6 +52,7 @@ private:
 	vector<BolaMapa *> *mapa;
 	string lvlNumber;
 	bool winlvl;
+	vector<int> ballColors;
 };
 
 

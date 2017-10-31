@@ -53,7 +53,7 @@ void Scene::init()
 
 	// Load textures
 	texs.loadFromFile("images/gameBackground.png", TEXTURE_PIXEL_FORMAT_RGBA);
-
+	
 	texturesuperior.loadFromFile("images/parteSuperiorMapa.png", TEXTURE_PIXEL_FORMAT_RGBA);
 	texturetecho.loadFromFile("images/techo.png", TEXTURE_PIXEL_FORMAT_RGBA);
 
@@ -63,15 +63,21 @@ void Scene::init()
 
 	mapa = map->convertToSprites();
 
-	player = new Player();
-	player->init(glm::ivec2(305.f, 390.f), texProgram,rand()%4);
-	//player->setPosition(glm::vec2(INIT_PLAYER_X_TILES * map->getTileSize(), INIT_PLAYER_Y_TILES * map->getTileSize()));
-	player->setTileMap(map);
+	checkColors();
 
+	for (int i = 0; i < ballColors.size(); ++i) cout << ballColors[i];
+	cout << endl;
+
+	player = new Player();
+	if (ballColors.size() > 0) {
+		player->init(glm::ivec2(305.f, 390.f), texProgram, ballColors[rand() % ballColors.size()]);
+		player->setTileMap(map);
+	}
 	playernext = new Player();
-	playernext->init(glm::ivec2(250.f, 425.f), texProgram,rand()%4);
-	//player->setPosition(glm::vec2(INIT_PLAYER_X_TILES * map->getTileSize(), INIT_PLAYER_Y_TILES * map->getTileSize()));
-	playernext->setTileMap(map);
+	if (ballColors.size() > 0) {
+		playernext->init(glm::ivec2(250.f, 425.f), texProgram, ballColors[rand() % ballColors.size()]);
+		playernext->setTileMap(map);
+	}
 
 	arrow = new Arrow();
 	arrow->init(glm::ivec2(299.f, 340.f), texProgram);
@@ -82,7 +88,6 @@ void Scene::init()
 	angle = 90.0f;
 
 	winlvl = false;
-
 
 	glm::vec2 geomTecho[2] = { glm::vec2(SCREEN_X, -480.f + SCREEN_Y + baja*32.f), glm::vec2(SCREEN_X + 250, SCREEN_Y + baja*32.f) };
 	glm::vec2 texCoordsTecho[2] = { glm::vec2(0.f, 0.f), glm::vec2(1.f, 1.f) };
@@ -103,10 +108,8 @@ void Scene::update(int deltaTime)
 
 	compruebaMapa();
 
-	if (winlvl) {
-		++contadorNivel;
-		setNewLvl(contadorNivel);
-	}
+		for (int i = 0; i < ballColors.size(); ++i) cout << ballColors[i];
+	cout << endl;
 
 	if(Game::instance().getSpecialKey(GLUT_KEY_DOWN))
 	{
@@ -115,7 +118,7 @@ void Scene::update(int deltaTime)
 	}
 	if(!gameover && !winlvl){
 
-		if(tiempoTecho%300==0){
+		if(tiempoTecho%1200==0){
 			baja += 1;
 			map->bajaMapa(gameover);
 			cleanSprites();
@@ -157,15 +160,23 @@ void Scene::update(int deltaTime)
 			empieza = false;
 			acaba = false;
 			angle = angleAux;
-			playernext->init(glm::ivec2(250.f, 425.f), texProgram, rand() % 4);
-			playernext->setTileMap(map);
+			checkColors();
+			if (ballColors.size() > 0) {
+				playernext->init(glm::ivec2(250.f, 425.f), texProgram, ballColors[rand() % ballColors.size()]);
+				playernext->setTileMap(map);
+			}
 		}
 		if(gameover) {
 			setNewLvl(contadorNivel);
 		}
 	}
-	winlvl=false;
+	winlvl = false;
 	updateSprites(deltaTime);
+
+	if (winlvl) {
+		++contadorNivel;
+		setNewLvl(contadorNivel);
+	}
 }
 
 void Scene::render()
@@ -194,8 +205,6 @@ void Scene::render()
 	texProgram.setUniformMatrix4f("modelview", modelview);
 	texProgram.setUniform2f("texCoordDispl", 0.f, 0.f);
 
-	techo->free();
-	textecho->free();
 
 	glm::vec2 geomTecho[2] = { glm::vec2(SCREEN_X, -480.f + SCREEN_Y + baja*32.f), glm::vec2(SCREEN_X + 256, SCREEN_Y + baja*32.f) };
 	glm::vec2 texCoordsTecho[2] = { glm::vec2(0.f, 0.f), glm::vec2(1.f, 1.f) };
@@ -210,8 +219,9 @@ void Scene::render()
 	texProgram.setUniform2f("texCoordDispl", 0.f, 0.f);
 	textecho->render(texturetecho);
 
-	superior->free();
-	texsuperior->free();
+	techo->free();
+	textecho->free();
+
 
 	glm::vec2 geomSuperior[2] = { glm::vec2(SCREEN_X, 0), glm::vec2(SCREEN_X + 256, SCREEN_Y) };
 	glm::vec2 texCoordsSuperior[2] = { glm::vec2(0.f, 0.f), glm::vec2(1.f, 1.f) };
@@ -225,6 +235,9 @@ void Scene::render()
 	texProgram.setUniformMatrix4f("modelview", modelview);
 	texProgram.setUniform2f("texCoordDispl", 0.f, 0.f);
 	texsuperior->render(texturesuperior);
+
+	superior->free();
+	texsuperior->free();
 
 	//map->render();
 
@@ -307,7 +320,7 @@ void Scene::updateSprites(int deltaTime)
 	}
 }
 
-void Scene::cleanSprites()
+void Scene::cleanSprites() 
 {
 	glm::ivec2 mapSize = map->getMapSize();
 	for (int j = 0; j < mapSize.y; ++j) {
@@ -321,7 +334,7 @@ void Scene::cleanSprites()
 	}
 }
 
-void Scene::compruebaMapa()
+void Scene::compruebaMapa() 
 {
 	winlvl = map->lvlClear();
 }
@@ -333,19 +346,34 @@ void Scene::setNewLvl(int lvl)
 	lvlNumber[13] = number;
 
 	cout << lvlNumber << endl;
+
 	baja = 0;
 	cambio = false;
 	acaba = false;
 	empieza = false;
-	gameover=false;
+	gameover = false;
 	tiempoDisparo = 0;
 	tiempoTecho = 0;
 	delete map;
 	map = TileMap::createTileMap(lvlNumber, glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
 	mapa = map->convertToSprites();
-	playernext->init(glm::ivec2(250.f, 425.f), texProgram, rand() % 4);
-	playernext->setTileMap(map);
-	player->init(glm::ivec2(305.f, 390.f), texProgram, rand() % 4);
-	player->setTileMap(map);
+	checkColors();
+	if (ballColors.size() > 0) {
+		player->init(glm::ivec2(305.f, 390.f), texProgram, ballColors[rand() % ballColors.size()]);
+		player->setTileMap(map);
+	}
+	if (ballColors.size() > 0) {
+		playernext->init(glm::ivec2(250.f, 425.f), texProgram, ballColors[rand() % ballColors.size()]);
+		playernext->setTileMap(map);
+	}
+
 }
 
+void Scene::checkColors() 
+{
+	set<int> colors = map->checkColors();
+	if (colors.size() != ballColors.size()) {
+		ballColors.resize(colors.size());
+		ballColors.assign(colors.begin(), colors.end());
+	}
+}
