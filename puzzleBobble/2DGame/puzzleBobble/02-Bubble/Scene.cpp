@@ -164,6 +164,7 @@ void Scene::update(int deltaTime)
 			setNewLvl(contadorNivel);
 		}
 	}
+	winlvl=false;
 	updateSprites(deltaTime);
 }
 
@@ -332,8 +333,6 @@ void Scene::setNewLvl(int lvl)
 	lvlNumber[13] = number;
 
 	cout << lvlNumber << endl;
-
-	winlvl=false;
 	baja = 0;
 	cambio = false;
 	acaba = false;
