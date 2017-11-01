@@ -16,7 +16,7 @@ class Player
 public:
 
 	int color;
-	void init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram, int colorbola);
+	void init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram, int colorbola, bool &gameover);
 	void update(int deltaTime, float angle, bool &cambio, bool &acaba, bool &gameover);
 	void render();
 

@@ -229,12 +229,14 @@ bool TileMap::collisionMoveDown(const glm::ivec2 &pos, const glm::ivec2 &size, i
 
 bool TileMap::collision(const glm::ivec2 &pos,int color, bool &gameover, int currentTime)
 {
+
 	deltaTime = currentTime;
 	for (int j=0;j<mapSize.y;++j){
 		for (int i=0;i<mapSize.x;++i){
 
 			int tile= tileMap[j*mapSize.x + i];
 			if(tile!=0){
+
 				glm::vec2 posTile;
 				if(j%2==0){
 					posTile=glm::vec2(minCoords.x+i*tileSize,minCoords.y+j*tileSize);
@@ -249,8 +251,10 @@ bool TileMap::collision(const glm::ivec2 &pos,int color, bool &gameover, int cur
 
 				double dist=(sqrt(pow(abs(BolaMapax-BolaJugadax),2)+pow(abs(BolaMapay-BolaJugaday),2)));
 				if(dist<=32){
+
 					colocaBola(j,i,color,BolaJugadax,BolaJugaday,gameover);
 					return true;
+
 				}
 				if(BolaJugaday<60+bajada*32){
 					colocaBolaTecho(0,(BolaJugadax-193.f)/32,color,gameover);
@@ -306,17 +310,11 @@ void TileMap::colocaBola(int j, int i, int color, int Bolax, int Bolay, bool &ga
 
 	tileMap[posfy*mapSize.x + posfx] = color+1;
 
-	addSprite(posfy, posfx, color);
+	addSprite(posfy, posfx, color,gameover);
 
 	if (!lvlClear()) prepareArrays(minCoords, program,gameover);
 
 	search(posfy,posfx,gameover);
-
-	if (posfy >= 10 - bajada) {
-		gameover = true;
-		puntuacion = 0;
-		bajada = 0;
-	}
 }
 
 
@@ -327,7 +325,7 @@ void TileMap::colocaBolaTecho(int j, int i, int color, bool &gameover)
 	glDeleteBuffers(1, &vbo);
 	tileMap[j*mapSize.x + i] = color+1;
 
-	addSprite(j, i, color);
+	addSprite(j, i, color,gameover);
 
 	bool aux=false;
 
@@ -425,6 +423,7 @@ void TileMap::deleteBalls(vector<glm::ivec2> &ballsToDelete, bool &gameover)
 		j = ballsToDelete[k].y;
 		tileMap[j*mapSize.x + i] = 0;
 		spriteMap[j*mapSize.x + i]->explode();
+		if(j==10) gameover=false;
 		if (spriteMap[j*mapSize.x + i]->getAnimRepetitions() == 1) {
 			delete spriteMap[j*mapSize.x + i];
 			spriteMap[j*mapSize.x + i] = NULL;
@@ -441,11 +440,13 @@ void TileMap::deleteBalls(vector<glm::ivec2> &ballsToDelete, bool &gameover)
 
 void TileMap::deleteAloneBalls(bool &gameover)
 {
+	int contador=0;
 	for (int j = 0; j < mapSize.y; j++)
 	{
 		for (int i = 0; i < mapSize.x; i++)
 		{
 			if (visitedMap[j*mapSize.x + i] == false && tileMap[j*mapSize.x + i] != 0) {
+				++contador;
 				tileMap[j*mapSize.x + i] = 0;
 				spriteMap[j*mapSize.x + i]->explode();
 				if (spriteMap[j*mapSize.x + i]->getAnimRepetitions() == 1) {
@@ -454,6 +455,10 @@ void TileMap::deleteAloneBalls(bool &gameover)
 				}
 			}
 		}
+	}
+	if(contador>0){
+
+		engine->play2D("./sounds/pbobble-032.wav", false);
 	}
 
 	clearVectors();
@@ -476,31 +481,36 @@ void TileMap::clearVectors()
 	}
 }
 
-vector<BolaMapa *> * TileMap::convertToSprites()
+vector<BolaMapa *> * TileMap::convertToSprites(bool &gameover)
 {
 	for (int j = 0; j < mapSize.y; ++j) {
 		for (int i = 0; i < mapSize.x; ++i) {
 			int tile = tileMap[j*mapSize.x + i];
 			if (tile != 0) {
-				addSprite(j, i, tile-1);
+				addSprite(j, i, tile-1,gameover);
 			}
 		}
 	}
 	return &spriteMap;
 }
 
-void TileMap::search(int j, int i, bool &gameover) 
+void TileMap::search(int j, int i, bool &gameover)
 {
 	searchBallsToDestroy(j,i);
 
 	if (ballsToDestroy.size() != 0) { ballsToDestroy.push_back(glm::ivec2(i, j)); }
 
 	if (ballsToDestroy.size() >= 3) {
+		engine->play2D("./sounds/pbobble-010.wav", false);
 		puntuacion += ballsToDestroy.size() * 10;
 		deleteBalls(ballsToDestroy, gameover);
 	}
 
-	else clearVectors();
+	else {
+
+		engine->play2D("./sounds/pbobble-005.wav", false);
+		clearVectors();
+	}
 
 	for (int k = 0; k < mapSize.x; ++k) {
 		if (tileMap[0 * mapSize.x + k] != 0) searchAloneBalls(0, k);
@@ -509,20 +519,20 @@ void TileMap::search(int j, int i, bool &gameover)
 	deleteAloneBalls(gameover);
 }
 
-void TileMap::addSprite(int j, int i, int color) 
+void TileMap::addSprite(int j, int i, int color,bool &gameover)
 {
 	glm::vec2 posTile;
 
 	if (j % 2 == 0) posTile = glm::vec2(minCoords.x + i*tileSize, minCoords.y + j*tileSize);
 	else posTile = glm::vec2(minCoords.x + i*tileSize + tileSize / 2, minCoords.y + j*tileSize);
-	
+
 	if (spriteMap[j*mapSize.x + i] != NULL) {
 		delete spriteMap[j*mapSize.x + i];
 		spriteMap[j*mapSize.x + i] = NULL;
 	}
 	else {
 		spriteMap[j*mapSize.x + i] = new BolaMapa();
-		spriteMap[j*mapSize.x + i]->init(posTile, program, color + 1);
+		spriteMap[j*mapSize.x + i]->init(posTile, program, color + 1,gameover);
 	}
 }
 
@@ -535,7 +545,7 @@ bool TileMap::lvlClear()
 	return lvlclear;
 }
 
-set<int> TileMap::checkColors() 
+set<int> TileMap::checkColors()
 {
 	set<int> vColors;
 	for (int j = 0; j < mapSize.y; ++j) {
@@ -549,7 +559,9 @@ set<int> TileMap::checkColors()
 	return vColors;
 }
 
-
+void TileMap::setSound(irrklang::ISoundEngine* eng) {
+	engine = eng;
+}
 
 
 

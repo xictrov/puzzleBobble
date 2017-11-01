@@ -10,6 +10,12 @@
 #include "TexturedQuad.h"
 #include "Arrow.h"
 #include "BolaMapa.h"
+#include <irrKlang.h>
+#if defined(WIN32)
+#include <conio.h>
+#else
+#include "conio.h"
+#endif
 
 #define SCREEN_WIDTH 640.f
 #define SCREEN_HEIGHT 480.f
@@ -29,6 +35,7 @@ public:
 	void init();
 	void update(int deltaTime);
 	void render();
+	void setSound(irrklang::ISoundEngine* eng);
 
 private:
 	void initShaders();
@@ -53,6 +60,8 @@ private:
 	string lvlNumber;
 	bool winlvl;
 	vector<int> ballColors;
+
+	irrklang::ISoundEngine* engine;
 };
 
 

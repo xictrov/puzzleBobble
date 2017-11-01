@@ -9,7 +9,7 @@
 
 #include <GL/glew.h>
 
-#include <GL/glut.h>
+#include <GLUT/glut.h>
 
 #include "BolaMapa.h"
 
@@ -49,17 +49,25 @@ BolaMapa::~BolaMapa() {
 
 
 
-void BolaMapa::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram, int colorbola)
+void BolaMapa::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram, int colorbola, bool &gameover)
 
 {
+
+	fall=0;
 
 	color = colorbola - 1;
 
 	bJumping = false;
 
 	explota = false;
+	if(!gameover){
 
-	spritesheet.loadFromFile("images/sprites.png", TEXTURE_PIXEL_FORMAT_RGBA);
+		spritesheet.loadFromFile("images/sprites.png", TEXTURE_PIXEL_FORMAT_RGBA);
+	}
+	else{
+
+		spritesheet.loadFromFile("images/escalagrises.png", TEXTURE_PIXEL_FORMAT_RGBA);
+	}
 
 	sprite = Sprite::createSprite(glm::ivec2(32, 32), glm::vec2(0.166666, 0.125), &spritesheet, &shaderProgram);
 
@@ -141,16 +149,17 @@ void BolaMapa::setPosition(const glm::vec2 &pos)
 
 void BolaMapa::explode()
 {
-	for (int i = 0; i<6; ++i) {
-		sprite->changeAnimation(EXPLOSION);
-	}
+
+	sprite->changeAnimation(EXPLOSION);
+	
 }
 
 
 
 void BolaMapa::fallDown()
 {
-
+	fall=1;
+	sprite->changeAnimation(FALL_DOWN);
 }
 
 
@@ -158,4 +167,15 @@ void BolaMapa::fallDown()
 int BolaMapa::getAnimRepetitions()
 {
 	return sprite->getAnimRepetitions();
+}
+
+int BolaMapa::animation()
+{
+	return sprite->animation();
+}
+
+
+int BolaMapa::getfall()
+{
+	return fall;
 }

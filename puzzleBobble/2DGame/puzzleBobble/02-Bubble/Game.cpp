@@ -1,13 +1,29 @@
 #include <GL/glew.h>
-#include <GL/glut.h>
+#include <GLUT/glut.h>
 #include "Game.h"
+#include <irrKlang.h>
+#if defined(WIN32)
+#include <conio.h>
+#else
+#include "conio.h"
+#endif
 
+#pragma comment(lib, "irrKlang.lib")
 
 void Game::init()
 {
+	engine = irrklang::createIrrKlangDevice();
+	if (!engine)
+	{
+		printf("Could not startup engine\n");
+		//return 0; // error starting up the engine
+	}
+	engine->setSoundVolume(0.5f);
 	bPlay = true;
 	glClearColor(0.3f, 0.3f, 0.3f, 1.0f);
+	
 	scene.init();
+	scene.setSound(engine);
 }
 
 bool Game::update(int deltaTime)

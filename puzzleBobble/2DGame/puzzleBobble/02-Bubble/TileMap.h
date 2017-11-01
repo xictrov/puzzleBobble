@@ -8,6 +8,12 @@
 #include "BolaMapa.h"
 #include "Texture.h"
 #include "ShaderProgram.h"
+#include <irrKlang.h>
+#if defined(WIN32)
+#include <conio.h>
+#else
+#include "conio.h"
+#endif
 
 
 // Class Tilemap is capable of loading a tile map from a text file in a very
@@ -42,16 +48,18 @@ public:
 	void deleteBalls(std::vector<glm::ivec2> &positions, bool &gameover);
 	void searchAloneBalls(int j, int i);
 	void deleteAloneBalls(bool &gameover);
-	vector<BolaMapa *> * convertToSprites();
+	vector<BolaMapa *> * convertToSprites(bool &gameover);
 	bool lvlClear();
 	set<int> checkColors();
+
+	void setSound(irrklang::ISoundEngine* eng);
 
 private:
 	bool loadLevel(const string &levelFile);
 	void prepareArrays(const glm::vec2 &minCoords, ShaderProgram &program, bool &gameover);
 	void clearVectors();
 	void search(int j, int i, bool &gameover);
-	void addSprite(int j, int i, int color);
+	void addSprite(int j, int i, int color, bool &gameover);
 
 private:
 	GLuint vao;
@@ -69,6 +77,7 @@ private:
 	std::vector<glm::ivec2> ballsToDestroy;
 	std::vector<BolaMapa *> spriteMap;
 	int deltaTime;
+	irrklang::ISoundEngine* engine;
 
 };
 

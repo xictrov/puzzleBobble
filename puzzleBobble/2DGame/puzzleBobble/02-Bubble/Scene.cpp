@@ -3,10 +3,11 @@
 #include <cmath>
 #include <glm/gtc/matrix_transform.hpp>
 #include <GL/glew.h>
-#include <GL/glut.h>
+#include <GLUT/glut.h>
 #include <time.h>
 #include "Scene.h"
 #include "Game.h"
+#include <irrKlang.h>
 
 using namespace std;
 
@@ -53,7 +54,7 @@ void Scene::init()
 
 	// Load textures
 	texs.loadFromFile("images/gameBackground.png", TEXTURE_PIXEL_FORMAT_RGBA);
-	
+
 	texturesuperior.loadFromFile("images/parteSuperiorMapa.png", TEXTURE_PIXEL_FORMAT_RGBA);
 	texturetecho.loadFromFile("images/techo.png", TEXTURE_PIXEL_FORMAT_RGBA);
 
@@ -61,21 +62,18 @@ void Scene::init()
 
 	map = TileMap::createTileMap(lvlNumber, glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
 
-	mapa = map->convertToSprites();
+	mapa = map->convertToSprites(gameover);
 
 	checkColors();
 
-	for (int i = 0; i < ballColors.size(); ++i) cout << ballColors[i];
-	cout << endl;
-
 	player = new Player();
 	if (ballColors.size() > 0) {
-		player->init(glm::ivec2(305.f, 390.f), texProgram, ballColors[rand() % ballColors.size()]);
+		player->init(glm::ivec2(305.f, 390.f), texProgram, ballColors[rand() % ballColors.size()],gameover);
 		player->setTileMap(map);
 	}
 	playernext = new Player();
 	if (ballColors.size() > 0) {
-		playernext->init(glm::ivec2(250.f, 425.f), texProgram, ballColors[rand() % ballColors.size()]);
+		playernext->init(glm::ivec2(250.f, 425.f), texProgram, ballColors[rand() % ballColors.size()],gameover);
 		playernext->setTileMap(map);
 	}
 
@@ -102,14 +100,12 @@ void Scene::init()
 
 void Scene::update(int deltaTime)
 {
+
+	map->setSound(engine);
 	currentTime += deltaTime;
 	tiempoDisparo+=1;
 	tiempoTecho += 1;
-
 	compruebaMapa();
-
-		for (int i = 0; i < ballColors.size(); ++i) cout << ballColors[i];
-	cout << endl;
 
 	if(Game::instance().getSpecialKey(GLUT_KEY_DOWN))
 	{
@@ -122,7 +118,7 @@ void Scene::update(int deltaTime)
 			baja += 1;
 			map->bajaMapa(gameover);
 			cleanSprites();
-			mapa = map->convertToSprites();
+			mapa = map->convertToSprites(gameover);
 		}
 		if (Game::instance().getSpecialKey(GLUT_KEY_LEFT))
 		{
@@ -141,6 +137,8 @@ void Scene::update(int deltaTime)
 		if(!empieza) arrow->update(deltaTime, numRadArrow);
 
 		if (Game::instance().getSpecialKey(GLUT_KEY_UP)) {
+
+			engine->play2D("./sounds/pbobble-002.wav", false);
 			angleAux = angle;
 			tiempoDisparo = 0;
 			empieza = true;
@@ -155,19 +153,27 @@ void Scene::update(int deltaTime)
 			cambio = false;
 		}
 		if (acaba) {
-			player->init(glm::ivec2(305.f, 390.f), texProgram, playernext->color);
+			player->init(glm::ivec2(305.f, 390.f), texProgram, playernext->color,gameover);
 			player->setTileMap(map);
 			empieza = false;
 			acaba = false;
 			angle = angleAux;
 			checkColors();
 			if (ballColors.size() > 0) {
-				playernext->init(glm::ivec2(250.f, 425.f), texProgram, ballColors[rand() % ballColors.size()]);
+				playernext->init(glm::ivec2(250.f, 425.f), texProgram, ballColors[rand() % ballColors.size()],gameover);
 				playernext->setTileMap(map);
 			}
 		}
 		if(gameover) {
-			setNewLvl(contadorNivel);
+
+			player->init(glm::ivec2(305.f, 390.f), texProgram, player->color,gameover);
+			player->setTileMap(map);
+			playernext->init(glm::ivec2(250.f, 425.f), texProgram, ballColors[playernext->color],gameover);
+			playernext->setTileMap(map);
+
+			cleanSprites();
+			mapa=map->convertToSprites(gameover);
+			engine->play2D("./sounds/pbobble-041.wav", false);
 		}
 	}
 
@@ -321,7 +327,7 @@ void Scene::updateSprites(int deltaTime)
 	}
 }
 
-void Scene::cleanSprites() 
+void Scene::cleanSprites()
 {
 	glm::ivec2 mapSize = map->getMapSize();
 	for (int j = 0; j < mapSize.y; ++j) {
@@ -335,7 +341,7 @@ void Scene::cleanSprites()
 	}
 }
 
-void Scene::compruebaMapa() 
+void Scene::compruebaMapa()
 {
 	winlvl = map->lvlClear();
 }
@@ -357,20 +363,20 @@ void Scene::setNewLvl(int lvl)
 	tiempoTecho = 0;
 	delete map;
 	map = TileMap::createTileMap(lvlNumber, glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
-	mapa = map->convertToSprites();
+	mapa = map->convertToSprites(gameover);
 	checkColors();
 	if (ballColors.size() > 0) {
-		player->init(glm::ivec2(305.f, 390.f), texProgram, ballColors[rand() % ballColors.size()]);
+		player->init(glm::ivec2(305.f, 390.f), texProgram, ballColors[rand() % ballColors.size()],gameover);
 		player->setTileMap(map);
 	}
 	if (ballColors.size() > 0) {
-		playernext->init(glm::ivec2(250.f, 425.f), texProgram, ballColors[rand() % ballColors.size()]);
+		playernext->init(glm::ivec2(250.f, 425.f), texProgram, ballColors[rand() % ballColors.size()],gameover);
 		playernext->setTileMap(map);
 	}
 
 }
 
-void Scene::checkColors() 
+void Scene::checkColors()
 {
 	set<int> colors = map->checkColors();
 	if (colors.size() != ballColors.size()) {
@@ -378,3 +384,7 @@ void Scene::checkColors()
 		ballColors.assign(colors.begin(), colors.end());
 	}
 }
+void Scene::setSound(irrklang::ISoundEngine* eng) {
+	engine = eng;
+}
+

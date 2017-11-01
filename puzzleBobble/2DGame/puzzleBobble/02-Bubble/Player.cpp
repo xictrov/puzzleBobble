@@ -2,7 +2,7 @@
 #include <cmath>
 #include <iostream>
 #include <GL/glew.h>
-#include <GL/glut.h>
+#include <GLUT/glut.h>
 #include "Player.h"
 #include "Game.h"
 
@@ -22,11 +22,18 @@ enum explosionAnims {
 };
 
 
-void Player::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram, int colorbola)
+void Player::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram, int colorbola, bool &gameover)
 {
 	color=colorbola;
 	bJumping = false;
-	spritesheet.loadFromFile("images/sprites.png", TEXTURE_PIXEL_FORMAT_RGBA);
+	if(!gameover){
+
+		spritesheet.loadFromFile("images/sprites.png", TEXTURE_PIXEL_FORMAT_RGBA);
+	}
+	else{
+
+		spritesheet.loadFromFile("images/escalagrises.png", TEXTURE_PIXEL_FORMAT_RGBA);
+	}
 	sprite = Sprite::createSprite(glm::ivec2(32, 32), glm::vec2(0.16666, 0.125f), &spritesheet, &shaderProgram);
 	sprite->setNumberAnimations(1);
 

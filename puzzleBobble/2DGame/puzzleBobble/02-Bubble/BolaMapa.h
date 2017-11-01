@@ -18,7 +18,7 @@ public:
 
 	~BolaMapa();
 
-	void init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram, int colorbola);
+	void init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram, int colorbola, bool &gameover);
 	void update(int deltaTime, float angle);
 	void render();
 
@@ -28,6 +28,8 @@ public:
 	void fallDown();
 
 	int getAnimRepetitions();
+	int animation();
+	int getfall();
 
 private:
 	bool bJumping, explota;
@@ -36,6 +38,7 @@ private:
 	int jumpAngle, startY;
 	Texture spritesheet, explosionsheet;
 	Sprite *sprite;
+	int fall;
 
 };
 
