@@ -1,5 +1,5 @@
 #include <GL/glew.h>
-#include <GLUT/glut.h>
+#include <GL/glut.h>
 #include "Game.h"
 #include "Menu.h"
 #include <irrKlang.h>

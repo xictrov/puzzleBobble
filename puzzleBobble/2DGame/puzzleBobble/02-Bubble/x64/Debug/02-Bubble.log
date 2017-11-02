@@ -1,0 +1,27 @@
+﻿  Arrow.cpp
+Arrow.cpp(4): fatal error C1083: No se puede abrir el archivo incluir: 'GL/glew.h': No such file or directory
+  BolaMapa.cpp
+BolaMapa.cpp(10): fatal error C1083: No se puede abrir el archivo incluir: 'GL/glew.h': No such file or directory
+  Game.cpp
+Game.cpp(1): fatal error C1083: No se puede abrir el archivo incluir: 'GL/glew.h': No such file or directory
+  main.cpp
+main.cpp(1): fatal error C1083: No se puede abrir el archivo incluir: 'GL/glew.h': No such file or directory
+  Player.cpp
+Player.cpp(4): fatal error C1083: No se puede abrir el archivo incluir: 'GL/glew.h': No such file or directory
+  Quad.cpp
+Quad.cpp(1): fatal error C1083: No se puede abrir el archivo incluir: 'GL/glew.h': No such file or directory
+  Scene.cpp
+Scene.cpp(4): fatal error C1083: No se puede abrir el archivo incluir: 'glm/gtc/matrix_transform.hpp': No such file or directory
+  Shader.cpp
+c:\users\vimar\desktop\puzzlebobble\puzzlebobble\2dgame\puzzlebobble\02-bubble\Shader.h(6): fatal error C1083: No se puede abrir el archivo incluir: 'GL/glew.h': No such file or directory
+  ShaderProgram.cpp
+ShaderProgram.cpp(1): fatal error C1083: No se puede abrir el archivo incluir: 'glm/gtc/type_ptr.hpp': No such file or directory
+  Sprite.cpp
+Sprite.cpp(1): fatal error C1083: No se puede abrir el archivo incluir: 'GL/glew.h': No such file or directory
+  Texture.cpp
+Texture.cpp(1): fatal error C1083: No se puede abrir el archivo incluir: 'SOIL.h': No such file or directory
+  TexturedQuad.cpp
+TexturedQuad.cpp(1): fatal error C1083: No se puede abrir el archivo incluir: 'GL/glew.h': No such file or directory
+  TileMap.cpp
+c:\users\vimar\desktop\puzzlebobble\puzzlebobble\2dgame\puzzlebobble\02-bubble\TileMap.h(5): fatal error C1083: No se puede abrir el archivo incluir: 'glm/glm.hpp': No such file or directory
+  Generando código...

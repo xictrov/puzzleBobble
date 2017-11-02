@@ -565,7 +565,7 @@ void TileMap::setSound(irrklang::ISoundEngine* eng) {
 int TileMap::getPuntuacion(){
 	return puntuacion;
 }
-int TileMap::setPuntuacion(int punt){
+void TileMap::setPuntuacion(int punt){
 	puntuacion=punt;
 }
 

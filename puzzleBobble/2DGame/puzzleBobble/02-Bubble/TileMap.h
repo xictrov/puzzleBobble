@@ -54,7 +54,7 @@ public:
 
 	void setSound(irrklang::ISoundEngine* eng);
 	int getPuntuacion();
-	int setPuntuacion(int punt);
+	void setPuntuacion(int punt);
 
 private:
 	bool loadLevel(const string &levelFile);
