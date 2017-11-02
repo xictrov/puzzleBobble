@@ -29,6 +29,15 @@ int tiempoTecho = 0;
 int baja = 0;
 float angleAux;
 
+float numRadBola;
+float numRadArrow;
+
+enum State {
+	THROWING_BALL, LVL_WON, LVL_LOST, WAITING_FOR_THROW
+};
+
+State state;
+
 Scene::Scene()
 {
 	map = NULL;
@@ -46,6 +55,9 @@ Scene::~Scene()
 
 void Scene::init()
 {
+
+	state = WAITING_FOR_THROW;
+
 	srand(time(NULL));
 	glm::vec2 geom[2] = { glm::vec2(0.f, 0.f), glm::vec2(640.f, 480.f) };
 	glm::vec2 texCoords[2] = { glm::vec2(0.f, 0.f), glm::vec2(1.f, 1.f) };
@@ -105,7 +117,107 @@ void Scene::init()
 		cout << "Could not load font!!!" << endl;
 }
 
-void Scene::update(int deltaTime)
+void Scene::update(int deltaTime) {
+
+	map->setSound(engine);
+	currentTime += deltaTime;
+	tiempoDisparo += 1;
+	tiempoTecho += 1;
+	compruebaMapa();
+
+	if (gameover) state = LVL_LOST;
+
+	if (winlvl) state = LVL_WON;
+
+	switch (state) {
+		case (WAITING_FOR_THROW): 
+
+			if (tiempoTecho % 1200 == 0) {
+				baja += 1;
+				map->bajaMapa(gameover);
+				cleanSprites();
+				mapa = map->convertToSprites(gameover);
+			}
+			if (Game::instance().getSpecialKey(GLUT_KEY_LEFT))
+			{
+				angle -= 2;
+			}
+			else if (Game::instance().getSpecialKey(GLUT_KEY_RIGHT))
+			{
+				angle += 2;
+			}
+			if (angle > 170) angle = 170;
+			if (angle < 10) angle = 10;
+
+			numRadArrow = (angle - 90.f) * (M_PI / 180);
+
+			arrow->update(deltaTime, numRadArrow);
+
+			if (Game::instance().getSpecialKey(GLUT_KEY_UP) || tiempoDisparo % 600 == 0) {
+				engine->play2D("./sounds/pbobble-002.wav", false);
+				tiempoDisparo = 0;
+				angleAux = angle;
+				state = THROWING_BALL;
+			}
+
+			break;
+		case (THROWING_BALL):
+
+			numRadBola = angle * (M_PI / 180);
+
+			player->update(deltaTime, numRadBola, cambio, acaba, gameover);
+			if (cambio) angle = 180 - angle;
+			cambio = false;
+
+			if (acaba) {
+				state = WAITING_FOR_THROW;
+				player->init(glm::ivec2(305.f, 390.f), texProgram, playernext->color, gameover);
+				player->setTileMap(map);
+				acaba = false;
+				angle = angleAux;
+				checkColors();
+				if (ballColors.size() > 0) {
+					playernext->init(glm::ivec2(250.f, 425.f), texProgram, ballColors[rand() % ballColors.size()], gameover);
+					playernext->setTileMap(map);
+				}
+			}
+
+			break;
+		case (LVL_WON):
+
+			cout << "HAS GANADO" << endl;
+
+			//++contadorNivel;
+			//setNewLvl(contadorNivel);
+
+			break;
+		case (LVL_LOST):
+
+			//player->init(glm::ivec2(305.f, 390.f), texProgram, player->color, gameover);
+			//player->setTileMap(map);
+			//playernext->init(glm::ivec2(250.f, 425.f), texProgram, ballColors[playernext->color], gameover);
+			//playernext->setTileMap(map);
+
+			//text.render("push start to continue"), glm::vec2(500, 100),16, glm::vec4(1, 1, 1, 1);
+
+			cleanSprites();
+			mapa = map->convertToSprites(gameover);
+			engine->play2D("./sounds/pbobble-041.wav", false);
+
+			cout << "HAS PERDIDO" << endl;
+
+			if (Game::instance().getSpecialKey(GLUT_KEY_DOWN))
+			{
+				setNewLvl(contadorNivel);
+			}
+
+			break;
+	}
+
+	updateSprites(deltaTime);
+}
+
+/*void Scene::update(int deltaTime)
 {
 
 	map->setSound(engine);
@@ -193,7 +305,7 @@ void Scene::update(int deltaTime)
 
 	winlvl = false;
 	updateSprites(deltaTime);
-}
+}*/
 
 void Scene::render()
 {
