@@ -12,6 +12,7 @@
 
 using namespace std;
 
+
 #define SCREEN_X 192
 #define SCREEN_Y 48
 
@@ -98,7 +99,7 @@ void Scene::init()
 	superior = Quad::createQuad(SCREEN_X, 0, SCREEN_X + 256, SCREEN_Y, simpleProgram);
 	texsuperior = TexturedQuad::createTexturedQuad(geomSuperior, texCoordsSuperior, texProgram);
 
-	if(!text.init("fonts/OpenSans-Regular.ttf"))
+	if(!text.init("fonts/emulogic.ttf"))
 	//if(!text.init("fonts/OpenSans-Bold.ttf"))
 	//if(!text.init("fonts/DroidSerif.ttf"))
 		cout << "Could not load font!!!" << endl;
@@ -113,11 +114,6 @@ void Scene::update(int deltaTime)
 	tiempoTecho += 1;
 	compruebaMapa();
 
-	if(Game::instance().getSpecialKey(GLUT_KEY_DOWN))
-	{
-		gameover = false;
-		winlvl = false;
-	}
 	if(!gameover && !winlvl){
 
 		if(tiempoTecho%1200==0){
@@ -177,10 +173,17 @@ void Scene::update(int deltaTime)
 			playernext->init(glm::ivec2(250.f, 425.f), texProgram, ballColors[playernext->color],gameover);
 			playernext->setTileMap(map);
 
+			//text.render("push start to continue"), glm::vec2(500, 100),16, glm::vec4(1, 1, 1, 1);
+
 			cleanSprites();
 			mapa=map->convertToSprites(gameover);
 			engine->play2D("./sounds/pbobble-041.wav", false);
 		}
+	}
+
+	if(Game::instance().getSpecialKey(GLUT_KEY_DOWN))
+	{
+		setNewLvl(contadorNivel);
 	}
 
 	if (winlvl) {
@@ -262,9 +265,11 @@ void Scene::render()
 
 	renderSprites();
 
-	text.render("Puntuacion: ", glm::vec2(400, 478), 28, glm::vec4(1, 1, 1, 1));
+	text.render("Puntuacion: ", glm::vec2(400, 478), 14, glm::vec4(1, 1, 1, 1));
 
-	text.render(to_string(map->getPuntuacion()), glm::vec2(560, 478),32, glm::vec4(1, 1, 1, 1));
+	text.render(to_string(map->getPuntuacion()), glm::vec2(580, 478),16, glm::vec4(1, 1, 1, 1));
+
+	text.render(to_string(int(tiempoTecho/60)), glm::vec2(500, 100),16, glm::vec4(1, 1, 1, 1));
 
 }
 
@@ -362,7 +367,6 @@ void Scene::setNewLvl(int lvl)
 
 	lvlNumber[13] = number;
 
-	cout << lvlNumber << endl;
 
 	baja = 0;
 	cambio = false;
