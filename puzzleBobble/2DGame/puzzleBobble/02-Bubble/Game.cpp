@@ -21,7 +21,7 @@ void Game::init()
 	engine->setSoundVolume(0.5f);
 	bPlay = true;
 	glClearColor(0.3f, 0.3f, 0.3f, 1.0f);
-	
+
 	scene.init();
 	scene.setSound(engine);
 }

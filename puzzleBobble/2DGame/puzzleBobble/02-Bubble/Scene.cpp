@@ -7,6 +7,7 @@
 #include <time.h>
 #include "Scene.h"
 #include "Game.h"
+#include <string> 
 #include <irrKlang.h>
 
 using namespace std;
@@ -96,6 +97,11 @@ void Scene::init()
 	glm::vec2 texCoordsSuperior[2] = { glm::vec2(0.f, 0.f), glm::vec2(1.f, 1.f) };
 	superior = Quad::createQuad(SCREEN_X, 0, SCREEN_X + 256, SCREEN_Y, simpleProgram);
 	texsuperior = TexturedQuad::createTexturedQuad(geomSuperior, texCoordsSuperior, texProgram);
+
+	if(!text.init("fonts/OpenSans-Regular.ttf"))
+	//if(!text.init("fonts/OpenSans-Bold.ttf"))
+	//if(!text.init("fonts/DroidSerif.ttf"))
+		cout << "Could not load font!!!" << endl;
 }
 
 void Scene::update(int deltaTime)
@@ -256,6 +262,10 @@ void Scene::render()
 
 	renderSprites();
 
+	text.render("Puntuacion: ", glm::vec2(400, 478), 28, glm::vec4(1, 1, 1, 1));
+
+	text.render(to_string(map->getPuntuacion()), glm::vec2(560, 478),32, glm::vec4(1, 1, 1, 1));
+
 }
 
 void Scene::initShaders()
@@ -364,6 +374,7 @@ void Scene::setNewLvl(int lvl)
 	delete map;
 	map = TileMap::createTileMap(lvlNumber, glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
 	mapa = map->convertToSprites(gameover);
+	map->setPuntuacion(0);
 	checkColors();
 	if (ballColors.size() > 0) {
 		player->init(glm::ivec2(305.f, 390.f), texProgram, ballColors[rand() % ballColors.size()],gameover);

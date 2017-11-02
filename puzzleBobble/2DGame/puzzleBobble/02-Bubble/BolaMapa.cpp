@@ -151,7 +151,7 @@ void BolaMapa::explode()
 {
 
 	sprite->changeAnimation(EXPLOSION);
-	
+
 }
 
 

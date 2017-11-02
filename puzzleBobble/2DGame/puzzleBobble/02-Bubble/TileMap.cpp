@@ -562,6 +562,12 @@ set<int> TileMap::checkColors()
 void TileMap::setSound(irrklang::ISoundEngine* eng) {
 	engine = eng;
 }
+int TileMap::getPuntuacion(){
+	return puntuacion;
+}
+int TileMap::setPuntuacion(int punt){
+	puntuacion=punt;
+}
 
 
 

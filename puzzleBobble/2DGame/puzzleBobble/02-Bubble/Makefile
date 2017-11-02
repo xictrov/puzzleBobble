@@ -1,4 +1,4 @@
-INC = -I/usr/local/Cellar/glm/0.9.8.3/include -I/usr/local/Cellar/freetype/2.7.1/include/freetype2 -I//Users/Kawa/Documents/GitHub/puzzlebooble/puzzleBobble/2DGame/puzzleBobble/02-Bubble/include
+INC = -I/usr/local/Cellar/glm/0.9.8.3/include -I/usr/local/Cellar/freetype/2.8.1/include/freetype2 -I//Users/Kawa/Documents/GitHub/puzzlebooble/puzzleBobble/2DGame/puzzleBobble/02-Bubble/include
 FLAGS = -Wall -std=c++11 
 LIBS = -framework OpenGL -framework GLUT -lglew -lSOIL -lfreetype -lirrklang
 CPP_FILES := $(wildcard *.cpp)

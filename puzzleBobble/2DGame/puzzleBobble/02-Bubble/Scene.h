@@ -11,6 +11,7 @@
 #include "Arrow.h"
 #include "BolaMapa.h"
 #include <irrKlang.h>
+#include "Text.h"
 #if defined(WIN32)
 #include <conio.h>
 #else
@@ -60,6 +61,7 @@ private:
 	string lvlNumber;
 	bool winlvl;
 	vector<int> ballColors;
+	Text text;
 
 	irrklang::ISoundEngine* engine;
 };
