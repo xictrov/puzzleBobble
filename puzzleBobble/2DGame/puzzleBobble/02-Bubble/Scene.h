@@ -36,6 +36,7 @@ public:
 	void init();
 	void update(int deltaTime);
 	void render();
+	void Boom();
 	void setSound(irrklang::ISoundEngine* eng);
 
 private:

@@ -125,6 +125,10 @@ void Game::setSpecialKey(int key){
 	specialKeyReleased(key);
 }
 
+void Game::Bomba(){
+	scene.Boom();
+}
+
 
 
 

@@ -588,4 +588,10 @@ void Scene::checkColors()
 void Scene::setSound(irrklang::ISoundEngine* eng) {
 	engine = eng;
 }
+void Scene::Boom(){
+
+	playernext->setColor(20);
+
+
+}
 

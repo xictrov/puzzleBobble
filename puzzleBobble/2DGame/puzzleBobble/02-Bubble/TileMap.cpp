@@ -3,12 +3,14 @@
 #include <sstream>
 #include <vector>
 #include "TileMap.h"
+#include "Game.h"
 
 
 using namespace std;
 int bajada=0;
 bool primero = true;
 int puntuacion = 0;
+bool bomba=false;
 
 TileMap *TileMap::createTileMap(const string &levelFile, const glm::vec2 &minCoords, ShaderProgram &program)
 {
@@ -256,7 +258,9 @@ bool TileMap::collision(const glm::ivec2 &pos,int color, bool &gameover, int cur
 
 				}
 				if(BolaJugaday<60+bajada*32){
-					colocaBolaTecho(0,(BolaJugadax-193.f)/32,color,gameover);
+					if(color!=20){
+						colocaBolaTecho(0,(BolaJugadax-193.f)/32,color,gameover);
+					}
 					return true;
 				}
 			}
@@ -271,49 +275,118 @@ void TileMap::colocaBola(int j, int i, int color, int Bolax, int Bolay, bool &ga
 	int posfx = 0;
 	int posfy = 0;
 	int par=0;
-	if(j%2!=0){
-		par=-1;
-	}
-	else{
-		par=1;
-	}
-	for (int jj = -1; jj < 2; ++jj) {
-		for (int ii = -1; ii < 2; ++ii) {
-			if (!(jj == 0 && ii == 0) && !(jj == -1 && ii == par) && !(jj == 1 && ii == par) && (((j+jj)%2==0) || ((j+jj%2!=0 && (i+ii)<7)))) {
+	if(color!=20){
+		if(j%2!=0){
+			par=-1;
+		}
+		else{
+			par=1;
+		}
+		for (int jj = -1; jj < 2; ++jj) {
+			for (int ii = -1; ii < 2; ++ii) {
+				if (!(jj == 0 && ii == 0) && !(jj == -1 && ii == par) && !(jj == 1 && ii == par) && (((j+jj)%2==0) || ((j+jj%2!=0 && (i+ii)<7)))) {
 
-						int tile = tileMap[(j + jj)*mapSize.x + (i + ii)];
-						if (tile == 0) {
-							glm::vec2 posTile;
-							if ((jj+j) % 2 == 0) {
-								posTile = glm::vec2(minCoords.x + (i + ii)*tileSize, minCoords.y + (j + jj)*tileSize);
-							}
-							else {
-								posTile = glm::vec2(minCoords.x + (i + ii)*tileSize + tileSize / 2, minCoords.y + (j + jj)*tileSize);
-							}
+							int tile = tileMap[(j + jj)*mapSize.x + (i + ii)];
+							if (tile == 0) {
+								glm::vec2 posTile;
+								if ((jj+j) % 2 == 0) {
+									posTile = glm::vec2(minCoords.x + (i + ii)*tileSize, minCoords.y + (j + jj)*tileSize);
+								}
+								else {
+									posTile = glm::vec2(minCoords.x + (i + ii)*tileSize + tileSize / 2, minCoords.y + (j + jj)*tileSize);
+								}
 
-							int BolaMapax = posTile.x + tileSize / 2;
-							int BolaMapay = posTile.y + tileSize / 2;
+								int BolaMapax = posTile.x + tileSize / 2;
+								int BolaMapay = posTile.y + tileSize / 2;
 
-							double dist = (sqrt(pow(abs(BolaMapax - Bolax), 2) + pow(abs(BolaMapay - Bolay), 2)));
-							if (dist_anterior > dist) {
-									dist_anterior = dist;
-									posfy = j + jj;
-									posfx = i + ii;
+								double dist = (sqrt(pow(abs(BolaMapax - Bolax), 2) + pow(abs(BolaMapay - Bolay), 2)));
+								if (dist_anterior > dist) {
+										dist_anterior = dist;
+										posfy = j + jj;
+										posfx = i + ii;
+								}
 							}
 						}
 					}
 				}
+		glDeleteVertexArrays(1, &vao);
+		glDeleteBuffers(1, &vbo);
+
+		tileMap[posfy*mapSize.x + posfx] = color+1;
+
+		addSprite(posfy, posfx, color,gameover);
+
+		if (!lvlClear()) prepareArrays(minCoords, program,gameover);
+
+		search(posfy,posfx,gameover);
+	}
+	else{
+
+		if(j%2!=0){
+			par=-1;
+		}
+		else{
+			par=1;
+		}
+		for (int jj = -1; jj < 2; ++jj) {
+			for (int ii = -1; ii < 2; ++ii) {
+				if (!(jj == 0 && ii == 0) && !(jj == -1 && ii == par) && !(jj == 1 && ii == par) && (((j+jj)%2==0) || ((j+jj%2!=0 && (i+ii)<7)))) {
+
+							int tile = tileMap[(j + jj)*mapSize.x + (i + ii)];
+							if (tile == 0) {
+								glm::vec2 posTile;
+								if ((jj+j) % 2 == 0) {
+									posTile = glm::vec2(minCoords.x + (i + ii)*tileSize, minCoords.y + (j + jj)*tileSize);
+								}
+								else {
+									posTile = glm::vec2(minCoords.x + (i + ii)*tileSize + tileSize / 2, minCoords.y + (j + jj)*tileSize);
+								}
+
+								int BolaMapax = posTile.x + tileSize / 2;
+								int BolaMapay = posTile.y + tileSize / 2;
+
+								double dist = (sqrt(pow(abs(BolaMapax - Bolax), 2) + pow(abs(BolaMapay - Bolay), 2)));
+								if (dist_anterior > dist) {
+										dist_anterior = dist;
+										posfy = j + jj;
+										posfx = i + ii;
+								}
+							}
+						}
+					}
+				}
+
+		if(posfy%2!=0){
+			par=-1;
+		}
+		else{
+			par=1;
+		}
+		for (int jj = -1; jj < 2; ++jj) {
+			for (int ii = -1; ii < 2; ++ii) {
+				if (!(jj == 0 && ii == 0) && !(jj == -1 && ii == par) && !(jj == 1 && ii == par) && (((j+jj)%2==0) || ((j+jj%2!=0 && (i+ii)<7)))) {
+
+					int tile = tileMap[(posfy + jj)*mapSize.x + (posfx + ii)];
+					if (tile != 0) {
+						search((posfy+jj),(posfx+ii),gameover);
+						//tileMap[(posfy + jj)*mapSize.x + (posfx + ii)] = 0;
+						//spriteMap[(posfy + jj)*mapSize.x + (posfx + ii)]->explode();
+
+					}
+				}
 			}
-	glDeleteVertexArrays(1, &vao);
-	glDeleteBuffers(1, &vbo);
+		}
 
-	tileMap[posfy*mapSize.x + posfx] = color+1;
+		engine->play2D("./sounds/boom.wav", false);
 
-	addSprite(posfy, posfx, color,gameover);
+		clearVectors();
 
-	if (!lvlClear()) prepareArrays(minCoords, program,gameover);
+		glDeleteVertexArrays(1, &vao);
+		glDeleteBuffers(1, &vbo);
+		if (!lvlClear()) prepareArrays(minCoords, program, gameover);
 
-	search(posfy,posfx,gameover);
+
+	}
 }
 
 
@@ -496,20 +569,24 @@ vector<BolaMapa *> * TileMap::convertToSprites(bool &gameover)
 void TileMap::search(int j, int i, bool &gameover)
 {
 	searchBallsToDestroy(j,i);
-
 	if (ballsToDestroy.size() != 0) { ballsToDestroy.push_back(glm::ivec2(i, j)); }
 
+
+	if(ballsToDestroy.size()>=5){
+		Game::instance().Bomba();
+	}
 	if (ballsToDestroy.size() >= 3) {
 		engine->play2D("./sounds/pbobble-010.wav", false);
 		puntuacion += ballsToDestroy.size() * 10;
 		deleteBalls(ballsToDestroy, gameover);
+
 	}
-
 	else {
-
 		engine->play2D("./sounds/pbobble-005.wav", false);
 		clearVectors();
 	}
+
+
 
 	for (int k = 0; k < mapSize.x; ++k) {
 		if (tileMap[0 * mapSize.x + k] != 0) searchAloneBalls(0, k);

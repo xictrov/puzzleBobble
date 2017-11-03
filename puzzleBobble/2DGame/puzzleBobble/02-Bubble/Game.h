@@ -51,6 +51,7 @@ public:
 	void setSpecialKey(int key);
 	void initSc();
 	void newaction(int act);
+	void Bomba();
 
 private:
 	bool bPlay;                       // Continue to play game?
