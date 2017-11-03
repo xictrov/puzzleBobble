@@ -7,7 +7,7 @@
 #include <time.h>
 #include "Scene.h"
 #include "Game.h"
-#include <string> 
+#include <string>
 #include <irrKlang.h>
 
 using namespace std;
@@ -28,6 +28,7 @@ int tiempoDisparo = 0;
 int tiempoTecho = 0;
 int baja = 0;
 float angleAux;
+int gameover_sonido=0;
 
 float numRadBola;
 float numRadArrow;
@@ -56,6 +57,8 @@ Scene::~Scene()
 void Scene::init()
 {
 
+
+	engine->play2D("./sounds/pbobble-025.wav", false);
 	state = WAITING_FOR_THROW;
 
 	srand(time(NULL));
@@ -130,7 +133,7 @@ void Scene::update(int deltaTime) {
 	if (winlvl) state = LVL_WON;
 
 	switch (state) {
-		case (WAITING_FOR_THROW): 
+		case (WAITING_FOR_THROW):
 
 			if (tiempoTecho % 1200 == 0) {
 				baja += 1;
@@ -158,6 +161,7 @@ void Scene::update(int deltaTime) {
 				tiempoDisparo = 0;
 				angleAux = angle;
 				state = THROWING_BALL;
+				Game::instance().setSpecialKey(GLUT_KEY_UP);
 			}
 
 			break;
@@ -185,10 +189,16 @@ void Scene::update(int deltaTime) {
 			break;
 		case (LVL_WON):
 
-			cout << "HAS GANADO" << endl;
 
-			//++contadorNivel;
-			//setNewLvl(contadorNivel);
+			if(gameover_sonido==0) engine->play2D("./sounds/allstar.wav", false);
+			++gameover_sonido;
+
+			if(Game::instance().getKey(13)){
+				++contadorNivel;
+				setNewLvl(contadorNivel);
+
+			}
+
 
 			break;
 		case (LVL_LOST):
@@ -198,16 +208,18 @@ void Scene::update(int deltaTime) {
 			//playernext->init(glm::ivec2(250.f, 425.f), texProgram, ballColors[playernext->color], gameover);
 			//playernext->setTileMap(map);
 
-			//text.render("push start to continue"), glm::vec2(500, 100),16, glm::vec4(1, 1, 1, 1);
+
 
 			cleanSprites();
 			mapa = map->convertToSprites(gameover);
-			engine->play2D("./sounds/pbobble-041.wav", false);
+			if(gameover_sonido==0) engine->play2D("./sounds/pbobble-041.wav", false);
+			++gameover_sonido;
 
-			cout << "HAS PERDIDO" << endl;
 
-			if (Game::instance().getSpecialKey(GLUT_KEY_DOWN))
+
+			if (Game::instance().getKey(13))
 			{
+				cout << "entra?" << endl;
 				setNewLvl(contadorNivel);
 			}
 
@@ -377,11 +389,70 @@ void Scene::render()
 
 	renderSprites();
 
-	text.render("Puntuacion: ", glm::vec2(400, 478), 14, glm::vec4(1, 1, 1, 1));
+	if(state==LVL_LOST) {
+		text.render("Puntuacion: ", glm::vec2(192, 300), 14, glm::vec4(1, 1, 1, 1));
 
-	text.render(to_string(map->getPuntuacion()), glm::vec2(580, 478),16, glm::vec4(1, 1, 1, 1));
+		text.render(to_string(map->getPuntuacion()), glm::vec2(380, 300),20, glm::vec4(1, 1, 1, 1));
 
-	text.render(to_string(int(tiempoTecho/60)), glm::vec2(500, 100),16, glm::vec4(1, 1, 1, 1));
+
+		texturelosewin.loadFromFile("images/youlose.png", TEXTURE_PIXEL_FORMAT_RGBA);
+
+		glm::vec2 geomlosewin[2] = { glm::vec2(192, 100), glm::vec2(192+250, 160) };
+		glm::vec2 texCoordslosewin[2] = { glm::vec2(0.f, 0.f), glm::vec2(1.f, 1.f) };
+		losewin = Quad::createQuad(192,50,192+250,110, simpleProgram);
+		texlosewin = TexturedQuad::createTexturedQuad(geomlosewin, texCoordslosewin, texProgram);
+
+		texProgram.use();
+		texProgram.setUniformMatrix4f("projection", projection);
+		texProgram.setUniform4f("color", 1.0f, 1.0f, 1.0f, 1.0f);
+
+		texProgram.setUniformMatrix4f("modelview", modelview);
+		texProgram.setUniform2f("texCoordDispl", 0.f, 0.f);
+		texlosewin->render(texturelosewin);
+
+		if(int(tiempoTecho%10)>3){text.render("push enter to continue", glm::vec2(192, 240),10, glm::vec4(1, 1, 1, 1));}
+	}
+
+
+	else if(state==LVL_WON) {
+		text.render("Puntuacion: ", glm::vec2(192, 300), 14, glm::vec4(1, 1, 1, 1));
+
+		text.render(to_string(map->getPuntuacion()), glm::vec2(380, 300),20, glm::vec4(1, 1, 1, 1));
+
+
+		texturelosewin.loadFromFile("images/youwin.png", TEXTURE_PIXEL_FORMAT_RGBA);
+
+		glm::vec2 geomlosewin[2] = { glm::vec2(192, 100), glm::vec2(192+250, 160) };
+		glm::vec2 texCoordslosewin[2] = { glm::vec2(0.f, 0.f), glm::vec2(1.f, 1.f) };
+		losewin = Quad::createQuad(192,50,192+250,110, simpleProgram);
+		texlosewin = TexturedQuad::createTexturedQuad(geomlosewin, texCoordslosewin, texProgram);
+
+		texProgram.use();
+		texProgram.setUniformMatrix4f("projection", projection);
+		texProgram.setUniform4f("color", 1.0f, 1.0f, 1.0f, 1.0f);
+
+		texProgram.setUniformMatrix4f("modelview", modelview);
+		texProgram.setUniform2f("texCoordDispl", 0.f, 0.f);
+		texlosewin->render(texturelosewin);
+
+		if(int(tiempoTecho%10)>3){text.render("push enter to next level", glm::vec2(192, 240),10, glm::vec4(1, 1, 1, 1));}
+	}
+
+	else {
+		text.render("Puntuacion: ", glm::vec2(400, 478), 14, glm::vec4(1, 1, 1, 1));
+
+
+		text.render("Level: ", glm::vec2(SCREEN_X+280, SCREEN_Y+5), 14, glm::vec4(1, 1, 1, 1));
+
+
+		text.render(to_string(contadorNivel), glm::vec2(SCREEN_X+380, SCREEN_Y+5), 14, glm::vec4(1, 1, 1, 1));
+
+
+
+		text.render(to_string(map->getPuntuacion()), glm::vec2(580, 478),16, glm::vec4(1, 1, 1, 1));
+
+		text.render(to_string(int(tiempoTecho/60)), glm::vec2(500, 100),16, glm::vec4(1, 1, 1, 1));
+	}
 
 }
 
@@ -475,11 +546,10 @@ void Scene::compruebaMapa()
 
 void Scene::setNewLvl(int lvl)
 {
+	state=WAITING_FOR_THROW;
 	char number = lvl + '0';
-
 	lvlNumber[13] = number;
-
-
+	gameover_sonido=0;
 	baja = 0;
 	cambio = false;
 	acaba = false;
@@ -490,7 +560,11 @@ void Scene::setNewLvl(int lvl)
 	delete map;
 	map = TileMap::createTileMap(lvlNumber, glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
 	mapa = map->convertToSprites(gameover);
+	if(state==LVL_LOST)
 	map->setPuntuacion(0);
+
+	engine->stopAllSounds();
+	engine->play2D("./sounds/pbobble-025.wav", false);
 	checkColors();
 	if (ballColors.size() > 0) {
 		player->init(glm::ivec2(305.f, 390.f), texProgram, ballColors[rand() % ballColors.size()],gameover);

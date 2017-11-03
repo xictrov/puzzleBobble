@@ -3,12 +3,17 @@
 
 
 #include "Scene.h"
+#include "Menu.h"
 #include <irrKlang.h>
 #if defined(WIN32)
 #include <conio.h>
 #else
 #include "conio.h"
 #endif
+
+#define SCREEN_WIDTH 640
+#define SCREEN_HEIGHT 480
+
 
 // Game is a singleton (a class with a single instance) that represents our whole application
 
@@ -41,18 +46,25 @@ public:
 	void mouseRelease(int button);
 
 	bool getKey(int key) const;
-	bool getSpecialKey(int key) const;
+	bool getSpecialKey(int key);
+
+	void setSpecialKey(int key);
+	void initSc();
+	void newaction(int act);
 
 private:
 	bool bPlay;                       // Continue to play game?
+	Menu menu;
 	Scene scene;                      // Scene to render
 	bool keys[256], specialKeys[256]; // Store key states so that
-	bool Sc;
 	                                  // we can have access at any time
+	int estado;
+	bool bPulsed[256];
 	irrklang::ISoundEngine* engine;
 
 };
 
 
 #endif // _GAME_INCLUDE
+
 

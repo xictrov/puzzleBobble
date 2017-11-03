@@ -3,19 +3,12 @@
 
 #include <glm/glm.hpp>
 #include "ShaderProgram.h"
-#include "Quad.h"
 #include "TexturedQuad.h"
-#include <irrKlang.h>
 #include "Text.h"
-#if defined(WIN32)
-#include <conio.h>
-#else
-#include "conio.h"
-#endif
 
-#define SCREEN_WIDTH 640.f
-#define SCREEN_HEIGHT 480.f
 
+#define CAMERA_WIDTH 640
+#define CAMERA_HEIGHT 480
 
 // Scene contains all the entities of our game.
 // It is responsible for updating and render them.
@@ -31,26 +24,22 @@ public:
 	void init();
 	void update(int deltaTime);
 	void render();
-	void setSound(irrklang::ISoundEngine* eng);
-
+	bool jugar();
 private:
 	void initShaders();
-
+	void nextLevel();
 
 private:
-
-	ShaderProgram texProgram, simpleProgram;
-	float currentTime, angle;
+	int accion;
+	Text texto;
+	Texture imgFondo, imgCursor;
+	TexturedQuad *fondo,*cursor;
+	ShaderProgram texProgram;
+	float currentTime;
 	glm::mat4 projection;
-	Quad *quad;
-	TexturedQuad *texQuad;
-	Texture texs;
-	string lvlNumber;
-	Text text;
 
-	irrklang::ISoundEngine* engine;
 };
 
 
-#endif // _SCENE_INCLUDE
+#endif // _MENU_INCLUDE
 

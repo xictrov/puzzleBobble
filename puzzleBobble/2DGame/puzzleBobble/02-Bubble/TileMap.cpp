@@ -125,7 +125,6 @@ void TileMap::prepareArrays(const glm::vec2 &minCoords, ShaderProgram &program, 
 			if(tile != 0)
 			{
 				if(j+bajada >= 10) {
-					puntuacion = 0;
 					gameover=true;
 					bajada=0;
 				}
@@ -340,7 +339,6 @@ void TileMap::bajaMapa(bool &gameover){
 	minCoords.y+=32;
 	if (gameover) {
 		bajada = 0;
-		puntuacion = 0;
 	}
 	glDeleteVertexArrays(1, &vao);
 	glDeleteBuffers(1, &vbo);
@@ -447,6 +445,7 @@ void TileMap::deleteAloneBalls(bool &gameover)
 		{
 			if (visitedMap[j*mapSize.x + i] == false && tileMap[j*mapSize.x + i] != 0) {
 				++contador;
+				puntuacion+=20;
 				tileMap[j*mapSize.x + i] = 0;
 				spriteMap[j*mapSize.x + i]->explode();
 				if (spriteMap[j*mapSize.x + i]->getAnimRepetitions() == 1) {

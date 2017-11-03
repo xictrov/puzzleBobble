@@ -1,7 +1,6 @@
 #include <GL/glew.h>
 #include <GL/glut.h>
 #include "Game.h"
-#include "Menu.h"
 #include <irrKlang.h>
 #include <iostream>
 #if defined(WIN32)
@@ -11,13 +10,11 @@
 #endif
 
 
-#pragma comment(lib, "irrKlang.lib")
-
-using namespace std;
 
 void Game::init()
 {
-	Sc=false;
+	bPlay = true;
+	estado=3;
 	engine = irrklang::createIrrKlangDevice();
 	if (!engine)
 	{
@@ -26,37 +23,37 @@ void Game::init()
 	}
 
 	engine->setSoundVolume(0.5f);
-	bPlay = true;
 	glClearColor(0.3f, 0.3f, 0.3f, 1.0f);
-
-	scene.init();
-	scene.setSound(engine);
-
+	menu.init();
+	//scene.init();
 }
 
 bool Game::update(int deltaTime)
 {
 
-		scene.update(deltaTime);
-		return bPlay;
+	if(estado==3)menu.update(deltaTime);
+	else if(estado==0) scene.update(deltaTime);
 
+	return bPlay;
 }
 
 void Game::render()
 {
 
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		scene.render();
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	if(estado==3)menu.render();
+	else if(estado==0)scene.render();
+
 
 }
 
 void Game::keyPressed(int key)
 {
-
-	if(key == 27) // Escape code
+	if(key == 27) {// Escape code
 		bPlay = false;
-	if(key==32)
-		Sc=true;
+		cout << "entra" << endl;
+	}
+
 	keys[key] = true;
 }
 
@@ -91,10 +88,41 @@ bool Game::getKey(int key) const
 {
 	return keys[key];
 }
-
-bool Game::getSpecialKey(int key) const
+bool Game::getSpecialKey(int key)
 {
 	return specialKeys[key];
+}
+
+
+void Game::initSc(){
+	scene.setSound(engine);
+	scene.init();
+}
+
+void Game::newaction(int act)
+{
+
+	estado=act;
+	if(act==3){
+		menu.init();
+	}
+	else if (act==0){
+		initSc();
+	}
+	else if(act==1){
+
+	glClearColor(0.3f, 0.3f, 0.3f, 1.0f);
+
+	}
+	else{
+
+			glClearColor(1.f, 1.f, 1.f, 1.0f);
+
+
+	}
+}
+void Game::setSpecialKey(int key){
+	specialKeyReleased(key);
 }
 
 
