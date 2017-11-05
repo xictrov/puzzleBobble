@@ -43,16 +43,26 @@ Sprite::Sprite(const glm::vec2 &quadSize, const glm::vec2 &sizeInSpritesheet, Te
 	animRepetitions = 0;
 }
 
-void Sprite::update(int deltaTime, float angle)
+void Sprite::update(int deltaTime, float angle, bool move, bool right)
 {
-	if(currentAnimation >= 0)
+	if(move && currentAnimation >= 0)
 	{
 		timeAnimation += deltaTime;
-		while(timeAnimation > animations[currentAnimation].millisecsPerKeyframe)
-		{
-			timeAnimation -= animations[currentAnimation].millisecsPerKeyframe;
-			if (currentKeyframe + 2 == animations[currentAnimation].keyframeDispl.size()) ++animRepetitions;
-			currentKeyframe = (currentKeyframe + 1) % animations[currentAnimation].keyframeDispl.size();
+		if (right) {
+			while (timeAnimation > animations[currentAnimation].millisecsPerKeyframe)
+			{
+				timeAnimation -= animations[currentAnimation].millisecsPerKeyframe;
+				if (currentKeyframe + 2 == animations[currentAnimation].keyframeDispl.size()) ++animRepetitions;
+				currentKeyframe = (currentKeyframe + 1) % animations[currentAnimation].keyframeDispl.size();
+			}
+		}
+		else {
+			while (timeAnimation > animations[currentAnimation].millisecsPerKeyframe)
+			{
+				timeAnimation -= animations[currentAnimation].millisecsPerKeyframe;
+				if (currentKeyframe + 2 == animations[currentAnimation].keyframeDispl.size()) ++animRepetitions;
+				currentKeyframe = (currentKeyframe - 1) % animations[currentAnimation].keyframeDispl.size();
+			}
 		}
 		texCoordDispl = animations[currentAnimation].keyframeDispl[currentKeyframe];
 	}
@@ -96,8 +106,9 @@ void Sprite::setAnimationSpeed(int animId, int keyframesPerSec)
 
 void Sprite::addKeyframe(int animId, const glm::vec2 &displacement)
 {
-	if(animId < int(animations.size()))
+	if (animId < int(animations.size())) {
 		animations[animId].keyframeDispl.push_back(displacement);
+	}
 }
 
 void Sprite::changeAnimation(int animId)

@@ -32,6 +32,7 @@ private:
 	Texture spritesheet, explosionsheet;
 	Sprite *sprite, *explosionSprite;
 	TileMap *map;
+	ShaderProgram program;
 
 };
 

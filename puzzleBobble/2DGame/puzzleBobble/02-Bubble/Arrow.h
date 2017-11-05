@@ -1,5 +1,5 @@
-#ifndef _ARROW_INCLUDE
-#define _ARROW_INCLUDE
+#ifndef _ARROWMACHINE_INCLUDE
+#define _ARROWMACHINE_INCLUDE
 
 
 #include "Sprite.h"
@@ -10,7 +10,7 @@
 // all properties it needs to track its movement, jumping, and collisions.
 
 
-class Arrow
+class ArrowMachine
 {
 
 public:
@@ -25,8 +25,8 @@ private:
 	bool bJumping;
 	glm::ivec2 tileMapDispl, posArrow;
 	int jumpAngle, startY;
-	Texture spritesheet;
-	Sprite *sprite;
+	Texture arrowSpritesheet, gearSpritesheet, wheelSpritesheet, platformSpritesheet, bagSpritesheet;
+	Sprite *spriteArrow, *spriteWheel, *spriteGear, *spritePlatform, *spriteBag;
 	TileMap *map;
 
 };

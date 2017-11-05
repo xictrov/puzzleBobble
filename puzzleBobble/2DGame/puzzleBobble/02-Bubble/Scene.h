@@ -51,13 +51,13 @@ private:
 private:
 	TileMap *map;
 	Player *player, *playernext;
-	Arrow *arrow;
+	ArrowMachine *arrow;
 	ShaderProgram texProgram, simpleProgram;
 	float currentTime, angle;
 	glm::mat4 projection;
 	Quad *quad, *techo, *superior, *losewin;
 	TexturedQuad *texQuad, *textecho, *texsuperior,*texlosewin;
-	Texture texs, texturetecho, texturesuperior,texturelosewin;
+	Texture texs, texturetecho, texturesuperior, texturewin, texturelose;
 	vector<BolaMapa *> *mapa;
 	string lvlNumber;
 	bool winlvl;

@@ -58,7 +58,8 @@ void Scene::init()
 {
 
 
-	engine->play2D("./sounds/pbobble-025.wav", false);
+	//engine->play2D("./sounds/pbobble-025.wav", false);
+	engine->play2D("./sounds/smash_mouth-all_star.wav", false);
 	state = WAITING_FOR_THROW;
 
 	srand(time(NULL));
@@ -74,6 +75,8 @@ void Scene::init()
 
 	texturesuperior.loadFromFile("images/parteSuperiorMapa.png", TEXTURE_PIXEL_FORMAT_RGBA);
 	texturetecho.loadFromFile("images/techo.png", TEXTURE_PIXEL_FORMAT_RGBA);
+	texturelose.loadFromFile("images/youlose.png", TEXTURE_PIXEL_FORMAT_RGBA);
+	texturewin.loadFromFile("images/youwin.png", TEXTURE_PIXEL_FORMAT_RGBA);
 
 	lvlNumber = "levels/level01.txt";
 
@@ -94,7 +97,7 @@ void Scene::init()
 		playernext->setTileMap(map);
 	}
 
-	arrow = new Arrow();
+	arrow = new ArrowMachine();
 	arrow->init(glm::ivec2(299.f, 340.f), texProgram);
 	arrow->setTileMap(map);
 
@@ -190,7 +193,10 @@ void Scene::update(int deltaTime) {
 		case (LVL_WON):
 
 
-			if(gameover_sonido==0) engine->play2D("./sounds/allstar.wav", false);
+			if (gameover_sonido == 0) {
+				engine->stopAllSounds();
+				engine->play2D("./sounds/allstar.wav", false);
+			}
 			++gameover_sonido;
 
 			if(Game::instance().getKey(13)){
@@ -229,95 +235,6 @@ void Scene::update(int deltaTime) {
 	updateSprites(deltaTime);
 }
 
-/*void Scene::update(int deltaTime)
-{
-
-	map->setSound(engine);
-	currentTime += deltaTime;
-	tiempoDisparo+=1;
-	tiempoTecho += 1;
-	compruebaMapa();
-
-	if(!gameover && !winlvl){
-
-		if(tiempoTecho%1200==0){
-			baja += 1;
-			map->bajaMapa(gameover);
-			cleanSprites();
-			mapa = map->convertToSprites(gameover);
-		}
-		if (Game::instance().getSpecialKey(GLUT_KEY_LEFT))
-		{
-			angle -= 2;
-		}
-		else if (Game::instance().getSpecialKey(GLUT_KEY_RIGHT))
-		{
-			angle += 2;
-		}
-		if (angle > 170) angle = 170;
-		if (angle < 10) angle = 10;
-
-		float numRadBola = angle * (M_PI / 180);
-		float numRadArrow = (angle - 90.f) * (M_PI / 180);
-
-		if(!empieza) arrow->update(deltaTime, numRadArrow);
-
-		if (Game::instance().getSpecialKey(GLUT_KEY_UP)) {
-
-			engine->play2D("./sounds/pbobble-002.wav", false);
-			angleAux = angle;
-			tiempoDisparo = 0;
-			empieza = true;
-		}
-		if (tiempoDisparo % 600 == 0) {
-			angleAux = angle;
-			empieza = true;
-		}
-		if (empieza) {
-			player->update(deltaTime, numRadBola, cambio, acaba, gameover);
-			if (cambio) angle = 180 - angle;
-			cambio = false;
-		}
-		if (acaba) {
-			player->init(glm::ivec2(305.f, 390.f), texProgram, playernext->color,gameover);
-			player->setTileMap(map);
-			empieza = false;
-			acaba = false;
-			angle = angleAux;
-			checkColors();
-			if (ballColors.size() > 0) {
-				playernext->init(glm::ivec2(250.f, 425.f), texProgram, ballColors[rand() % ballColors.size()],gameover);
-				playernext->setTileMap(map);
-			}
-		}
-		if(gameover) {
-
-			player->init(glm::ivec2(305.f, 390.f), texProgram, player->color,gameover);
-			player->setTileMap(map);
-			playernext->init(glm::ivec2(250.f, 425.f), texProgram, ballColors[playernext->color],gameover);
-			playernext->setTileMap(map);
-
-			//text.render("push start to continue"), glm::vec2(500, 100),16, glm::vec4(1, 1, 1, 1);
-
-			cleanSprites();
-			mapa=map->convertToSprites(gameover);
-			engine->play2D("./sounds/pbobble-041.wav", false);
-		}
-	}
-
-	if(Game::instance().getSpecialKey(GLUT_KEY_DOWN))
-	{
-		setNewLvl(contadorNivel);
-	}
-
-	if (winlvl) {
-		++contadorNivel;
-		setNewLvl(contadorNivel);
-	}
-
-	winlvl = false;
-	updateSprites(deltaTime);
-}*/
 
 void Scene::render()
 {
@@ -395,8 +312,6 @@ void Scene::render()
 		text.render(to_string(map->getPuntuacion()), glm::vec2(380, 300),20, glm::vec4(1, 1, 1, 1));
 
 
-		texturelosewin.loadFromFile("images/youlose.png", TEXTURE_PIXEL_FORMAT_RGBA);
-
 		glm::vec2 geomlosewin[2] = { glm::vec2(192, 100), glm::vec2(192+250, 160) };
 		glm::vec2 texCoordslosewin[2] = { glm::vec2(0.f, 0.f), glm::vec2(1.f, 1.f) };
 		losewin = Quad::createQuad(192,50,192+250,110, simpleProgram);
@@ -408,19 +323,19 @@ void Scene::render()
 
 		texProgram.setUniformMatrix4f("modelview", modelview);
 		texProgram.setUniform2f("texCoordDispl", 0.f, 0.f);
-		texlosewin->render(texturelosewin);
+		texlosewin->render(texturelose);
+
+		losewin->free();
+		texlosewin->free();
 
 		if(int(tiempoTecho%10)>3){text.render("push enter to continue", glm::vec2(192, 240),10, glm::vec4(1, 1, 1, 1));}
 	}
 
 
 	else if(state==LVL_WON) {
-		text.render("Puntuacion: ", glm::vec2(192, 300), 14, glm::vec4(1, 1, 1, 1));
+		text.render("Puntuation: ", glm::vec2(192, 300), 14, glm::vec4(1, 1, 1, 1));
 
 		text.render(to_string(map->getPuntuacion()), glm::vec2(380, 300),20, glm::vec4(1, 1, 1, 1));
-
-
-		texturelosewin.loadFromFile("images/youwin.png", TEXTURE_PIXEL_FORMAT_RGBA);
 
 		glm::vec2 geomlosewin[2] = { glm::vec2(192, 100), glm::vec2(192+250, 160) };
 		glm::vec2 texCoordslosewin[2] = { glm::vec2(0.f, 0.f), glm::vec2(1.f, 1.f) };
@@ -433,13 +348,18 @@ void Scene::render()
 
 		texProgram.setUniformMatrix4f("modelview", modelview);
 		texProgram.setUniform2f("texCoordDispl", 0.f, 0.f);
-		texlosewin->render(texturelosewin);
+		texlosewin->render(texturewin);
 
-		if(int(tiempoTecho%10)>3){text.render("push enter to next level", glm::vec2(192, 240),10, glm::vec4(1, 1, 1, 1));}
+		losewin->free();
+		texlosewin->free();
+
+		if(int(tiempoTecho%10)>3) {
+			text.render("push enter to next level", glm::vec2(192, 240),10, glm::vec4(1, 1, 1, 1));
+		}
 	}
 
 	else {
-		text.render("Puntuacion: ", glm::vec2(400, 478), 14, glm::vec4(1, 1, 1, 1));
+		text.render("Punctuation: ", glm::vec2(400, 478), 14, glm::vec4(1, 1, 1, 1));
 
 
 		text.render("Level: ", glm::vec2(SCREEN_X+280, SCREEN_Y+5), 14, glm::vec4(1, 1, 1, 1));
@@ -564,7 +484,7 @@ void Scene::setNewLvl(int lvl)
 	map->setPuntuacion(0);
 
 	engine->stopAllSounds();
-	engine->play2D("./sounds/pbobble-025.wav", false);
+	engine->play2D("./sounds/smash_mouth-all_star.wav", false);
 	checkColors();
 	if (ballColors.size() > 0) {
 		player->init(glm::ivec2(305.f, 390.f), texProgram, ballColors[rand() % ballColors.size()],gameover);
@@ -585,13 +505,13 @@ void Scene::checkColors()
 		ballColors.assign(colors.begin(), colors.end());
 	}
 }
+
 void Scene::setSound(irrklang::ISoundEngine* eng) {
 	engine = eng;
 }
+
 void Scene::Boom(){
-
-	playernext->setColor(20);
-
-
+	playernext->init(glm::ivec2(250.f, 425.f), texProgram, 20, gameover);
+	//playernext->setColor(20);
 }
 

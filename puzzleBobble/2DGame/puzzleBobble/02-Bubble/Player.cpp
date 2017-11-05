@@ -26,34 +26,41 @@ void Player::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram, in
 {
 	color=colorbola;
 	bJumping = false;
-	if(!gameover){
+	if (color == 20) {
+		spritesheet.loadFromFile("images/bomb.png", TEXTURE_PIXEL_FORMAT_RGBA);
+		sprite = Sprite::createSprite(glm::ivec2(32, 32), glm::vec2(1,1), &spritesheet, &shaderProgram);
+		sprite->setNumberAnimations(1);
 
-		spritesheet.loadFromFile("images/sprites.png", TEXTURE_PIXEL_FORMAT_RGBA);
+		sprite->setAnimationSpeed(COLOR, 0);
+		sprite->addKeyframe(COLOR, glm::vec2(0.f, color));
 	}
-	else{
+	else {
+		if (!gameover) {
+			spritesheet.loadFromFile("images/sprites.png", TEXTURE_PIXEL_FORMAT_RGBA);
+		}
+		else {
+			spritesheet.loadFromFile("images/escalagrises.png", TEXTURE_PIXEL_FORMAT_RGBA);
+		}
+		sprite = Sprite::createSprite(glm::ivec2(32, 32), glm::vec2(0.16666, 0.125f), &spritesheet, &shaderProgram);
+		sprite->setNumberAnimations(1);
 
-		spritesheet.loadFromFile("images/escalagrises.png", TEXTURE_PIXEL_FORMAT_RGBA);
+		sprite->setAnimationSpeed(COLOR, 0);
+		sprite->addKeyframe(COLOR, glm::vec2(0.f, color / 8.f));
 	}
-	sprite = Sprite::createSprite(glm::ivec2(32, 32), glm::vec2(0.16666, 0.125f), &spritesheet, &shaderProgram);
-	sprite->setNumberAnimations(1);
 
-	sprite->setAnimationSpeed(COLOR, 0);
-	sprite->addKeyframe(COLOR, glm::vec2(0.f, color/8.f));
 	sprite->changeAnimation(0);
 	tileMapDispl = tileMapPos;
 	posPlayer = glm::vec2(0.0f);
 
 	posPlayerF = glm::vec2(0.0f);
 	sprite->setPosition(glm::vec2(float(tileMapDispl.x), float(tileMapDispl.y)));
-
-
 }
 
 void Player::update(int deltaTime, float angle, bool &cambio, bool &acaba, bool &gameover)
 {
 
 
-	sprite->update(deltaTime, angle);
+	sprite->update(deltaTime, 0.0f, false, true);
 
 	if (posPlayer.x < -112.5f || posPlayer.x>112.5f ) {
 		angle = M_PI - angle;
