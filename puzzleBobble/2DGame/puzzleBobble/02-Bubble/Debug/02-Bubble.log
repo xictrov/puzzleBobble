@@ -1,9 +1,1 @@
-﻿  Scene.cpp
-c:\users\victor\desktop\puzzlebobble\puzzlebobble\2dgame\puzzlebobble\02-bubble\game.h(14): warning C4005: 'SCREEN_WIDTH': macro redefinition
-  c:\users\victor\desktop\puzzlebobble\puzzlebobble\2dgame\puzzlebobble\02-bubble\scene.h(21): note: see previous definition of 'SCREEN_WIDTH'
-c:\users\victor\desktop\puzzlebobble\puzzlebobble\2dgame\puzzlebobble\02-bubble\game.h(15): warning C4005: 'SCREEN_HEIGHT': macro redefinition
-  c:\users\victor\desktop\puzzlebobble\puzzlebobble\2dgame\puzzlebobble\02-bubble\scene.h(22): note: see previous definition of 'SCREEN_HEIGHT'
-c:\users\victor\desktop\puzzlebobble\puzzlebobble\2dgame\puzzlebobble\02-bubble\scene.cpp(66): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
-c:\users\victor\desktop\puzzlebobble\puzzlebobble\2dgame\puzzlebobble\02-bubble\scene.cpp(165): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-c:\users\victor\desktop\puzzlebobble\puzzlebobble\2dgame\puzzlebobble\02-bubble\scene.cpp(180): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-  02-Bubble.vcxproj -> C:\Users\Victor\Desktop\puzzleBobble\puzzleBobble\2DGame\puzzleBobble\Debug\02-Bubble.exe
+﻿  02-Bubble.vcxproj -> C:\Users\vimar\Desktop\puzzleBobble\puzzleBobble\2DGame\puzzleBobble\Debug\02-Bubble.exe
