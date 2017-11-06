@@ -29,6 +29,7 @@ int tiempoTecho = 0;
 int baja = 0;
 float angleAux;
 int gameover_sonido=0;
+bool first;
 
 float numRadBola;
 float numRadArrow;
@@ -70,15 +71,21 @@ void Scene::init()
 	quad = Quad::createQuad(0.f, 0.f, 640.f, 480.f, simpleProgram);
 	texQuad = TexturedQuad::createTexturedQuad(geom, texCoords, texProgram);
 
-	// Load textures
-	texs.loadFromFile("images/gameBackground.png", TEXTURE_PIXEL_FORMAT_RGBA);
+	lvlNumber = "levels/level01.txt";
+	background = "images/gameBackground1.png";
+	superiorMap = "images/parteSuperiorMapa1.png";
+	ceiling = "images/techo1.png";
 
-	texturesuperior.loadFromFile("images/parteSuperiorMapa.png", TEXTURE_PIXEL_FORMAT_RGBA);
-	texturetecho.loadFromFile("images/techo.png", TEXTURE_PIXEL_FORMAT_RGBA);
+	// Load textures
+
+	texs.loadFromFile(background, TEXTURE_PIXEL_FORMAT_RGBA);
+	texturesuperior.loadFromFile(superiorMap, TEXTURE_PIXEL_FORMAT_RGBA);
+	texturetecho.loadFromFile(ceiling, TEXTURE_PIXEL_FORMAT_RGBA);
+
 	texturelose.loadFromFile("images/youlose.png", TEXTURE_PIXEL_FORMAT_RGBA);
 	texturewin.loadFromFile("images/youwin.png", TEXTURE_PIXEL_FORMAT_RGBA);
 
-	lvlNumber = "levels/level01.txt";
+	
 
 	map = TileMap::createTileMap(lvlNumber, glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
 
@@ -187,6 +194,7 @@ void Scene::update(int deltaTime) {
 					playernext->init(glm::ivec2(250.f, 425.f), texProgram, ballColors[rand() % ballColors.size()], gameover);
 					playernext->setTileMap(map);
 				}
+				if (gameover) first = true;
 			}
 
 			break;
@@ -214,19 +222,21 @@ void Scene::update(int deltaTime) {
 			//playernext->init(glm::ivec2(250.f, 425.f), texProgram, ballColors[playernext->color], gameover);
 			//playernext->setTileMap(map);
 
-
-
-			cleanSprites();
-			mapa = map->convertToSprites(gameover);
-			if(gameover_sonido==0) engine->play2D("./sounds/pbobble-041.wav", false);
+			if (first) {
+				cleanSprites();
+				mapa = map->convertToSprites(gameover);
+				first = false;
+			}
+			if (gameover_sonido == 0) {
+				engine->stopAllSounds();
+				engine->play2D("./sounds/pbobble-041.wav", false);
+			}
 			++gameover_sonido;
-
-
 
 			if (Game::instance().getKey(13))
 			{
-				cout << "entra?" << endl;
 				setNewLvl(contadorNivel);
+				first = true;
 			}
 
 			break;
@@ -307,14 +317,14 @@ void Scene::render()
 	renderSprites();
 
 	if(state==LVL_LOST) {
-		text.render("Puntuacion: ", glm::vec2(192, 300), 14, glm::vec4(1, 1, 1, 1));
+		text.render("Score: ", glm::vec2(192, 300), 14, glm::vec4(1, 1, 1, 1));
 
-		text.render(to_string(map->getPuntuacion()), glm::vec2(380, 300),20, glm::vec4(1, 1, 1, 1));
+		text.render(to_string(map->getPuntuacion()), glm::vec2(380, 300), 20, glm::vec4(1, 1, 1, 1));
 
 
-		glm::vec2 geomlosewin[2] = { glm::vec2(192, 100), glm::vec2(192+250, 160) };
+		glm::vec2 geomlosewin[2] = { glm::vec2(192, 100), glm::vec2(192 + 250, 160) };
 		glm::vec2 texCoordslosewin[2] = { glm::vec2(0.f, 0.f), glm::vec2(1.f, 1.f) };
-		losewin = Quad::createQuad(192,50,192+250,110, simpleProgram);
+		losewin = Quad::createQuad(192, 50, 192 + 250, 110, simpleProgram);
 		texlosewin = TexturedQuad::createTexturedQuad(geomlosewin, texCoordslosewin, texProgram);
 
 		texProgram.use();
@@ -328,14 +338,14 @@ void Scene::render()
 		losewin->free();
 		texlosewin->free();
 
-		if(int(tiempoTecho%10)>3){text.render("push enter to continue", glm::vec2(192, 240),10, glm::vec4(1, 1, 1, 1));}
+		if (int(tiempoTecho % 10)>3) { text.render("push enter to continue", glm::vec2(192, 240), 10, glm::vec4(1, 1, 1, 1)); }
 	}
 
 
 	else if(state==LVL_WON) {
-		text.render("Puntuation: ", glm::vec2(192, 300), 14, glm::vec4(1, 1, 1, 1));
+		text.render("Score: ", glm::vec2(220, 300), 14, glm::vec4(1, 1, 1, 1));
 
-		text.render(to_string(map->getPuntuacion()), glm::vec2(380, 300),20, glm::vec4(1, 1, 1, 1));
+		text.render(to_string(map->getPuntuacion()), glm::vec2(340, 300),20, glm::vec4(1, 1, 1, 1));
 
 		glm::vec2 geomlosewin[2] = { glm::vec2(192, 100), glm::vec2(192+250, 160) };
 		glm::vec2 texCoordslosewin[2] = { glm::vec2(0.f, 0.f), glm::vec2(1.f, 1.f) };
@@ -359,15 +369,13 @@ void Scene::render()
 	}
 
 	else {
-		text.render("Punctuation: ", glm::vec2(400, 478), 14, glm::vec4(1, 1, 1, 1));
+		text.render("Score: ", glm::vec2(400, 478), 14, glm::vec4(1, 1, 1, 1));
 
 
 		text.render("Level: ", glm::vec2(SCREEN_X+280, SCREEN_Y+5), 14, glm::vec4(1, 1, 1, 1));
 
 
 		text.render(to_string(contadorNivel), glm::vec2(SCREEN_X+380, SCREEN_Y+5), 14, glm::vec4(1, 1, 1, 1));
-
-
 
 		text.render(to_string(map->getPuntuacion()), glm::vec2(580, 478),16, glm::vec4(1, 1, 1, 1));
 
@@ -477,6 +485,16 @@ void Scene::setNewLvl(int lvl)
 	gameover = false;
 	tiempoDisparo = 0;
 	tiempoTecho = 0;
+
+	if (lvl == 3) {
+		background[21] = number;
+		superiorMap[24] = number;
+		ceiling[12] = number;
+		texs.loadFromFile(background, TEXTURE_PIXEL_FORMAT_RGBA);
+		texturesuperior.loadFromFile(superiorMap, TEXTURE_PIXEL_FORMAT_RGBA);
+		texturetecho.loadFromFile(ceiling, TEXTURE_PIXEL_FORMAT_RGBA);
+	}
+
 	delete map;
 	map = TileMap::createTileMap(lvlNumber, glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
 	mapa = map->convertToSprites(gameover);

@@ -59,7 +59,7 @@ private:
 	TexturedQuad *texQuad, *textecho, *texsuperior,*texlosewin;
 	Texture texs, texturetecho, texturesuperior, texturewin, texturelose;
 	vector<BolaMapa *> *mapa;
-	string lvlNumber;
+	string lvlNumber, background, superiorMap, ceiling;
 	bool winlvl;
 	vector<int> ballColors;
 	Text text;
