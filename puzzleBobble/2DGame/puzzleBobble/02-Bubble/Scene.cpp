@@ -35,7 +35,7 @@ float numRadBola;
 float numRadArrow;
 
 enum State {
-	THROWING_BALL, LVL_WON, LVL_LOST, WAITING_FOR_THROW
+	THROWING_BALL, LVL_WON, LVL_LOST, WAITING_FOR_THROW, GAME_LOST, GAME_WIN
 };
 
 State state;
@@ -85,6 +85,7 @@ void Scene::init()
 	texturelose.loadFromFile("images/youlose.png", TEXTURE_PIXEL_FORMAT_RGBA);
 	texturewin.loadFromFile("images/youwin.png", TEXTURE_PIXEL_FORMAT_RGBA);
 
+	texturegameover.loadFromFile("images/gameOver.png", TEXTURE_PIXEL_FORMAT_RGBA);
 	
 
 	map = TileMap::createTileMap(lvlNumber, glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
@@ -117,6 +118,7 @@ void Scene::init()
 	angle = 90.0f;
 
 	winlvl = false;
+	lives = 3;
 
 	glm::vec2 geomTecho[2] = { glm::vec2(SCREEN_X, -480.f + SCREEN_Y + baja*32.f), glm::vec2(SCREEN_X + 250, SCREEN_Y + baja*32.f) };
 	glm::vec2 texCoordsTecho[2] = { glm::vec2(0.f, 0.f), glm::vec2(1.f, 1.f) };
@@ -145,6 +147,8 @@ void Scene::update(int deltaTime) {
 	if (gameover) state = LVL_LOST;
 
 	if (winlvl) state = LVL_WON;
+
+	if (lives < 0) state = GAME_LOST;
 
 	switch (state) {
 		case (WAITING_FOR_THROW):
@@ -243,8 +247,14 @@ void Scene::update(int deltaTime) {
 			{
 				setNewLvl(contadorNivel);
 				first = true;
+				--lives;
 			}
+			
+			break;
+		case (GAME_LOST) :
 
+			engine->stopAllSounds();
+			engine->play2D("./sounds/pbobble-041.wav", false);
 			break;
 	}
 
@@ -375,7 +385,20 @@ void Scene::render()
 			text.render("press enter to next level", glm::vec2(176, 240),10, glm::vec4(1, 1, 1, 1));
 		}
 	}
+	else if (state == GAME_LOST) {
 
+		glm::vec2 geom[2] = { glm::vec2(0.f, 0.f), glm::vec2(640.f, 480.f) };
+		glm::vec2 texCoords[2] = { glm::vec2(0.f, 0.f), glm::vec2(1.f, 1.f) };
+		texgameover = TexturedQuad::createTexturedQuad(geom, texCoords, texProgram);
+
+		texProgram.use();
+		texProgram.setUniformMatrix4f("projection", projection);
+		texProgram.setUniform4f("color", 1.0f, 1.0f, 1.0f, 1.0f);
+		modelview = glm::mat4(1.0f);
+		texProgram.setUniformMatrix4f("modelview", modelview);
+		texProgram.setUniform2f("texCoordDispl", 0.f, 0.f);
+		texgameover->render(texturegameover);
+	}
 	else {
 		text.render("Score: ", glm::vec2(40, 30), 14, glm::vec4(1, 1, 1, 1));
 
@@ -383,10 +406,7 @@ void Scene::render()
 
 		text.render("Level: ", glm::vec2(SCREEN_X+280, SCREEN_Y+5), 14, glm::vec4(1, 1, 1, 1));
 
-
 		text.render(to_string(contadorNivel), glm::vec2(SCREEN_X+380, SCREEN_Y+5), 14, glm::vec4(1, 1, 1, 1));
-
-		
 
 		text.render(to_string(int(tiempoTecho/60)), glm::vec2(500, 100),16, glm::vec4(1, 1, 1, 1));
 	}
