@@ -19,8 +19,8 @@
 #include "conio.h"
 #endif
 
-#define SCREEN_WIDTH 640.f
-#define SCREEN_HEIGHT 480.f
+#define SCREEN_WIDTH 640
+#define SCREEN_HEIGHT 480
 
 
 // Scene contains all the entities of our game.
@@ -66,6 +66,21 @@ private:
 	vector<int> ballColors;
 	Text text;
 	int lifes;
+
+	bool cambio;
+	bool acaba;
+	bool empieza;
+	bool gameover;
+	int contadorNivel;
+	int tiempoDisparo;
+	int tiempoTecho;
+	int baja;
+	float angleAux;
+	int gameover_sonido;
+	bool first;
+
+	float numRadBola;
+	float numRadArrow;
 
 	irrklang::ISoundEngine* engine;
 };

@@ -245,21 +245,20 @@ bool TileMap::collision(const glm::ivec2 &pos,int color, bool &gameover, int cur
 				else{
 					posTile=glm::vec2(minCoords.x+i*tileSize+tileSize/2,minCoords.y+j*tileSize);
 				}
-				int BolaJugadax=pos.x+tileSize/2;
-				int BolaJugaday=pos.y+tileSize/2;
-				int BolaMapax=posTile.x+tileSize/2;
-				int BolaMapay=posTile.y+tileSize/2;
+				float BolaJugadax=pos.x+tileSize/2.f;
+				float BolaJugaday=pos.y+tileSize/2.f;
+				float BolaMapax=posTile.x+tileSize/2.f;
+				float BolaMapay=posTile.y+tileSize/2.f;
 
 				double dist=(sqrt(pow(abs(BolaMapax-BolaJugadax),2)+pow(abs(BolaMapay-BolaJugaday),2)));
 				if(dist<=32){
-
 					colocaBola(j,i,color,BolaJugadax,BolaJugaday,gameover);
 					return true;
 
 				}
 				if(BolaJugaday<60+bajada*32){
 					if(color!=20){
-						colocaBolaTecho(0,(BolaJugadax-193.f)/32,color,gameover);
+						colocaBolaTecho(0,(BolaJugadax-193.f)/32.f,color,gameover);
 					}
 					return true;
 				}
@@ -269,7 +268,7 @@ bool TileMap::collision(const glm::ivec2 &pos,int color, bool &gameover, int cur
 	return false;
 }
 
-void TileMap::colocaBola(int j, int i, int color, int Bolax, int Bolay, bool &gameover)
+void TileMap::colocaBola(int j, int i, int color, float Bolax, float Bolay, bool &gameover)
 {
 	double dist_anterior = 100.0f;
 	int posfx = 0;
@@ -342,8 +341,8 @@ void TileMap::colocaBola(int j, int i, int color, int Bolax, int Bolay, bool &ga
 									posTile = glm::vec2(minCoords.x + (i + ii)*tileSize + tileSize / 2, minCoords.y + (j + jj)*tileSize);
 								}
 
-								int BolaMapax = posTile.x + tileSize / 2;
-								int BolaMapay = posTile.y + tileSize / 2;
+								float BolaMapax = posTile.x + tileSize / 2.f;
+								float BolaMapay = posTile.y + tileSize / 2.f;
 
 								double dist = (sqrt(pow(abs(BolaMapax - Bolax), 2) + pow(abs(BolaMapay - Bolay), 2)));
 								if (dist_anterior > dist) {
@@ -489,7 +488,7 @@ void TileMap::searchAloneBalls(int j, int i)
 void TileMap::deleteBalls(vector<glm::ivec2> &ballsToDelete, bool &gameover)
 {
 	int i, j;
-	for (int k = 0; k < ballsToDelete.size(); ++k) {
+	for (unsigned int k = 0; k < ballsToDelete.size(); ++k) {
 		i = ballsToDelete[k].x;
 		j = ballsToDelete[k].y;
 		tileMap[j*mapSize.x + i] = 0;

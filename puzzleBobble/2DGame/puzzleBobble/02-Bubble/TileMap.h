@@ -41,7 +41,7 @@ public:
 	bool collisionMoveLeft(const glm::ivec2 &pos, const glm::ivec2 &size) const;
 	bool collisionMoveRight(const glm::ivec2 &pos, const glm::ivec2 &size) const;
 	bool collisionMoveDown(const glm::ivec2 &pos, const glm::ivec2 &size, int *posY) const;
-	void colocaBola(int i, int j, int color, int Bolax, int Bolay, bool &gameover);
+	void colocaBola(int i, int j, int color, float Bolax, float Bolay, bool &gameover);
 	void colocaBolaTecho(int i, int j, int color, bool &gameover);
 	void bajaMapa(bool &gameover);
 	void searchBallsToDestroy(int j, int i);

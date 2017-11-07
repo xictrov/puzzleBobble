@@ -63,7 +63,7 @@ void Player::update(int deltaTime, float angle, bool &cambio, bool &acaba, bool 
 	sprite->update(deltaTime, 0.0f, false, true);
 
 	if (posPlayer.x < -112.5f || posPlayer.x>112.5f ) {
-		angle = M_PI - angle;
+		angle = (float) M_PI - angle;
 		cambio = true;
 	}
 

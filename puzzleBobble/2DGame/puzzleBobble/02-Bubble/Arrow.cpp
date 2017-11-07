@@ -114,7 +114,7 @@ void ArrowMachine::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgr
 void ArrowMachine::update(int deltaTime, float angle)
 {
 	spriteArrow->update(deltaTime, angle, false, true);
-	float angleAux = (angle) * (180 / M_PI);
+	float angleAux = float ((angle) * (180 / M_PI));
 	if (angleAux > -80 && angleAux < 80) {
 		if (Game::instance().getSpecialKey(GLUT_KEY_RIGHT))
 		{

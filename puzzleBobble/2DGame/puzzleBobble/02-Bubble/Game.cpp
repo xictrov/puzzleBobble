@@ -56,7 +56,10 @@ void Game::render()
 void Game::keyPressed(int key)
 {
 	if(key == 27) {// Escape code
-		if (estado != 3) estado = 3;
+		if (estado != 3) {
+			if (estado==0)scene.~Scene();
+			estado = 3;
+		}
 		else {
 			bPlay = false;
 			cout << "entra" << endl;
@@ -122,7 +125,7 @@ void Game::newaction(int act)
 
 	}
 	else {
-		glClearColor(1.f, 1.f, 1.f, 1.0f);
+		//glClearColor(1.f, 1.f, 1.f, 1.0f);
 	}
 }
 void Game::setSpecialKey(int key){

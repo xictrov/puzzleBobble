@@ -48,6 +48,7 @@ Scene::Scene()
 
 Scene::~Scene()
 {
+	engine->stopAllSounds();
 	if(map != NULL)
 		delete map;
 	if(player != NULL)
@@ -120,6 +121,17 @@ void Scene::init()
 	winlvl = false;
 	lifes = 2;
 
+	cambio = false;
+	acaba = false;
+	empieza = false;
+	gameover = false;
+	contadorNivel = 1;
+	tiempoDisparo = 0;
+	tiempoTecho = 0;
+	baja = 0;
+	angleAux;
+	gameover_sonido = 0;
+
 	glm::vec2 geomTecho[2] = { glm::vec2(SCREEN_X, -480.f + SCREEN_Y + baja*32.f), glm::vec2(SCREEN_X + 250, SCREEN_Y + baja*32.f) };
 	glm::vec2 texCoordsTecho[2] = { glm::vec2(0.f, 0.f), glm::vec2(1.f, 1.f) };
 	techo = Quad::createQuad(SCREEN_X, -480.f + SCREEN_Y + (baja + 1) * 32, SCREEN_X + 250, SCREEN_Y + (baja + 1)*32.f, simpleProgram);
@@ -170,7 +182,7 @@ void Scene::update(int deltaTime) {
 			if (angle > 170) angle = 170;
 			if (angle < 10) angle = 10;
 
-			numRadArrow = (angle - 90.f) * (M_PI / 180);
+			numRadArrow = float ((angle - 90.f) * (M_PI / 180));
 
 			arrow->update(deltaTime, numRadArrow);
 
@@ -187,7 +199,7 @@ void Scene::update(int deltaTime) {
 			break;
 		case (THROWING_BALL):
 
-			numRadBola = angle * (M_PI / 180);
+			numRadBola = float (angle * (M_PI / 180));
 
 			player->update(deltaTime, numRadBola, cambio, acaba, gameover);
 			if (cambio) angle = 180 - angle;
@@ -218,7 +230,7 @@ void Scene::update(int deltaTime) {
 			++gameover_sonido;
 
 			if(Game::instance().getKey(13)){
-				contadorNivel=6;
+				++contadorNivel;
 				if (contadorNivel >= 6) state = GAME_WIN;
 				else setNewLvl(contadorNivel);
 
@@ -260,7 +272,7 @@ void Scene::update(int deltaTime) {
 		case (GAME_WIN):
 
 			engine->stopAllSounds();
-			engine->play2D("./sounds/pbobble-041.wav", false);
+			//engine->play2D("./sounds/pbobble-041.wav", false);
 
 
 			break;

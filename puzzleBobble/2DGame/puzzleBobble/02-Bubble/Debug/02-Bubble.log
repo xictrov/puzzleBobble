@@ -1,9 +1,17 @@
-﻿  Scene.cpp
-c:\users\vimar\desktop\puzzlebobble\puzzlebobble\2dgame\puzzlebobble\02-bubble\game.h(16): warning C4005: 'SCREEN_WIDTH': redefinición de macro
-  c:\users\vimar\desktop\puzzlebobble\puzzlebobble\2dgame\puzzlebobble\02-bubble\scene.h(22): note: vea la definición anterior de 'SCREEN_WIDTH'
-c:\users\vimar\desktop\puzzlebobble\puzzlebobble\2dgame\puzzlebobble\02-bubble\game.h(17): warning C4005: 'SCREEN_HEIGHT': redefinición de macro
-  c:\users\vimar\desktop\puzzlebobble\puzzlebobble\2dgame\puzzlebobble\02-bubble\scene.h(23): note: vea la definición anterior de 'SCREEN_HEIGHT'
-c:\users\vimar\desktop\puzzlebobble\puzzlebobble\2dgame\puzzlebobble\02-bubble\scene.cpp(66): warning C4244: 'argumento': conversión de 'time_t' a 'unsigned int'; posible pérdida de datos
-c:\users\vimar\desktop\puzzlebobble\puzzlebobble\2dgame\puzzlebobble\02-bubble\scene.cpp(173): warning C4244: '=': conversión de 'double' a 'float'; posible pérdida de datos
-c:\users\vimar\desktop\puzzlebobble\puzzlebobble\2dgame\puzzlebobble\02-bubble\scene.cpp(190): warning C4244: '=': conversión de 'double' a 'float'; posible pérdida de datos
+﻿  TileMap.cpp
+c:\users\vimar\desktop\puzzlebobble\puzzlebobble\2dgame\puzzlebobble\02-bubble\tilemap.cpp(261): warning C4244: 'argumento': conversión de 'float' a 'int'; posible pérdida de datos
+c:\users\vimar\desktop\puzzlebobble\puzzlebobble\2dgame\puzzlebobble\02-bubble\tilemap.cpp(298): warning C4244: 'inicializando': conversión de 'float' a 'int'; posible pérdida de datos
+c:\users\vimar\desktop\puzzlebobble\puzzlebobble\2dgame\puzzlebobble\02-bubble\tilemap.cpp(299): warning C4244: 'inicializando': conversión de 'float' a 'int'; posible pérdida de datos
+  Generando código...
+  Omitiendo... (no se detectaron cambios relevantes)
+  main.cpp
+  Scene.cpp
+  Player.cpp
+  Menu.cpp
+  Instructions.cpp
+  Game.cpp
+  Dino.cpp
+  Credits.cpp
+  BolaMapa.cpp
+  Arrow.cpp
   02-Bubble.vcxproj -> C:\Users\vimar\Desktop\puzzleBobble\puzzleBobble\2DGame\puzzleBobble\Debug\02-Bubble.exe
