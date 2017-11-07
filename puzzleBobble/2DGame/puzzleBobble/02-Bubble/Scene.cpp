@@ -118,7 +118,7 @@ void Scene::init()
 	angle = 90.0f;
 
 	winlvl = false;
-	lives = 3;
+	lifes = 2;
 
 	glm::vec2 geomTecho[2] = { glm::vec2(SCREEN_X, -480.f + SCREEN_Y + baja*32.f), glm::vec2(SCREEN_X + 250, SCREEN_Y + baja*32.f) };
 	glm::vec2 texCoordsTecho[2] = { glm::vec2(0.f, 0.f), glm::vec2(1.f, 1.f) };
@@ -148,12 +148,12 @@ void Scene::update(int deltaTime) {
 
 	if (winlvl) state = LVL_WON;
 
-	if (lives < 0) state = GAME_LOST;
+	if (lifes < 0) state = GAME_LOST;
 
 	switch (state) {
 		case (WAITING_FOR_THROW):
 
-			if (tiempoTecho % 3000 == 0) {
+			if (tiempoTecho % 1800 == 0) {
 				baja += 1;
 				map->bajaMapa(gameover);
 				cleanSprites();
@@ -174,10 +174,10 @@ void Scene::update(int deltaTime) {
 
 			arrow->update(deltaTime, numRadArrow);
 
-			if (Game::instance().getSpecialKey(GLUT_KEY_UP) || tiempoDisparo % 5000 == 0) {
+			if (Game::instance().getSpecialKey(GLUT_KEY_UP) || tiempoDisparo == 600) {
 				engine->play2D("./sounds/pbobble-002.wav", false);
-				tiempoDisparo = 0;
 				angleAux = angle;
+				tiempoDisparo = 0;
 				state = THROWING_BALL;
 				Game::instance().setSpecialKey(GLUT_KEY_UP);
 			}
@@ -219,7 +219,8 @@ void Scene::update(int deltaTime) {
 
 			if(Game::instance().getKey(13)){
 				++contadorNivel;
-				setNewLvl(contadorNivel);
+				if (contadorNivel >= 6) state = GAME_WIN;
+				else setNewLvl(contadorNivel);
 
 			}
 
@@ -247,7 +248,7 @@ void Scene::update(int deltaTime) {
 			{
 				setNewLvl(contadorNivel);
 				first = true;
-				--lives;
+				--lifes;
 			}
 			
 			break;
@@ -255,6 +256,10 @@ void Scene::update(int deltaTime) {
 
 			engine->stopAllSounds();
 			engine->play2D("./sounds/pbobble-041.wav", false);
+			break;
+		case (GAME_WIN):
+
+
 			break;
 	}
 
@@ -335,9 +340,9 @@ void Scene::render()
 	renderSprites();
 
 	if(state==LVL_LOST) {
-		text.render("Score: ", glm::vec2(192, 300), 14, glm::vec4(1, 1, 1, 1));
+		text.render("Score: ", glm::vec2(220, 300), 14, glm::vec4(1, 1, 1, 1));
 
-		text.render(to_string(map->getPuntuacion()), glm::vec2(380, 300), 20, glm::vec4(1, 1, 1, 1));
+		text.render(to_string(map->getPuntuacion()), glm::vec2(340, 300), 20, glm::vec4(1, 1, 1, 1));
 
 
 		glm::vec2 geomlosewin[2] = { glm::vec2(192, 100), glm::vec2(192 + 250, 160) };
@@ -400,15 +405,19 @@ void Scene::render()
 		texgameover->render(texturegameover);
 	}
 	else {
-		text.render("Score: ", glm::vec2(40, 30), 14, glm::vec4(1, 1, 1, 1));
+		text.render("Score:", glm::vec2(30, 30), 14, glm::vec4(1, 1, 1, 1));
 
-		text.render(to_string(map->getPuntuacion()), glm::vec2(200, 30), 16, glm::vec4(1, 1, 1, 1));
+		text.render(to_string(map->getPuntuacion()), glm::vec2(130, 30), 16, glm::vec4(1, 1, 1, 1));
 
-		text.render("Level: ", glm::vec2(SCREEN_X+280, SCREEN_Y+5), 14, glm::vec4(1, 1, 1, 1));
+		text.render("Level ", glm::vec2(30, 450), 14, glm::vec4(1, 1, 1, 1));
 
-		text.render(to_string(contadorNivel), glm::vec2(SCREEN_X+380, SCREEN_Y+5), 14, glm::vec4(1, 1, 1, 1));
+		text.render(to_string(contadorNivel), glm::vec2(130, 450), 14, glm::vec4(1, 1, 1, 1));
 
-		text.render(to_string(int(tiempoTecho/60)), glm::vec2(500, 100),16, glm::vec4(1, 1, 1, 1));
+		text.render(to_string(int(tiempoTecho/60)), glm::vec2(540, 30),16, glm::vec4(1, 1, 1, 1));
+
+		text.render("Lifes: ", glm::vec2(490, 450), 14, glm::vec4(1, 1, 1, 1));
+
+		text.render(to_string(lifes), glm::vec2(590, 450), 14, glm::vec4(1, 1, 1, 1));
 	}
 
 }

@@ -3,7 +3,7 @@ TILEMAP
 32 32						-- Tile size & block size
 images/balls.png 	-- Tilesheet
 1 8 	-- Number of tiles in tilesheet	
-20055002
+20000002
 12343210
 40000004
 14321430

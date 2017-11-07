@@ -65,7 +65,7 @@ private:
 	bool winlvl;
 	vector<int> ballColors;
 	Text text;
-	int lives;
+	int lifes;
 
 	irrklang::ISoundEngine* engine;
 };
