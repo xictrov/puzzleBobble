@@ -60,7 +60,7 @@ void Scene::init()
 
 
 	//engine->play2D("./sounds/pbobble-025.wav", false);
-	engine->play2D("./sounds/smash_mouth-all_star.wav", false);
+	engine->play2D("./sounds/smash_mouth-all_star.wav", true);
 	state = WAITING_FOR_THROW;
 
 	srand(time(NULL));
@@ -86,7 +86,7 @@ void Scene::init()
 	texturewin.loadFromFile("images/youwin.png", TEXTURE_PIXEL_FORMAT_RGBA);
 
 	texturegameover.loadFromFile("images/gameOver.png", TEXTURE_PIXEL_FORMAT_RGBA);
-	
+
 
 	map = TileMap::createTileMap(lvlNumber, glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
 
@@ -218,7 +218,7 @@ void Scene::update(int deltaTime) {
 			++gameover_sonido;
 
 			if(Game::instance().getKey(13)){
-				++contadorNivel;
+				contadorNivel=6;
 				if (contadorNivel >= 6) state = GAME_WIN;
 				else setNewLvl(contadorNivel);
 
@@ -250,7 +250,7 @@ void Scene::update(int deltaTime) {
 				first = true;
 				--lifes;
 			}
-			
+
 			break;
 		case (GAME_LOST) :
 
@@ -258,6 +258,9 @@ void Scene::update(int deltaTime) {
 			engine->play2D("./sounds/pbobble-041.wav", false);
 			break;
 		case (GAME_WIN):
+
+			engine->stopAllSounds();
+			engine->play2D("./sounds/pbobble-041.wav", false);
 
 
 			break;
@@ -403,6 +406,11 @@ void Scene::render()
 		texProgram.setUniformMatrix4f("modelview", modelview);
 		texProgram.setUniform2f("texCoordDispl", 0.f, 0.f);
 		texgameover->render(texturegameover);
+	}
+	else if (state == GAME_WIN) {
+
+		engine->stopAllSounds();
+		Game::instance().newaction(2);
 	}
 	else {
 		text.render("Score:", glm::vec2(30, 30), 14, glm::vec4(1, 1, 1, 1));

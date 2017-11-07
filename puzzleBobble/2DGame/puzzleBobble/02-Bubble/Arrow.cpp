@@ -52,7 +52,7 @@ void ArrowMachine::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgr
 	tileMapDispl = tileMapPos;
 	spriteArrow->setPosition(glm::vec2(float(tileMapDispl.x + posArrow.x), float(tileMapDispl.y + posArrow.y)));
 
-	
+
 	wheelSpritesheet.loadFromFile("images/rueda.png", TEXTURE_PIXEL_FORMAT_RGBA);
 	spriteWheel = Sprite::createSprite(glm::ivec2(32, 32), glm::vec2(0.125f, 1.0f), &wheelSpritesheet, &shaderProgram);
 	spriteWheel->setNumberAnimations(1);
