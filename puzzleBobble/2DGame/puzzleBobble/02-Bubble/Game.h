@@ -4,6 +4,8 @@
 
 #include "Scene.h"
 #include "Menu.h"
+#include "Instructions.h"
+#include "Credits.h"
 #include <irrKlang.h>
 #if defined(WIN32)
 #include <conio.h>
@@ -56,6 +58,8 @@ public:
 private:
 	bool bPlay;                       // Continue to play game?
 	Menu menu;
+	Instructions instructions;
+	Credits credits;
 	Scene scene;                      // Scene to render
 	bool keys[256], specialKeys[256]; // Store key states so that
 	                                  // we can have access at any time

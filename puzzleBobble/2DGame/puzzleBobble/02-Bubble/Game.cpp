@@ -26,13 +26,17 @@ void Game::init()
 	glClearColor(0.3f, 0.3f, 0.3f, 1.0f);
 	menu.init();
 	//scene.init();
+	instructions.init();
+	credits.init();
 }
 
 bool Game::update(int deltaTime)
 {
 
-	if(estado==3)menu.update(deltaTime);
+	if(estado==3) menu.update(deltaTime);
 	else if(estado==0) scene.update(deltaTime);
+	else if (estado == 1) instructions.update(deltaTime);
+	else credits.update(deltaTime);
 
 	return bPlay;
 }
@@ -43,6 +47,8 @@ void Game::render()
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	if(estado==3)menu.render();
 	else if(estado==0)scene.render();
+	else if (estado == 1) instructions.render();
+	else credits.render();
 
 
 }
@@ -50,8 +56,11 @@ void Game::render()
 void Game::keyPressed(int key)
 {
 	if(key == 27) {// Escape code
-		bPlay = false;
-		cout << "entra" << endl;
+		if (estado != 3) estado = 3;
+		else {
+			bPlay = false;
+			cout << "entra" << endl;
+		}
 	}
 
 	keys[key] = true;
@@ -109,16 +118,11 @@ void Game::newaction(int act)
 	else if (act==0){
 		initSc();
 	}
-	else if(act==1){
-
-	glClearColor(0.3f, 0.3f, 0.3f, 1.0f);
+	else if(act==1) {
 
 	}
-	else{
-
-			glClearColor(1.f, 1.f, 1.f, 1.0f);
-
-
+	else {
+		glClearColor(1.f, 1.f, 1.f, 1.0f);
 	}
 }
 void Game::setSpecialKey(int key){

@@ -100,13 +100,17 @@ void Scene::init()
 	}
 	playernext = new Player();
 	if (ballColors.size() > 0) {
-		playernext->init(glm::ivec2(250.f, 425.f), texProgram, ballColors[rand() % ballColors.size()],gameover);
+		playernext->init(glm::ivec2(235.f, 426.f), texProgram, ballColors[rand() % ballColors.size()],gameover);
 		playernext->setTileMap(map);
 	}
 
 	arrow = new ArrowMachine();
 	arrow->init(glm::ivec2(299.f, 340.f), texProgram);
 	arrow->setTileMap(map);
+
+	dino = new Dino();
+	dino->init(glm::ivec2(250.f, 400.f), texProgram);
+	dino->setTileMap(map);
 
 	projection = glm::ortho(0.f, float(SCREEN_WIDTH -1), float(SCREEN_HEIGHT -1), 0.f);
 	currentTime = 0.0f;
@@ -145,7 +149,7 @@ void Scene::update(int deltaTime) {
 	switch (state) {
 		case (WAITING_FOR_THROW):
 
-			if (tiempoTecho % 1200 == 0) {
+			if (tiempoTecho % 3000 == 0) {
 				baja += 1;
 				map->bajaMapa(gameover);
 				cleanSprites();
@@ -166,13 +170,15 @@ void Scene::update(int deltaTime) {
 
 			arrow->update(deltaTime, numRadArrow);
 
-			if (Game::instance().getSpecialKey(GLUT_KEY_UP) || tiempoDisparo % 600 == 0) {
+			if (Game::instance().getSpecialKey(GLUT_KEY_UP) || tiempoDisparo % 5000 == 0) {
 				engine->play2D("./sounds/pbobble-002.wav", false);
 				tiempoDisparo = 0;
 				angleAux = angle;
 				state = THROWING_BALL;
 				Game::instance().setSpecialKey(GLUT_KEY_UP);
 			}
+
+			dino->update(deltaTime, 0.0f);
 
 			break;
 		case (THROWING_BALL):
@@ -191,7 +197,7 @@ void Scene::update(int deltaTime) {
 				angle = angleAux;
 				checkColors();
 				if (ballColors.size() > 0) {
-					playernext->init(glm::ivec2(250.f, 425.f), texProgram, ballColors[rand() % ballColors.size()], gameover);
+					playernext->init(glm::ivec2(235.f, 426.f), texProgram, ballColors[rand() % ballColors.size()], gameover);
 					playernext->setTileMap(map);
 				}
 				if (gameover) first = true;
@@ -310,6 +316,8 @@ void Scene::render()
 
 	arrow->render();
 
+	dino->render();
+
 	player->render();
 
 	playernext->render();
@@ -338,7 +346,7 @@ void Scene::render()
 		losewin->free();
 		texlosewin->free();
 
-		if (int(tiempoTecho % 10)>3) { text.render("push enter to continue", glm::vec2(192, 240), 10, glm::vec4(1, 1, 1, 1)); }
+		if (int(tiempoTecho % 10)>3) { text.render("press enter to continue", glm::vec2(192, 240), 10, glm::vec4(1, 1, 1, 1)); }
 	}
 
 
@@ -364,20 +372,21 @@ void Scene::render()
 		texlosewin->free();
 
 		if(int(tiempoTecho%10)>3) {
-			text.render("push enter to next level", glm::vec2(192, 240),10, glm::vec4(1, 1, 1, 1));
+			text.render("press enter to next level", glm::vec2(176, 240),10, glm::vec4(1, 1, 1, 1));
 		}
 	}
 
 	else {
-		text.render("Score: ", glm::vec2(400, 478), 14, glm::vec4(1, 1, 1, 1));
+		text.render("Score: ", glm::vec2(40, 30), 14, glm::vec4(1, 1, 1, 1));
 
+		text.render(to_string(map->getPuntuacion()), glm::vec2(200, 30), 16, glm::vec4(1, 1, 1, 1));
 
 		text.render("Level: ", glm::vec2(SCREEN_X+280, SCREEN_Y+5), 14, glm::vec4(1, 1, 1, 1));
 
 
 		text.render(to_string(contadorNivel), glm::vec2(SCREEN_X+380, SCREEN_Y+5), 14, glm::vec4(1, 1, 1, 1));
 
-		text.render(to_string(map->getPuntuacion()), glm::vec2(580, 478),16, glm::vec4(1, 1, 1, 1));
+		
 
 		text.render(to_string(int(tiempoTecho/60)), glm::vec2(500, 100),16, glm::vec4(1, 1, 1, 1));
 	}
@@ -509,7 +518,7 @@ void Scene::setNewLvl(int lvl)
 		player->setTileMap(map);
 	}
 	if (ballColors.size() > 0) {
-		playernext->init(glm::ivec2(250.f, 425.f), texProgram, ballColors[rand() % ballColors.size()],gameover);
+		playernext->init(glm::ivec2(235.f, 426.f), texProgram, ballColors[rand() % ballColors.size()],gameover);
 		playernext->setTileMap(map);
 	}
 

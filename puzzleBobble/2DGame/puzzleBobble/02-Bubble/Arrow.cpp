@@ -108,7 +108,7 @@ void ArrowMachine::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgr
 
 
 	spriteBag->changeAnimation(0);
-	spriteBag->setPosition(glm::vec2(float(180.f), float(410.f)));
+	spriteBag->setPosition(glm::vec2(float(170.f), float(410.f)));
 }
 
 void ArrowMachine::update(int deltaTime, float angle)
@@ -131,11 +131,11 @@ void ArrowMachine::update(int deltaTime, float angle)
 
 void ArrowMachine::render()
 {
-	spriteArrow->render();
 	spriteGear->render();
 	spriteWheel->render();
 	spritePlatform->render();
 	spriteBag->render();
+	spriteArrow->render();
 }
 
 void ArrowMachine::setTileMap(TileMap *tileMap)

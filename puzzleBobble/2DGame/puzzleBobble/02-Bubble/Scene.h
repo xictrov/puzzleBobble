@@ -10,6 +10,7 @@
 #include "TexturedQuad.h"
 #include "Arrow.h"
 #include "BolaMapa.h"
+#include "Dino.h"
 #include <irrKlang.h>
 #include "Text.h"
 #if defined(WIN32)
@@ -52,6 +53,7 @@ private:
 	TileMap *map;
 	Player *player, *playernext;
 	ArrowMachine *arrow;
+	Dino *dino;
 	ShaderProgram texProgram, simpleProgram;
 	float currentTime, angle;
 	glm::mat4 projection;

@@ -34,7 +34,7 @@ void Menu::init()
 	glm::vec2 geom[2] = { glm::vec2(0.f, 0.f), glm::vec2(640.f, 480.f) };
 	glm::vec2 texCoords[2] = { glm::vec2(0.f, 0.f), glm::vec2(1.f, 1.f) };
 	fondo = TexturedQuad::createTexturedQuad(geom, texCoords, texProgram);
-	imgFondo.loadFromFile("images/Menu.png", TEXTURE_PIXEL_FORMAT_RGBA);
+	imgFondo.loadFromFile("images/logoscreen.png", TEXTURE_PIXEL_FORMAT_RGBA);
 
 	glm::vec2 geom2[2] = { glm::vec2(0.f, 0.f), glm::vec2(32.f, 32.f) };
 	glm::vec2 texCoords2[2] = { glm::vec2(0.f, 0.f), glm::vec2(1.f, 1.f) };
@@ -74,9 +74,9 @@ void Menu::update(int deltaTime)
 
 		texto.render("Play ", glm::vec2(260, 380), 20, glm::vec4(1, 1, 1, 1));
 
-		texto.render("Instrucciones ", glm::vec2(200, 420), 14, glm::vec4(1, 1, 1, 1));
+		texto.render("How to play ", glm::vec2(200, 420), 14, glm::vec4(1, 1, 1, 1));
 
-		texto.render("Creditos ", glm::vec2(240, 460), 14, glm::vec4(1, 1, 1, 1));
+		texto.render("Credits ", glm::vec2(240, 460), 14, glm::vec4(1, 1, 1, 1));
 
 		glm::vec2 geom2[2] = { glm::vec2(350.f, 370.f), glm::vec2(350+32.f, 370+32.f) };
 		glm::vec2 texCoords2[2] = { glm::vec2(0.f, 0.f), glm::vec2(1.f, 1.f) };
@@ -87,11 +87,11 @@ void Menu::update(int deltaTime)
 
 		texto.render("Play ", glm::vec2(270, 380), 14, glm::vec4(1, 1, 1, 1));
 
-		texto.render("Instrucciones ", glm::vec2(160, 420), 20, glm::vec4(1, 1, 1, 1));
+		texto.render("How to play ", glm::vec2(160, 420), 20, glm::vec4(1, 1, 1, 1));
 
-		texto.render("Creditos ", glm::vec2(240, 460), 14, glm::vec4(1, 1, 1, 1));
+		texto.render("Credits ", glm::vec2(240, 460), 14, glm::vec4(1, 1, 1, 1));
 
-		glm::vec2 geom2[2] = { glm::vec2(455.f, 410.f), glm::vec2(455+32.f, 410+32.f) };
+		glm::vec2 geom2[2] = { glm::vec2(430.f, 410.f), glm::vec2(430+32.f, 410+32.f) };
 		glm::vec2 texCoords2[2] = { glm::vec2(0.f, 0.f), glm::vec2(1.f, 1.f) };
 		cursor = TexturedQuad::createTexturedQuad(geom2, texCoords2, texProgram);
 
@@ -101,17 +101,16 @@ void Menu::update(int deltaTime)
 
 		texto.render("Play ", glm::vec2(270, 380), 14, glm::vec4(1, 1, 1, 1));
 
-		texto.render("Instrucciones ", glm::vec2(200, 420), 14, glm::vec4(1, 1, 1, 1));
+		texto.render("How to play ", glm::vec2(200, 420), 14, glm::vec4(1, 1, 1, 1));
 
-		texto.render("Creditos ", glm::vec2(215, 460), 20, glm::vec4(1, 1, 1, 1));
+		texto.render("Credits ", glm::vec2(215, 460), 20, glm::vec4(1, 1, 1, 1));
 
-		glm::vec2 geom2[2] = { glm::vec2(400.f, 450.f), glm::vec2(400+32.f, 450+32.f) };
+		glm::vec2 geom2[2] = { glm::vec2(380.f, 450.f), glm::vec2(380+32.f, 450+32.f) };
 		glm::vec2 texCoords2[2] = { glm::vec2(0.f, 0.f), glm::vec2(1.f, 1.f) };
 		cursor = TexturedQuad::createTexturedQuad(geom2, texCoords2, texProgram);
 
 	}
 	if (Game::instance().getKey(13)) {
-
 		Game::instance().newaction(accion);
 	}
 
@@ -135,9 +134,9 @@ void Menu::render()
 
 		texto.render("Play ", glm::vec2(260, 380), 20, glm::vec4(1, 1, 1, 1));
 
-		texto.render("Instrucciones ", glm::vec2(200, 420), 14, glm::vec4(1, 1, 1, 1));
+		texto.render("How to play ", glm::vec2(220, 420), 14, glm::vec4(1, 1, 1, 1));
 
-		texto.render("Creditos ", glm::vec2(240, 460), 14, glm::vec4(1, 1, 1, 1));
+		texto.render("Credits ", glm::vec2(250, 460), 14, glm::vec4(1, 1, 1, 1));
 
 
 	}
@@ -145,9 +144,9 @@ void Menu::render()
 
 		texto.render("Play ", glm::vec2(270, 380), 14, glm::vec4(1, 1, 1, 1));
 
-		texto.render("Instrucciones ", glm::vec2(160, 420), 20, glm::vec4(1, 1, 1, 1));
+		texto.render("How to play ", glm::vec2(180, 420), 20, glm::vec4(1, 1, 1, 1));
 
-		texto.render("Creditos ", glm::vec2(240, 460), 14, glm::vec4(1, 1, 1, 1));
+		texto.render("Credits ", glm::vec2(250, 460), 14, glm::vec4(1, 1, 1, 1));
 
 
 	}
@@ -156,9 +155,9 @@ void Menu::render()
 
 		texto.render("Play ", glm::vec2(270, 380), 14, glm::vec4(1, 1, 1, 1));
 
-		texto.render("Instrucciones ", glm::vec2(200, 420), 14, glm::vec4(1, 1, 1, 1));
+		texto.render("How to play ", glm::vec2(220, 420), 14, glm::vec4(1, 1, 1, 1));
 
-		texto.render("Creditos ", glm::vec2(215, 460), 20, glm::vec4(1, 1, 1, 1));
+		texto.render("Credits ", glm::vec2(220, 460), 20, glm::vec4(1, 1, 1, 1));
 
 
 	}
