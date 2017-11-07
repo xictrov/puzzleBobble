@@ -1,17 +1,3 @@
-﻿  TileMap.cpp
-c:\users\vimar\desktop\puzzlebobble\puzzlebobble\2dgame\puzzlebobble\02-bubble\tilemap.cpp(261): warning C4244: 'argumento': conversión de 'float' a 'int'; posible pérdida de datos
-c:\users\vimar\desktop\puzzlebobble\puzzlebobble\2dgame\puzzlebobble\02-bubble\tilemap.cpp(298): warning C4244: 'inicializando': conversión de 'float' a 'int'; posible pérdida de datos
-c:\users\vimar\desktop\puzzlebobble\puzzlebobble\2dgame\puzzlebobble\02-bubble\tilemap.cpp(299): warning C4244: 'inicializando': conversión de 'float' a 'int'; posible pérdida de datos
-  Generando código...
-  Omitiendo... (no se detectaron cambios relevantes)
-  main.cpp
-  Scene.cpp
-  Player.cpp
-  Menu.cpp
-  Instructions.cpp
-  Game.cpp
-  Dino.cpp
-  Credits.cpp
-  BolaMapa.cpp
-  Arrow.cpp
-  02-Bubble.vcxproj -> C:\Users\vimar\Desktop\puzzleBobble\puzzleBobble\2DGame\puzzleBobble\Debug\02-Bubble.exe
+﻿  Scene.cpp
+c:\users\vimar\desktop\puzzlebobble\puzzlebobble\2dgame\puzzlebobble\02-bubble\scene.cpp(53): warning C4244: 'argumento': conversión de 'time_t' a 'unsigned int'; posible pérdida de datos
+  02-Bubble.vcxproj -> C:\Users\vimar\Desktop\puzzleBobble\puzzleBobble\2DGame\puzzleBobble\02-Bubble\Debug\02-Bubble.exe

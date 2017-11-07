@@ -19,17 +19,8 @@ using namespace std;
 #define INIT_PLAYER_X_TILES 4
 #define INIT_PLAYER_Y_TILES 25
 
-bool cambio = false;
-bool acaba = false;
-bool empieza = false;
-bool gameover = false;
-int contadorNivel = 1;
-int tiempoDisparo = 0;
-int tiempoTecho = 0;
-int baja = 0;
-float angleAux;
-int gameover_sonido=0;
-bool first;
+
+bool bombita = false;
 
 float numRadBola;
 float numRadArrow;
@@ -48,7 +39,7 @@ Scene::Scene()
 
 Scene::~Scene()
 {
-	engine->stopAllSounds();
+	
 	if(map != NULL)
 		delete map;
 	if(player != NULL)
@@ -59,8 +50,8 @@ Scene::~Scene()
 void Scene::init()
 {
 
-
-	//engine->play2D("./sounds/pbobble-025.wav", false);
+	engine->stopAllSounds();
+	engine->play2D("./sounds/pbobble-025.wav", false);
 	engine->play2D("./sounds/smash_mouth-all_star.wav", true);
 	state = WAITING_FOR_THROW;
 
@@ -87,11 +78,13 @@ void Scene::init()
 	texturewin.loadFromFile("images/youwin.png", TEXTURE_PIXEL_FORMAT_RGBA);
 
 	texturegameover.loadFromFile("images/gameOver.png", TEXTURE_PIXEL_FORMAT_RGBA);
+	texturegamewin.loadFromFile("images/credits.png", TEXTURE_PIXEL_FORMAT_RGBA);
 
 
 	map = TileMap::createTileMap(lvlNumber, glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
 
 	mapa = map->convertToSprites(gameover);
+	map->setPuntuacion(0);
 
 	checkColors();
 
@@ -119,7 +112,7 @@ void Scene::init()
 	angle = 90.0f;
 
 	winlvl = false;
-	lifes = 2;
+	lives = 2;
 
 	cambio = false;
 	acaba = false;
@@ -160,7 +153,7 @@ void Scene::update(int deltaTime) {
 
 	if (winlvl) state = LVL_WON;
 
-	if (lifes < 0) state = GAME_LOST;
+	if (lives < 0) state = GAME_LOST;
 
 	switch (state) {
 		case (WAITING_FOR_THROW):
@@ -213,7 +206,12 @@ void Scene::update(int deltaTime) {
 				angle = angleAux;
 				checkColors();
 				if (ballColors.size() > 0) {
-					playernext->init(glm::ivec2(235.f, 426.f), texProgram, ballColors[rand() % ballColors.size()], gameover);
+					if (bombita) {
+						playernext->init(glm::ivec2(250.f, 425.f), texProgram, 20, gameover);
+						playernext->setColor(20);
+						bombita = false;
+					}
+					else playernext->init(glm::ivec2(235.f, 426.f), texProgram, ballColors[rand() % ballColors.size()], gameover);
 					playernext->setTileMap(map);
 				}
 				if (gameover) first = true;
@@ -260,19 +258,23 @@ void Scene::update(int deltaTime) {
 			{
 				setNewLvl(contadorNivel);
 				first = true;
-				--lifes;
+				--lives;
 			}
 
 			break;
 		case (GAME_LOST) :
 
-			engine->stopAllSounds();
-			engine->play2D("./sounds/pbobble-041.wav", false);
+			if (gameover_sonido == 0) {
+				engine->stopAllSounds();
+				engine->play2D("./sounds/pbobble-012.wav", false);
+			}
+			++gameover_sonido;
+
 			break;
 		case (GAME_WIN):
 
 			engine->stopAllSounds();
-			//engine->play2D("./sounds/pbobble-041.wav", false);
+			engine->play2D("./sounds/smash_mouth-all_star.wav", true);
 
 
 			break;
@@ -418,10 +420,13 @@ void Scene::render()
 		texProgram.setUniformMatrix4f("modelview", modelview);
 		texProgram.setUniform2f("texCoordDispl", 0.f, 0.f);
 		texgameover->render(texturegameover);
+
+		text.render("TOTAL SCORE:", glm::vec2(120, 350), 20, glm::vec4(1, 1, 1, 1));
+
+		text.render(to_string(map->getPuntuacion()), glm::vec2(420, 350), 20, glm::vec4(1, 1, 1, 1));
 	}
 	else if (state == GAME_WIN) {
-
-		engine->stopAllSounds();
+	
 		Game::instance().newaction(2);
 	}
 	else {
@@ -435,9 +440,9 @@ void Scene::render()
 
 		text.render(to_string(int(tiempoTecho/60)), glm::vec2(540, 30),16, glm::vec4(1, 1, 1, 1));
 
-		text.render("Lifes: ", glm::vec2(490, 450), 14, glm::vec4(1, 1, 1, 1));
+		text.render("Lives: ", glm::vec2(490, 450), 14, glm::vec4(1, 1, 1, 1));
 
-		text.render(to_string(lifes), glm::vec2(590, 450), 14, glm::vec4(1, 1, 1, 1));
+		text.render(to_string(lives), glm::vec2(590, 450), 14, glm::vec4(1, 1, 1, 1));
 	}
 
 }
@@ -560,7 +565,8 @@ void Scene::setNewLvl(int lvl)
 	map->setPuntuacion(0);
 
 	engine->stopAllSounds();
-	engine->play2D("./sounds/smash_mouth-all_star.wav", false);
+	engine->play2D("./sounds/pbobble-025.wav", false);
+	engine->play2D("./sounds/smash_mouth-all_star.wav", true);
 	checkColors();
 	if (ballColors.size() > 0) {
 		player->init(glm::ivec2(305.f, 390.f), texProgram, ballColors[rand() % ballColors.size()],gameover);
@@ -587,7 +593,9 @@ void Scene::setSound(irrklang::ISoundEngine* eng) {
 }
 
 void Scene::Boom(){
-	playernext->init(glm::ivec2(250.f, 425.f), texProgram, 20, gameover);
-	//playernext->setColor(20);
+	bombita = true;
+	/*playernext->init(glm::ivec2(250.f, 425.f), texProgram, 20, gameover);
+	playernext->setColor(20); 
+	playernext->setTileMap(map); playernext->render();*/
 }
 

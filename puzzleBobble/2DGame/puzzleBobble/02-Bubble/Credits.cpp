@@ -59,6 +59,7 @@ void Credits::render()
 	texProgram.setUniform2f("texCoordDispl", 0.f, 0.f);
 	fondo->render(credits);
 
+
 	text.render("Press ESC to go to the MENU screen", glm::vec2(240, 450), 10, glm::vec4(1, 1, 1, 1));
 
 }

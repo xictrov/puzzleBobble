@@ -1,0 +1,16 @@
+TILEMAP
+8 11					-- Size of tile map in tiles
+32 32						-- Tile size & block size
+images/balls.png 	-- Tilesheet
+1 8 	-- Number of tiles in tilesheet	
+05500110
+08000700
+01000200
+08000200
+08000200
+03000800
+08000100
+03000200
+00000000
+00000000
+00000000

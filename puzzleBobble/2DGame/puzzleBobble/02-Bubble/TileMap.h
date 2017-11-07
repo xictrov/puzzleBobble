@@ -45,6 +45,8 @@ public:
 	void colocaBolaTecho(int i, int j, int color, bool &gameover);
 	void bajaMapa(bool &gameover);
 	void searchBallsToDestroy(int j, int i);
+	void searchBallsToDestroy2(int j, int i);
+
 	void deleteBalls(std::vector<glm::ivec2> &positions, bool &gameover);
 	void searchAloneBalls(int j, int i);
 	void deleteAloneBalls(bool &gameover);
@@ -60,7 +62,7 @@ private:
 	bool loadLevel(const string &levelFile);
 	void prepareArrays(const glm::vec2 &minCoords, ShaderProgram &program, bool &gameover);
 	void clearVectors();
-	void search(int j, int i, bool &gameover);
+	void search(int j, int i, bool &gameover, int color);
 	void addSprite(int j, int i, int color, bool &gameover);
 
 private:

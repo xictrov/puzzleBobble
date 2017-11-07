@@ -10,6 +10,7 @@ using namespace std;
 int bajada=0;
 bool primero = true;
 int puntuacion = 0;
+int puntuacion2 = 1;
 bool bomba=false;
 
 TileMap *TileMap::createTileMap(const string &levelFile, const glm::vec2 &minCoords, ShaderProgram &program)
@@ -317,7 +318,7 @@ void TileMap::colocaBola(int j, int i, int color, float Bolax, float Bolay, bool
 
 		if (!lvlClear()) prepareArrays(minCoords, program,gameover);
 
-		search(posfy,posfx,gameover);
+		search(posfy,posfx,gameover,color);
 	}
 	else{
 
@@ -367,10 +368,9 @@ void TileMap::colocaBola(int j, int i, int color, float Bolax, float Bolay, bool
 
 					int tile = tileMap[(posfy + jj)*mapSize.x + (posfx + ii)];
 					if (tile != 0) {
-						search((posfy+jj),(posfx+ii),gameover);
+						search((posfy+jj),(posfx+ii),gameover,color);
 						//tileMap[(posfy + jj)*mapSize.x + (posfx + ii)] = 0;
 						//spriteMap[(posfy + jj)*mapSize.x + (posfx + ii)]->explode();
-
 					}
 				}
 			}
@@ -402,7 +402,7 @@ void TileMap::colocaBolaTecho(int j, int i, int color, bool &gameover)
 
 	if (!lvlClear()) prepareArrays(minCoords, program, aux);
 
-	search(j, i, gameover);
+	search(j, i, gameover,color);
 }
 
 
@@ -431,6 +431,52 @@ void TileMap::searchBallsToDestroy(int j, int i)
 	glm::ivec2 vecino;
 
 	int color = tileMap[j*mapSize.x + i];
+	visitedMap[j*mapSize.x + i] = true;
+
+	for (int k = 0; k < 6; ++k) {
+		nj = positions[k].first;
+		ni = positions[k].second;
+		if (j % 2 != 0 && (nj == -1 || nj == 1) && ni == -1) ni = 1;
+		vecino.x = i + ni;
+		vecino.y = j + nj;
+
+		if (vecino.x >= 0 && vecino.x <= mapSize.x &&
+			vecino.y >= 0 && vecino.y <= mapSize.y &&
+			!visitedMap[vecino.y*mapSize.x + vecino.x] &&
+			(tileMap[vecino.y*mapSize.x + vecino.x] == color)) {
+
+			ballsToDestroy.push_back(vecino);
+
+			searchBallsToDestroy(vecino.y, vecino.x);
+		}
+	}
+}
+
+
+
+
+
+
+
+
+
+
+
+
+void TileMap::searchBallsToDestroy2(int j, int i)
+{
+	static vector<pair<int, int> > positions = {
+		{ -1, -1 },
+		{ -1, 0 },
+		{ 0, -1 },
+		{ 0, 1 },
+		{ 1, 0 },
+		{ 1, -1 },
+	};
+	int ni, nj;
+	glm::ivec2 vecino;
+
+	int color = tileMap[j*mapSize.x + i];
 
 	visitedMap[j*mapSize.x + i] = true;
 
@@ -444,7 +490,7 @@ void TileMap::searchBallsToDestroy(int j, int i)
 		if (vecino.x >= 0 && vecino.x <= mapSize.x &&
 			vecino.y >= 0 && vecino.y <= mapSize.y &&
 			!visitedMap[vecino.y*mapSize.x + vecino.x] &&
-			tileMap[vecino.y*mapSize.x + vecino.x] == color) {
+			(tileMap[vecino.y*mapSize.x + vecino.x] == color)) {
 
 			ballsToDestroy.push_back(vecino);
 
@@ -452,6 +498,26 @@ void TileMap::searchBallsToDestroy(int j, int i)
 		}
 	}
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 void TileMap::searchAloneBalls(int j, int i)
 {
@@ -565,33 +631,64 @@ vector<BolaMapa *> * TileMap::convertToSprites(bool &gameover)
 	return &spriteMap;
 }
 
-void TileMap::search(int j, int i, bool &gameover)
+void TileMap::search(int j, int i, bool &gameover,int color)
 {
-	searchBallsToDestroy(j,i);
-	if (ballsToDestroy.size() != 0) { ballsToDestroy.push_back(glm::ivec2(i, j)); }
+	if (color != 20){
+		searchBallsToDestroy(j, i);
+		if (ballsToDestroy.size() != 0) { ballsToDestroy.push_back(glm::ivec2(i, j)); }
 
 
-	if(ballsToDestroy.size()>=5){
-		Game::instance().Bomba();
+		if (puntuacion > puntuacion2 * 200){
+			++puntuacion2;
+			Game::instance().Bomba();
+		}
+		if (ballsToDestroy.size() >= 3 || tileMap[j*mapSize.x + i] == 20) {
+			engine->play2D("./sounds/pbobble-010.wav", false);
+			puntuacion += ballsToDestroy.size() * 10;
+			deleteBalls(ballsToDestroy, gameover);
+
+		}
+		else {
+			engine->play2D("./sounds/pbobble-005.wav", false);
+			clearVectors();
+		}
+
+
+
+		for (int k = 0; k < mapSize.x; ++k) {
+			if (tileMap[0 * mapSize.x + k] != 0) searchAloneBalls(0, k);
+		}
+
+		deleteAloneBalls(gameover);
 	}
-	if (ballsToDestroy.size() >= 3) {
-		engine->play2D("./sounds/pbobble-010.wav", false);
-		puntuacion += ballsToDestroy.size() * 10;
-		deleteBalls(ballsToDestroy, gameover);
+	else{
+		searchBallsToDestroy2(j, i);
+		ballsToDestroy.push_back(glm::ivec2(i, j)); 
+		cout << ballsToDestroy.size() << "size " << endl;
 
+		if (puntuacion > puntuacion2 * 200){
+			++puntuacion2;
+			Game::instance().Bomba();
+		}
+			engine->play2D("./sounds/pbobble-010.wav", false);
+			puntuacion += ballsToDestroy.size() * 10;
+			deleteBalls(ballsToDestroy, gameover);
+
+
+		for (int k = 0; k < mapSize.x; ++k) {
+			if (tileMap[0 * mapSize.x + k] != 0) searchAloneBalls(0, k);
+		}
+
+		deleteAloneBalls(gameover);
 	}
-	else {
-		engine->play2D("./sounds/pbobble-005.wav", false);
-		clearVectors();
-	}
 
-
-
-	for (int k = 0; k < mapSize.x; ++k) {
-		if (tileMap[0 * mapSize.x + k] != 0) searchAloneBalls(0, k);
-	}
-
-	deleteAloneBalls(gameover);
+	/*for (int jj = 0; jj < mapSize.y; ++jj) {
+		for (int ii = 0; ii < mapSize.x; ++ii) {
+			int tile = tileMap[jj*mapSize.x + ii];
+			cout << tile;
+		}
+		cout << endl;
+	}*/
 }
 
 void TileMap::addSprite(int j, int i, int color,bool &gameover)

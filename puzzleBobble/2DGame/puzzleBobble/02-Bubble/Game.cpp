@@ -57,7 +57,6 @@ void Game::keyPressed(int key)
 {
 	if(key == 27) {// Escape code
 		if (estado != 3) {
-			if (estado==0)scene.~Scene();
 			estado = 3;
 		}
 		else {

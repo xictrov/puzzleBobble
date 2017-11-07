@@ -58,14 +58,14 @@ private:
 	float currentTime, angle;
 	glm::mat4 projection;
 	Quad *quad, *techo, *superior, *losewin;
-	TexturedQuad *texQuad, *textecho, *texsuperior,*texlosewin, *texgameover;
-	Texture texs, texturetecho, texturesuperior, texturewin, texturelose, texturegameover;
+	TexturedQuad *texQuad, *textecho, *texsuperior,*texlosewin, *texgameover, *texgamewin;
+	Texture texs, texturetecho, texturesuperior, texturewin, texturelose, texturegameover, texturegamewin;
 	vector<BolaMapa *> *mapa;
 	string lvlNumber, background, superiorMap, ceiling;
 	bool winlvl;
 	vector<int> ballColors;
 	Text text;
-	int lifes;
+	int lives;
 
 	bool cambio;
 	bool acaba;
